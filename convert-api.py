@@ -2,4 +2,8 @@
 # Created by Emilia on 2025-02-27
 
 def get_ids(filename: str) -> list[int]:
+    with open(filename) as file:
 
+        for game in file:
+            id = game[0]
+            return [game[0]['appid']]
