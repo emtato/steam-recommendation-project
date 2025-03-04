@@ -78,7 +78,7 @@ def get_deets(games: list[int]) -> list[Game]:
             prices = data_dict.get("price_overview", "unknown")
             if prices != 'unknown':
                 p = prices['final'] / 100
-                p *= exchange_rate if prices['currency'] == 'USD' else 1
+                p *= exchange_rate if prices['currency'] == 'USD' else 1 if prices['currency'] == 'CAD' else 1.53 if prices['currency'] == 'EUR' else print('AAAA')
                 prices.pop('currency')
                 prices['range'] = 'low' if p <= 10 else 'medium' if p <= 25 else 'high'
                 prices['final'] = p
@@ -132,7 +132,7 @@ def write_to_csv(games: list[Game]) -> None:
                        f"\"{game.categories}\",\"{game.genres}\",{game.dlc}\n")
 
 
-write_to_csv(get_deets(get_ids(750, 900)))
+write_to_csv(get_deets(get_ids(60, 61)))
 
 
 #get_single_info()
