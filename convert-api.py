@@ -54,24 +54,25 @@ def get_clean_requirements(req):
     return ""
 
 
-def get_single_info(id: int) -> None:
+def get_single_info(id: int) -> list[Game]:
     print(get_deets([id]))
+    return get_deets([id])
 
 
 def get_deets(games: list[int]) -> list[Game]:
     appinfo = "https://store.steampowered.com/api/appdetails?appids="
     game_list = []
-
     for game in games:
         response = requests.get(appinfo + str(game))
         data = response.json()
         print(data)
-
+        if data is None:
+            break
         if data is not None and str(game) in data and 'data' in data[str(game)] and data[str(game)]['success']:
             data_dict = data[str(game)]['data']
 
             # Extract name
-            name = data_dict.get("name", "Unknown")
+            name = data_dict.get("name", "Unknown").replace('"', '')
 
             # Extract freeness
             prices = data_dict.get("price_overview", "unknown")
@@ -106,7 +107,7 @@ def get_deets(games: list[int]) -> list[Game]:
             genres = [genre_dict['description'] for genre_dict in data_dict.get('genres', [])]
 
             # Extract yap
-            description = data_dict.get("short_description", "No description available.")
+            description = data_dict.get("short_description", "No description available.").replace('"', '')
 
             # Extract system requirements
             requirements = {'PC': get_clean_requirements(data_dict.get('pc_requirements')),
@@ -130,6 +131,26 @@ def write_to_csv(games: list[Game]) -> None:
                        f"{game.image},\"{game.requirements}\",\"{game.developers}\",\"{game.platforms}\","
                        f"\"{game.categories}\",\"{game.genres}\",{game.dlc}\n")
 
-write_to_csv(get_deets(get_ids(77, 90)))
 
-#get_single_info(2060270)
+write_to_csv(get_deets(get_ids(750, 900)))
+
+
+#get_single_info()
+
+# due to the manual input requirement of inputting data to csv and IP banning, some duplicate games may exist
+def check_dupes() -> None:
+    seen = set()
+    dupes = False
+    with open("data.csv", "r") as file:
+        for line in file:
+            first_col = line.split(",", 1)[0].strip()  # Get first column, strip whitespace
+            if first_col in seen:
+                print(f"Duplicate found: {first_col}")
+                dupes = True
+            else:
+                seen.add(first_col)
+        print(f"is there dupes??? {dupes}")
+
+
+check_dupes()
+#write_to_csv(get_single_info(2373191))
