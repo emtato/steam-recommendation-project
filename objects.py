@@ -5,17 +5,30 @@ class Game:
     '''yap herre'''
     id: int
     name: str
-    genre: list[str]
+    price: int
     description: str
-    requirements: list[str]
+    languages: str
+    image: str
+    requirements: dict[str: str]
+    developers: list[str]
+    platforms: dict[str: bool]
+    categories: list[str]
+    genres: list[str]
 
-    def __init__(self, id, name, genre, description, requirements):
+    def __init__(self, id: int, name: str, price: int, description: str, languages: str, image: str,
+            requirements: dict[str: str], developers: list[str], platforms: dict[str: bool], categories: list[str],
+            genres: list[str]):
         self.id = id
         self.name = name
-        self.genre = genre
+        self.price = price
         self.description = description
+        self.languages = languages
+        self.image = image
         self.requirements = requirements
+        self.developers = developers
+        self.platforms = platforms
+        self.categories = categories
+        self.genres = genres
 
-    def __str__(self):
-        return f'game: {self.name}, id: {self.id}, genres: {self.genre}'
-
+    def __repr__(self):
+        return f"Game(id={self.id}, name='{self.name}', price={self.price}, genre={self.genres})"

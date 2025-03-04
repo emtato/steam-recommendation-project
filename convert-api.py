@@ -68,6 +68,24 @@ def get_deets(games: list[int]) -> list[Game]:
             # Extract name
             name = data_dict.get("name", "Unknown")
 
+            # Extract freeness
+            price = data_dict.get("price_overview", "unknown")
+
+            # Extract lingo
+            languages = data_dict.get("supported_languages", "Unknown")
+
+            # Extract image
+            image = data_dict.get("capsule_image", "unknown")
+
+            # Extract code monkeys
+            developers = data_dict.get("developers", "unknown")
+
+            # Extract operating systems (>> windows)
+            platforms = data_dict.get("platforms", "unknown")
+
+            # Extract categories
+            categories = [cat['description'] for cat in data_dict.get('genres', [])]
+
             # Extract genres
             genres = [genre_dict['description'] for genre_dict in data_dict.get('genres', [])]
 
@@ -75,12 +93,14 @@ def get_deets(games: list[int]) -> list[Game]:
             description = data_dict.get("short_description", "No description available.")
 
             # Extract system requirements
-            requirements = {"PC": get_clean_requirements(data_dict.get("pc_requirements")),
-                            "Mac": get_clean_requirements(data_dict.get("mac_requirements")),
-                            "Linux": get_clean_requirements(data_dict.get("linux_requirements"))}
+            requirements = {'PC': get_clean_requirements(data_dict.get('pc_requirements')),
+                            'Mac': get_clean_requirements(data_dict.get('mac_requirements')),
+                            'Linux': get_clean_requirements(data_dict.get('linux_requirements'))}
 
             # Append to game list
-            game_list.append(Game(game, name, genres, description, requirements))
+            game_list.append(
+                Game(game, name, price, description, languages, image, requirements, developers, platforms, categories,
+                     genres))
 
     return game_list
 
@@ -88,8 +108,9 @@ def get_deets(games: list[int]) -> list[Game]:
 def write_to_csv(games: list[Game]) -> None:
     with open("data.csv", "a") as file:
         for game in games:
-            file.write(f"{game.id},'{game.name}',\"[{game.genre}]\",\"{game.description}\",\"{game.requirements}\"\n")
+            file.write(
+                f"{game.id},'{game.name}','{game.price}',\"[{game.description}]\",\"{game.languages}\",{game.image},\"{game.requirements}\",\"{game.developers}\",\"{game.platforms}\",\"{game.categories}\",\"{game.genres}\"\n")
 
 
-#run to add to csv, currently added most from 0 to 1400 (actual line count less since many dont have any info, some skipped due to ip ban
-write_to_csv(get_deets(get_ids(1200,1400)))
+
+write_to_csv(get_deets(get_ids(74, 100)))
