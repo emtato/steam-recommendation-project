@@ -109,7 +109,7 @@ def write_to_csv(games: list[Game]) -> None:
     with open("data.csv", "a") as file:
         for game in games:
             file.write(
-                f"{game.id},'{game.name}','{game.price}',\"[{game.description}]\",\"{game.languages}\",{game.image},\"{game.requirements}\",\"{game.developers}\",\"{game.platforms}\",\"{game.categories}\",\"{game.genres}\"\n")
+                f"{game.id},'{game.name}',\"{game.price}\",\"[{game.description}]\",\"{game.languages}\",{game.image},\"{game.requirements}\",\"{game.developers}\",\"{game.platforms}\",\"{game.categories}\",\"{game.genres}\"\n")
 
 
 
