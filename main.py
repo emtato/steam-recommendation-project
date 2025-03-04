@@ -6,6 +6,8 @@ import sys
 
 pygame.init()
 
+#ballsack
+
 # Screen settings
 WIDTH, HEIGHT = 1280, 720
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
