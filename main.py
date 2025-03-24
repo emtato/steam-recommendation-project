@@ -99,14 +99,28 @@ class Graph:
             row = next(reader)
             row = 'you are useless garbo header row no one needs you'
             row = ':('
-            for i,row in enumerate(reader):
-                print(row)
-                if i >= amount-1:
+
+            dic = {}
+            for i, row in enumerate(reader):
+                # print(row)
+                if i >= amount - 1:
                     break
+
+                try:
+                    (id, name, price_overview, description, supported_languages, capsule_image, requirements,
+                     developers, platforms, categories, genres, dlc) = row
+                except(Exception):
+                    raise ValueError("shit")  # this shold be fine i think cuz all the rows have , even if no value
+                    # so some should  # just be an empty string
+
+                if name in dic:
+                    print(f"Duplicate game name found: {name}")
+                else:
+                    dic[name] = True
 
 
 g = Graph()
-g.build_graph('data.csv', 10)
+g.build_graph('data.csv', 1500)
 
 
 def option_selected(value):

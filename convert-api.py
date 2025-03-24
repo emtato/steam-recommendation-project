@@ -78,7 +78,11 @@ def get_deets(games: list[int]) -> list[Game]:
             prices = data_dict.get("price_overview", "unknown")
             if prices != 'unknown':
                 p = prices['final'] / 100
-                p *= exchange_rate if prices['currency'] == 'USD' else 1 if prices['currency'] == 'CAD' else 1.53 if prices['currency'] == 'EUR' else print('AAAA')
+                p *= exchange_rate if prices['currency'] == 'USD' else 1 if prices['currency'] == 'CAD' else 1.53 if \
+                prices['currency'] == 'EUR' else 0
+                if p == 0:
+                    print('skipped one')
+                    continue
                 prices.pop('currency')
                 prices['range'] = 'low' if p <= 10 else 'medium' if p <= 25 else 'high'
                 prices['final'] = p
@@ -101,7 +105,7 @@ def get_deets(games: list[int]) -> list[Game]:
             platforms = data_dict.get("platforms", "unknown")
 
             # Extract categories
-            categories = [cat['description'] for cat in data_dict.get('genres', [])]
+            categories = [cat['description'] for cat in data_dict.get('categories', [])]
 
             # Extract genres
             genres = [genre_dict['description'] for genre_dict in data_dict.get('genres', [])]
@@ -117,9 +121,8 @@ def get_deets(games: list[int]) -> list[Game]:
             # Extract dlcness
             dlc = data_dict.get('type', 'unknown') == 'dlc'
             # Append to game list
-            game_list.append(
-                Game(game, name, prices, description, languages, image, requirements, developers, platforms, categories,
-                     genres, dlc))
+            game_list.append(Game(game, name, prices, description, languages, image, requirements, developers,
+                                  platforms, categories, genres, dlc))
 
     return game_list
 
@@ -127,15 +130,15 @@ def get_deets(games: list[int]) -> list[Game]:
 def write_to_csv(games: list[Game]) -> None:
     with open("data.csv", "a") as file:
         for game in games:
-            file.write(f"{game.id},'{game.name}',\"{game.price}\",\"[{game.description}]\",\"{game.languages}\","
+            file.write(f"{game.id},\"{game.name}\,\"{game.price}\",\"[{game.description}]\",\"{game.languages}\","
                        f"{game.image},\"{game.requirements}\",\"{game.developers}\",\"{game.platforms}\","
                        f"\"{game.categories}\",\"{game.genres}\",{game.dlc}\n")
 
 
-write_to_csv(get_deets(get_ids(100, 110)))
+# write_to_csv(get_deets(get_ids(1700, 1900)))
 
 
-#get_single_info()
+# get_single_info()
 
 # due to the manual input requirement of inputting data to csv and IP banning, some duplicate games may exist
 def check_dupes() -> None:
@@ -153,4 +156,4 @@ def check_dupes() -> None:
 
 
 check_dupes()
-#write_to_csv(get_single_info(2373191))
+# write_to_csv(get_single_info(2373191))
