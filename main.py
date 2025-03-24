@@ -1,61 +1,125 @@
 # Description:
-# Created by Emilia on 2025-02-27
+# Created by Emilia on 2025-03-23
+from __future__ import annotations
 
-import pygame
-import sys
+import csv
+import tkinter as tk
+from typing import Any
 
-pygame.init()
+# weight of each category for determining matches
+# we can create a simple ranking system where the user ranks whats most important to them for personalization
+genre, languages, platforms = 0, 0, 0
 
 
-# Screen settings
-WIDTH, HEIGHT = 1280, 720
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("kitty")
+class _Vertex:
+    """A vertex in a graph.
 
-# Define colors
-WHITE = (255, 255, 255)
-GRAY = (200, 200, 200)
-BLACK = (0, 0, 0)
+    Instance Attributes:
+        - item: The data stored in this vertex.
+        - neighbours: The vertices that are adjacent to this vertex.
 
-# Define button rectangles
-button1 = pygame.Rect(100, 200, 150, 50)
-button2 = pygame.Rect(390, 200, 150, 50)
+    Representation Invariants:
+        - self not in self.neighbours
+        - all(self in u.neighbours for u in self.neighbours)
+    """
+    item: Any
+    neighbours: set[_Vertex]
 
-clock = pygame.time.Clock()
+    def __init__(self, item: Any, neighbours: set[_Vertex]) -> None:
+        """Initialize a new vertex with the given item and neighbours."""
+        self.item = item
+        self.neighbours = neighbours
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    def check_connected(self, target_item: Any, visited: set[_Vertex]) -> bool:
+        """Return whether this vertex is connected to a vertex corresponding to the target_item,
+        WITHOUT using any of the vertices in visited.
 
-        # Check for mouse clicks on buttons
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # left click
-                if button1.collidepoint(event.pos):
-                    print("Button 1 clicked!")
-                if button2.collidepoint(event.pos):
-                    print("Button 2 clicked!")
+        Preconditions:
+            - self not in visited
+        """
+        if self.item == target_item:
+            return True
+        else:
+            visited.add(self)
+            for u in self.neighbours:
+                if u not in visited:
+                    if u.check_connected(target_item, visited):
+                        return True
 
-        screen.fill(WHITE)
+            return False
 
-        # Draw buttons (filled with gray)
-        pygame.draw.rect(screen, GRAY, button1)
-        pygame.draw.rect(screen, GRAY, button2)
 
-        # Optional: add text labels to the buttons
-        font = pygame.font.SysFont(None, 36)
-        text1 = font.render("Button 1", True, BLACK)
-        text2 = font.render("Button 2", True, BLACK)
-        # Center the text on each button
-        screen.blit(text1, (button1.x + (button1.width - text1.get_width()) // 2,
-                            button1.y + (button1.height - text1.get_height()) // 2))
-        screen.blit(text2, (button2.x + (button2.width - text2.get_width()) // 2,
-                            button2.y + (button2.height - text2.get_height()) // 2))
+class Graph:
+    """A graph.
 
-        # Update the display
-        pygame.display.flip()
-        clock.tick(60)
+    Representation Invariants:
+        - all(item == self._vertices[item].item for item in self._vertices)
+    """
+    # Private Instance Attributes:
+    #     - _vertices:
+    #         A collection of the vertices contained in this graph.
+    #         Maps item to _Vertex object.
+    _vertices: dict[Any, _Vertex]
 
-pygame.quit()
-sys.exit()
+    def __init__(self) -> None:
+        """Initialize an empty graph (no vertices or edges)."""
+        self._vertices = {}
+
+    def add_vertex(self, item: Any) -> None:
+        """Add a vertex with the given item to this graph.
+
+        The new vertex is not adjacent to any other vertices.
+
+        Preconditions:
+            - item not in self._vertices
+        """
+        if item not in self._vertices:
+            self._vertices[item] = _Vertex(item, set())
+
+    def add_edge(self, item1: Any, item2: Any) -> None:
+        """Add an edge between the two vertices with the given items in this graph.
+
+        Raise a ValueError if item1 or item2 do not appear as vertices in this graph.
+
+        Preconditions:
+            - item1 != item2
+        """
+        if item1 in self._vertices and item2 in self._vertices:
+            v1 = self._vertices[item1]
+            v2 = self._vertices[item2]
+
+            v1.neighbours.add(v2)
+            v2.neighbours.add(v1)
+        else:
+            raise ValueError
+
+    def build_graph(self, data_file: str, amount: int) -> Graph:
+        with open(data_file, 'r') as file:
+            reader = csv.reader(file)
+            row = next(reader)
+            row = 'you are useless garbo header row no one needs you'
+            row = ':('
+            for i,row in enumerate(reader):
+                print(row)
+                if i >= amount-1:
+                    break
+
+
+g = Graph()
+g.build_graph('data.csv', 10)
+
+
+def option_selected(value):
+    print(f"Selected: {value}")
+
+
+root = tk.Tk()
+root.title("Dropdown Example")
+
+options = ["Option 1", "Option 2", "Option 3"]
+selected = tk.StringVar(value=options[0])
+
+dropdown = tk.OptionMenu(root, selected, *options, command=option_selected)
+dropdown.pack(pady=20)
+
+root.mainloop()
