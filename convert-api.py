@@ -130,12 +130,12 @@ def get_deets(games: list[int]) -> list[Game]:
 def write_to_csv(games: list[Game]) -> None:
     with open("data.csv", "a") as file:
         for game in games:
-            file.write(f"{game.id},\"{game.name}\,\"{game.price}\",\"[{game.description}]\",\"{game.languages}\","
+            file.write(f"{game.id},\"{game.name}\",\"{game.price}\",\"[{game.description}]\",\"{game.languages}\","
                        f"{game.image},\"{game.requirements}\",\"{game.developers}\",\"{game.platforms}\","
                        f"\"{game.categories}\",\"{game.genres}\",{game.dlc}\n")
 
 
-# write_to_csv(get_deets(get_ids(1700, 1900)))
+write_to_csv(get_deets(get_ids(1900, 2100)))
 
 
 # get_single_info()

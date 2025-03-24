@@ -97,7 +97,7 @@ class Graph:
         with open(data_file, 'r') as file:
             reader = csv.reader(file)
             row = next(reader)
-            row = 'you are useless garbo header row no one needs you'
+            row = 'useless'
             row = ':('
 
             dic = {}
@@ -105,7 +105,8 @@ class Graph:
                 # print(row)
                 if i >= amount - 1:
                     break
-
+                if len(row)!= 12:
+                    print("NOOOO")
                 try:
                     (id, name, price_overview, description, supported_languages, capsule_image, requirements,
                      developers, platforms, categories, genres, dlc) = row
@@ -120,7 +121,7 @@ class Graph:
 
 
 g = Graph()
-g.build_graph('data.csv', 1500)
+g.build_graph('data.csv', 1719)
 
 
 def option_selected(value):
