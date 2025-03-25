@@ -135,7 +135,7 @@ def write_to_csv(games: list[Game]) -> None:
                        f"\"{game.categories}\",\"{game.genres}\",{game.dlc}\n")
 
 
-write_to_csv(get_deets(get_ids(1900, 2100)))
+write_to_csv(get_deets(get_ids(2300, 2400)))
 
 
 # get_single_info()
