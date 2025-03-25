@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-#import tkinter as tk
 from typing import Any
 
 # weight of each category for determining matches
@@ -127,18 +126,3 @@ class Graph:
 g = Graph()
 g.build_graph('data.csv', 2069)
 
-#
-# def option_selected(value):
-#     print(f"Selected: {value}")
-
-#
-# root = tk.Tk()
-# root.title("Dropdown Example")
-#
-# options = ["Option 1", "Option 2", "Option 3"]
-# selected = tk.StringVar(value=options[0])
-#
-# dropdown = tk.OptionMenu(root, selected, *options, command=option_selected)
-# dropdown.pack(pady=20)
-#
-# root.mainloop()
