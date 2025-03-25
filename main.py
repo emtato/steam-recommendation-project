@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+from codecs import ignore_errors
 from typing import Any
 
 # weight of each category for determining matches
@@ -96,7 +97,8 @@ class Graph:
     #add weights to graph so can sort by weight -> most similar
 
     def build_graph(self, data_file: str, amount: int) -> Graph:
-        with open(data_file, 'r') as file:
+        # Here we are using the 'encoding=' to make sure everyone's computer will be able to use the csv file
+        with open(data_file, 'r', encoding='utf8') as file:
             reader = csv.reader(file)
             row = next(reader)
             row = 'useless'
@@ -107,7 +109,7 @@ class Graph:
                 # print(row)
                 if i >= amount - 1:
                     break
-                if len(row)!= 12:
+                if len(row) != 12:
                     print(i, row[0])
                     print("NOOOO")
                 try:
@@ -125,4 +127,3 @@ class Graph:
 
 g = Graph()
 g.build_graph('data.csv', 2069)
-

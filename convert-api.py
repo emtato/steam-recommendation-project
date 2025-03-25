@@ -60,6 +60,10 @@ def get_single_info(id: int) -> list[Game]:
 
 
 def get_deets(games: list[int]) -> list[Game]:
+    """ This function retrieves and converts the wanted information from each game_id from the web, into a list of Game
+    objects we can use.
+
+    """
     appinfo = "https://store.steampowered.com/api/appdetails?appids="
     game_list = []
     for game in games:

@@ -5,9 +5,9 @@ from main import Graph
 
 st.title("QQHHHHHHQHHHQH")
 
-g = Graph()
-g.build_graph("data.csv", 2069)
+# g = Graph()
+# g.build_graph("data.csv", 1)
 
-st.write("Graph built successfully!")
+# st.write("Graph built successfully!")
 
 #run streamlit run app.py in terminal
