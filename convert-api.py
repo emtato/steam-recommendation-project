@@ -114,7 +114,7 @@ def get_deets(games: list[int]) -> list[Game]:
             description = data_dict.get("short_description", "No description available.").replace('"', '')
 
             # Extract system requirements
-            requirements = {'PC': get_clean_requirements(data_dict.get('pc_requirements')),
+            requirements = {'PC': get_clean_requirements(data_dict.get('pc_requirements')).replace('"', "'"),
                             'Mac': get_clean_requirements(data_dict.get('mac_requirements')),
                             'Linux': get_clean_requirements(data_dict.get('linux_requirements'))}
 
@@ -135,7 +135,7 @@ def write_to_csv(games: list[Game]) -> None:
                        f"\"{game.categories}\",\"{game.genres}\",{game.dlc}\n")
 
 
-write_to_csv(get_deets(get_ids(2300, 2400)))
+write_to_csv(get_deets(get_ids(2475, 2475)))
 
 
 # get_single_info()

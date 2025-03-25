@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import csv
-import tkinter as tk
+#import tkinter as tk
 from typing import Any
 
 # weight of each category for determining matches
@@ -93,6 +93,9 @@ class Graph:
         else:
             raise ValueError
 
+
+    #add weights to graph so can sort by weight -> most similar
+
     def build_graph(self, data_file: str, amount: int) -> Graph:
         with open(data_file, 'r') as file:
             reader = csv.reader(file)
@@ -106,6 +109,7 @@ class Graph:
                 if i >= amount - 1:
                     break
                 if len(row)!= 12:
+                    print(i, row[0])
                     print("NOOOO")
                 try:
                     (id, name, price_overview, description, supported_languages, capsule_image, requirements,
@@ -121,20 +125,20 @@ class Graph:
 
 
 g = Graph()
-g.build_graph('data.csv', 1719)
+g.build_graph('data.csv', 2069)
 
+#
+# def option_selected(value):
+#     print(f"Selected: {value}")
 
-def option_selected(value):
-    print(f"Selected: {value}")
-
-
-root = tk.Tk()
-root.title("Dropdown Example")
-
-options = ["Option 1", "Option 2", "Option 3"]
-selected = tk.StringVar(value=options[0])
-
-dropdown = tk.OptionMenu(root, selected, *options, command=option_selected)
-dropdown.pack(pady=20)
-
-root.mainloop()
+#
+# root = tk.Tk()
+# root.title("Dropdown Example")
+#
+# options = ["Option 1", "Option 2", "Option 3"]
+# selected = tk.StringVar(value=options[0])
+#
+# dropdown = tk.OptionMenu(root, selected, *options, command=option_selected)
+# dropdown.pack(pady=20)
+#
+# root.mainloop()
