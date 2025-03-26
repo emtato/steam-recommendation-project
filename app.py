@@ -47,7 +47,7 @@ def pc_req_page():
     """
     st.title("Choosing your pc requirements")
     option_comp = st.selectbox("What type of computer do you have?", (
-    "PC (ew)", "Mac", "Linux"), index=None, placeholder="-", )
+        "PC (ew)", "Mac", "Linux"), index=None, placeholder="-", )
 
     # st.write("You selected:", option)
     results.append(option_comp)
@@ -63,33 +63,39 @@ def pc_page():
     """"""
     option_OS = st.selectbox("What Windows (ew) OS version do you use?", (
     "Windows 11", "Windows 10", "Windows 7"),  # May have to replace this with a POSSIBLE OS list from data
-        index=None, placeholder="-",
-    option_RAM = st.selectbox("How much RAM does your computer have?", (
-    "8GB", "16GB", "32GB", "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
         index=None, placeholder="-", )
-    option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO INTEGERS ONLY
+    option_RAM = st.selectbox("How much RAM does your computer "
+                              "have?", ("8GB", "16GB", "32GB",
+                                        "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
+                              index=None, placeholder="-", )
+
+
+option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO
+# INTEGERS ONLY
 
 
 def mac_page():
     """"""
     option_OS = st.selectbox("What Mac OS version do you use?", (
         "insert"),  # May have to replace this with a POSSIBLE OS list from data
-        index=None, placeholder="-", )
+                             index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer have?", (
-    "8GB", "16GB", "32GB", "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
-        index=None, placeholder="-", )
-    option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO INTEGERS ONLY
+        "8GB", "16GB", "32GB", "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
+                              index=None, placeholder="-", )
+    option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO  #
+    # INTEGERS ONLY
 
 
 def linux_page():
     """"""
     option_OS = st.selectbox("What Linux OS version do you use?", (
         "isert"),  # May have to replace this with a POSSIBLE OS list from data
-        index=None, placeholder="-", )
+                             index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer have?", (
-    "8GB", "16GB", "32GB", "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
-        index=None, placeholder="-", )
-    option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO INTEGERS ONLY
+        "8GB", "16GB", "32GB", "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
+                              index=None, placeholder="-", )
+    option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO  #
+    # INTEGERS ONLY
 
 
 def game_genre_page():
@@ -106,7 +112,8 @@ def final_page():
     """
     st.write(str(results))
 
-    # this section checks the session_state and loads the next page, this is to prevent the app's cache from maxing and  # restarting the app, making the user lose progress.
+    # this section checks the session_state and loads the next page, this is to prevent the app's cache from maxing
+    # and  # restarting the app, making the user lose progress.
 
 
 if "start" not in st.session_state:
