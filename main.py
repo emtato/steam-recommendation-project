@@ -71,7 +71,6 @@ class _Vertex:
             return False
 
 
-
 class Graph:
     """A graph.
 
@@ -155,20 +154,16 @@ class Graph:
                     print("NOOOO")
                 try:
                     (
-                        id, name, price_overview, description, supported_languages, capsule_image, requirements,
-                        developers,
-                        platforms, categories, genres, dlc) = row
+                    id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
+                    platforms, categories, genres, dlc) = row
                 except(Exception):
-                    raise ValueError(
-                        "shit")  # this shold be fine i think cuz all the rows have , even if no value  # so some  #
-                    # should  # just be an empty string
+                    raise ValueError("shit")  # this shold be fine i think cuz all the rows have , even if no value
+                    # so some  #  # should  # just be an empty string
 
                 if name in dic:
                     print(f"Duplicate game name found: {name}")
                 else:
                     dic[name] = True
-
-
 
 
 def load_graph(data_file: str) -> Graph:
@@ -192,8 +187,8 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
     """ Helper function for load_graph which creates a Game object using a list of game_data
 
     """
-    (id, name, price_overview, description, supported_languages, capsule_image, requirements,
-     developers, platforms, categories, genres, dlc) = game_data
+    (id, name, price_overview, description, supported_languages, capsule_image, requirements, developers, platforms,
+     categories, genres, dlc) = game_data
     id = int(id)
     if price_overview == '':
         price_overview = None
@@ -220,8 +215,8 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
     else:
         genres = ast.literal_eval(genres)
 
-    return Game(id, name, price_overview, description, supported_languages, capsule_image, requirements,
-                developers, platforms, categories, genres, dlc)
+    return Game(id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
+                platforms, categories, genres, dlc)
 
 
 def extract_freq(data_file: str):
@@ -247,3 +242,22 @@ def extract_freq(data_file: str):
 print(extract_freq('data.csv'))
 g = Graph()
 g.build_graph('data.csv', 10)
+
+with open('data.csv', 'r') as file:
+    reader = csv.reader(file)
+    row = next(reader)
+    row = 'useless'
+    row = ':('
+    dic = {}
+
+    for x in reader:
+        x = x[4]
+        list = x.split(',')
+        for i, a in enumerate(list):
+            if '<' in a:
+                list.pop(i)
+                list.extend(a.split('<'))
+        for x in list:
+            dic[x] = dic.get(x, 0) + 1
+
+print(dic)

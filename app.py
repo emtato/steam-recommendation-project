@@ -164,8 +164,7 @@ def game_genre_page():
 
     st.write(' | '.join(st.session_state['chosen_genres']))
 
-    selected = st.selectbox("Choose genres okay",
-                            st.session_state['gen'], index=None, placeholder='I AM GOING CUCKOO')
+    selected = st.selectbox("Choose genres okay", st.session_state['gen'], index=None, placeholder='I AM GOING CUCKOO')
     if st.button("undo select"):
         st.session_state["undo_pressed"] = True
         if len(st.session_state['chosen_genres']) > 0:
@@ -186,12 +185,26 @@ def game_genre_page():
 
 def brokeness_level():
     st.title('bald')
+    selected = st.selectbox("lmk how broke u are", (
+    "free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
+    if st.button("next"):
+        st.session_state[3] = False
+        st.session_state[4] = True
+        st.rerun()
 
+
+def lnaugeg():
+    selected = st.selectbox("language", (), index=None, placeholder='im hungry')
+    if st.button("next"):
+        st.session_state[3] = False
+        st.session_state[4] = True
+        st.rerun()
 
 def final_page():
     """
     A page that shows the results the user chose, aka the options.
     """
+    st.write('zaza')
     st.write(str(results))
 
     # this section checks the session_state and loads the next page, this is to prevent the app's cache from maxing
@@ -209,7 +222,11 @@ elif st.session_state[1]:
 elif st.session_state[2]:
     game_genre_page()
 elif st.session_state[3]:
-    brokeness_level()  # The code below creates tabs! We can use this to show the results later  #   # tab1,
+    brokeness_level()
+elif st.session_state[4]:
+    lnaugeg()
+elif st.session_state[5]:
+    final_page()  # The code below creates tabs! We can use this to show the results later  #   # tab1,
     # tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
 
 # g = Graph()
