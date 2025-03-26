@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 from codecs import ignore_errors
+from importlib.metadata import files
 from typing import Any
 
 # weight of each category for determining matches
@@ -96,20 +97,6 @@ class Graph:
     # to determine the most popular categories and genres in csv to sort by most popular when user is presented with
     # the option to chose genres
 
-    def extract_freq(self, row):
-        dic_categories = {}
-        dic_genres = {}
-        categories = row[9]
-        genres = row[10]
-        print(categories, genres)
-        for x in categories:
-            dic_categories[x] = dic_categories.get(x, 0) + 1
-        for x in genres:
-            dic_genres[x] = dic_genres.get(x, 0) + 1
-        categories_items = sorted(dic_categories.items(), key = lambda x: (-x[1], x[0]))
-        genres_items = sorted(dic_genres.items(), key = lambda x: (-x[1], x[0]))
-
-
     # add weights to graph so can sort by weight -> most similar
 
     def build_graph(self, data_file: str, amount: int) -> Graph:
@@ -129,9 +116,9 @@ class Graph:
                     print(i, row[0])
                     print("NOOOO")
                 try:
-                    (id, name, price_overview, description, supported_languages, capsule_image, requirements,
-                     developers, platforms, categories, genres, dlc) = row
-                    self.extract_freq(row)
+                    (
+                    id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
+                    platforms, categories, genres, dlc) = row
                 except(Exception):
                     raise ValueError(
                         "shit")  # this shold be fine i think cuz all the rows have , even if no value  # so some  #
@@ -141,6 +128,27 @@ class Graph:
                     print(f"Duplicate game name found: {name}")
                 else:
                     dic[name] = True
+
+
+def extract_freq(data_file: str):
+    with open(data_file, 'r') as file:
+        reader = csv.reader(file)
+        row = next(reader)
+        row = 'useless'
+        row = ':('
+        for i, row in enumerate(reader):
+            dic_categories = {}
+            dic_genres = {}
+            categories = row[9]
+            genres = row[10]
+            print(categories, genres)
+            for x in categories:
+                dic_categories[x] = dic_categories.get(x, 0) + 1
+            for x in genres:
+                dic_genres[x] = dic_genres.get(x, 0) + 1
+            categories_items = sorted(dic_categories.items(), key=lambda x: (-x[1], x[0]))
+            genres_items = sorted(dic_genres.items(), key=lambda x: (-x[1], x[0]))
+            return [x[0] for x in categories_items], [x[0] for x in genres_items]
 
 
 g = Graph()

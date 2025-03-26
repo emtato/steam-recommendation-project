@@ -6,12 +6,13 @@
 
 import streamlit as st
 
-
-# from main import Graph
+import main
+from main import Graph
 
 results = []
 
-#states = 1: start, 2: system reqs, 3: categories, 4: genres, 5: cost
+
+# states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost
 
 def start_page():
     """
@@ -73,7 +74,9 @@ def pc_page():
     if option_STORAGE.isdigit():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
-            category_pick()
+            st.session_state['0'] = True
+            st.session_state['start'] = False
+            st.rerun()
 
     elif option_STORAGE != "":
         st.warning('the hell ya think yer doin mate that aint no **int**')
@@ -103,16 +106,24 @@ def linux_page():
         "How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO  #  # INTEGERS ONLY
 
 
+def get_data():
+    main.extract_freq('data.csv')
+
 def category_pick():
     st.title('hi')
-
-
+    st.write('pick gaming stuff')
+    if 'cat' not in st.session_state:
+        st.session_state['cat'] = [] #list of sleected categories ^•ω•^
 def game_genre_page():
     """
     A page that lets the user choose the genres they want.
     MULTIPLE CHOICE TEST
     """
     st.title("")
+
+
+def brokeness_level():
+    st.title('bald')
 
 
 def final_page():
@@ -127,13 +138,17 @@ def final_page():
 
 if "start" not in st.session_state:
     start_page()
-else:
+elif st.session_state['start']:
     pc_req_page()
-
-# The code below creates tabs! We can use this to show the results later
-# tab1, tab2 = st.tabs(["Tab 1", "Tab2"])
-# tab1.write("this is tab 1")
-# tab2.write("this is tab 2")
+elif st.session_state['0']:
+    get_data()
+elif st.session_state['1']:
+    category_pick()
+elif st.session_state['2']:
+    game_genre_page()
+elif st.session_state['3']:
+    brokeness_level()  # The code below creates tabs! We can use this to show the results later  #   # tab1,
+    # tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
 
 
 # g = Graph()
