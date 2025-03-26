@@ -126,32 +126,36 @@ def get_data():
     st.session_state['cat'] = cat
     st.session_state['gen'] = gen
     st.session_state[0], st.session_state[1] = False, True
+    st.session_state['undo_pressed'] = False
     st.rerun()
 
 
 def category_pick():
     st.title('hi')
-    st.write('pick gaming stuff')
-    st.write('currently chosen categories')
+    st.write('pick gaming stuff :DD | currently chosen categories:')
+
     if 'chosen_cat' not in st.session_state:
         st.session_state['chosen_cat'] = []  # list of sleected categories ^•ω•^
-    chosen = st.session_state['chosen_cat']
 
-    s = chosen[st.session_state['line_index']] if len(chosen) > 0 else ''
     st.write(' | '.join(st.session_state['chosen_cat']))
-
 
     selected = st.selectbox("Choose categories okay",
                             st.session_state['cat'], index=None, placeholder='I AM GOING CUCKOO')
-    if selected and selected not in st.session_state['chosen_cat']:
+    if st.button("undo select"):
+        st.session_state["undo_pressed"] = True
+        if len(st.session_state['chosen_cat']) > 0:
+            st.session_state['chosen_cat'].pop()
+            st.rerun()
+    if selected and selected not in st.session_state['chosen_cat'] and not st.session_state['undo_pressed']:
         st.session_state['just_added'] = selected
         st.session_state['chosen_cat'].append(selected)
         st.rerun()
-    if st.button("undo select"):
-        st.session_state['chosen_cat'].pop()
+    st.session_state['undo_pressed'] = False
+
     if st.button("submmit"):
         st.session_state[1] = False
         st.session_state[2] = True
+
 
 def game_genre_page():
     """
