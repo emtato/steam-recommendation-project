@@ -2,6 +2,7 @@
 # Description: This python file contains the UI for the project. Here we are using streamlit. You'll need to download
 # the streamlit library and follow the directions in the guide to utilize this.
 # WARNING: for the app to function, please use streamlit version 1.43.2
+# Or if you'd like use: emtato.streamlit.app in your browser to utilize the app that way.
 # Created by Emilia on 2025-03-25
 
 import streamlit as st
