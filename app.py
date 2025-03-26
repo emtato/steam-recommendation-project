@@ -47,7 +47,7 @@ def pc_req_page():
     """
     st.title("Choosing your pc requirements")
     option_comp = st.selectbox("What type of computer do you have?", (
-    "PC", "Mac", "Linux"), index=None, placeholder="-", )
+    "PC (ew)", "Mac", "Linux"), index=None, placeholder="-", )
 
     # st.write("You selected:", option)
     results.append(option_comp)
