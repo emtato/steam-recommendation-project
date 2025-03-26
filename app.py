@@ -51,7 +51,7 @@ def pc_req_page():
 
     # st.write("You selected:", option)
     results.append(option_comp)
-    if option_comp == "PC":
+    if option_comp == "PC (ew)":
         pc_page()
     elif option_comp == "Mac":
         mac_page()
@@ -61,9 +61,9 @@ def pc_req_page():
 
 def pc_page():
     """"""
-    option_OS = st.selectbox("What Windows OS version do you use?", (
+    option_OS = st.selectbox("What Windows (ew) OS version do you use?", (
     "Windows 11", "Windows 10", "Windows 7"),  # May have to replace this with a POSSIBLE OS list from data
-        index=None, placeholder="-", )
+        index=None, placeholder="-",
     option_RAM = st.selectbox("How much RAM does your computer have?", (
     "8GB", "16GB", "32GB", "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
         index=None, placeholder="-", )
