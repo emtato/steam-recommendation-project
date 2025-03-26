@@ -71,6 +71,7 @@ class _Vertex:
             return False
 
 
+
 class Graph:
     """A graph.
 
@@ -168,11 +169,14 @@ class Graph:
                     dic[name] = True
 
 
+
+
 def load_graph(data_file: str) -> Graph:
-    """
+    """ Loads a new graph with verticies given by a csv data_file
 
     Preconditions
     """
+    graph = Graph()
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
@@ -180,19 +184,12 @@ def load_graph(data_file: str) -> Graph:
             if len(row) != 12:
                 print(i, row[0])
             game = _load_game_object(row)
+            graph.add_vertex(game)
+    return graph
 
-            games[game.id] = game
-    return _build_graph(games, filters, game_id)
-
-
-def _build_graph(games: dict[int, Game], filters: list[Any], game_id: int) -> Graph:
-    """ Helper function for load_graph that builds a graph using a dictionary mapping game ids to games,
-    a list specifying the user's choice of filters, and the game_id of a target game
-    """
-#filters: list[Any], game_id: int
 
 def _load_game_object(game_data: list[str | bool]) -> Game:
-    """
+    """ Helper function for load_graph which creates a Game object using a list of game_data
 
     """
     (id, name, price_overview, description, supported_languages, capsule_image, requirements,
