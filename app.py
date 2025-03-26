@@ -135,7 +135,6 @@ def category_pick():
     st.write('currently chosen categories')
     if 'chosen_cat' not in st.session_state:
         st.session_state['chosen_cat'] = []  # list of sleected categories ^•ω•^
-        st.session_state['just_added'] = ""
     chosen = st.session_state['chosen_cat']
 
     s = chosen[st.session_state['line_index']] if len(chosen) > 0 else ''
@@ -147,9 +146,12 @@ def category_pick():
     if selected and selected not in st.session_state['chosen_cat']:
         st.session_state['just_added'] = selected
         st.session_state['chosen_cat'].append(selected)
-
         st.rerun()
-
+    if st.button("undo select"):
+        st.session_state['chosen_cat'].pop()
+    if st.button("submmit"):
+        st.session_state[1] = False
+        st.session_state[2] = True
 
 def game_genre_page():
     """
