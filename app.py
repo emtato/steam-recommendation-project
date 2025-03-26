@@ -74,7 +74,7 @@ def pc_page():
     if option_STORAGE.isdigit():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
-            st.session_state['0'] = True
+            st.session_state[0] = True
             st.session_state['start'] = False
             st.rerun()
 
@@ -107,13 +107,21 @@ def linux_page():
 
 
 def get_data():
-    main.extract_freq('data.csv')
+    cat, gen = main.extract_freq('data.csv')
+    st.session_state['cat'] = cat
+    st.session_state['gen'] = gen
+    st.session_state[0], st.session_state[1] = False, True
+    st.rerun()
+
 
 def category_pick():
     st.title('hi')
     st.write('pick gaming stuff')
     if 'cat' not in st.session_state:
-        st.session_state['cat'] = [] #list of sleected categories ^•ω•^
+        st.session_state['cat'] = []  # list of sleected categories ^•ω•^
+    selected = st.selectbox("Choose category okay", st.session_state['cat'])
+
+
 def game_genre_page():
     """
     A page that lets the user choose the genres they want.
@@ -140,16 +148,15 @@ if "start" not in st.session_state:
     start_page()
 elif st.session_state['start']:
     pc_req_page()
-elif st.session_state['0']:
+elif st.session_state[0]:
     get_data()
-elif st.session_state['1']:
+elif st.session_state[1]:
     category_pick()
-elif st.session_state['2']:
+elif st.session_state[2]:
     game_genre_page()
-elif st.session_state['3']:
+elif st.session_state[3]:
     brokeness_level()  # The code below creates tabs! We can use this to show the results later  #   # tab1,
     # tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
-
 
 # g = Graph()
 # g.build_graph("data.csv", 1)
