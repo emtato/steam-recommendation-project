@@ -1,4 +1,11 @@
+# Description:
+ # Description: This python file contains the UI for the project. Here we are using streamlit. You'll need to download
+ # the streamlit library and follow the directions in the guide to utilize this.
+ # WARNING: for the app to function, please use streamlit version 1.43.2
+ # Created by Emilia on 2025-03-25
+
 from http.client import responses
+
 
 import streamlit as st
 #from main import Graph
@@ -6,6 +13,12 @@ import streamlit as st
 results = []
 
 def start_page():
+    """
+         This serves as the starting page for the application, it contains basic information of what the app does
+         how the user can use it, and a button that begins the process.
+         """
+    st.title("Steam game recommendation system!")
+    st.markdown(
     """
     Hello user! 👋😎 Are you interested in playing games 🎮🕹️ on Steam but don't really know where to start? 🤔📉 Are you overwhelmed 😵‍💫🌊 by the sheer amount of options 📚💥 on Steam?
 
@@ -18,7 +31,7 @@ def start_page():
 
     Click the button below 🔘👇 to get started 🚀🎉🎯
     """
-
+    )
     if st.button("Start"):
         st.balloons()
         st.session_state["start"] = True
