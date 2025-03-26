@@ -220,7 +220,7 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
 
 
 def extract_freq(data_file: str):
-    with open(data_file, 'r') as file:
+    with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
         row = 'useless'
@@ -243,7 +243,7 @@ print(extract_freq('data.csv'))
 g = Graph()
 g.build_graph('data.csv', 10)
 
-with open('data.csv', 'r') as file:
+with open('data.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
     row = next(reader)
     row = 'useless'
