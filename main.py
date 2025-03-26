@@ -184,7 +184,7 @@ def load_graph(data_file: str, amount: int, filters: list[Any], game_id: int) ->
             if len(row) != 12:
                 print(i, row[0])
             game = _load_game_object(row)
-            games{}
+            #games{}
             graph.add_vertex(game)
 
     return graph
