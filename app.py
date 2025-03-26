@@ -5,9 +5,7 @@
 # Created by Emilia on 2025-03-25
 
 import streamlit as st
-
 import main
-from main import Graph
 
 results = []
 
@@ -147,7 +145,6 @@ def category_pick():
             st.session_state['chosen_cat'].pop()
             st.rerun()
     if selected and selected not in st.session_state['chosen_cat'] and not st.session_state['undo_pressed']:
-        st.session_state['just_added'] = selected
         st.session_state['chosen_cat'].append(selected)
         st.rerun()
     st.session_state['undo_pressed'] = False
@@ -155,13 +152,35 @@ def category_pick():
     if st.button("submmit"):
         st.session_state[1] = False
         st.session_state[2] = True
+        st.rerun()
 
 
 def game_genre_page():
-    """
-    A page that lets the user choose the genres they want.
-    MULTIPLE CHOICE TEST
-    """
+    st.title('hi')
+    st.write('pick gaming stuff :DD | currently chosen game genres:')
+
+    if 'chosen_genres' not in st.session_state:
+        st.session_state['chosen_genres'] = []  # list of sleected categories ^•ω•^
+
+    st.write(' | '.join(st.session_state['chosen_genres']))
+
+    selected = st.selectbox("Choose genres okay",
+                            st.session_state['gen'], index=None, placeholder='I AM GOING CUCKOO')
+    if st.button("undo select"):
+        st.session_state["undo_pressed"] = True
+        if len(st.session_state['chosen_genres']) > 0:
+            st.session_state['chosen_genres'].pop()
+            st.rerun()
+    if selected and selected not in st.session_state['chosen_genres'] and not st.session_state['undo_pressed']:
+        st.session_state['chosen_genres'].append(selected)
+        st.rerun()
+    st.session_state['undo_pressed'] = False
+
+    if st.button("submmit"):
+        st.session_state[2] = False
+        st.session_state[3] = True
+        st.rerun()
+
     st.title("")
 
 
