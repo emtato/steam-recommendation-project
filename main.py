@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import ast
 import csv
-from codecs import ignore_errors
-from importlib.metadata import files
+
 from typing import Any
 
 # weight of each category for determining matches
