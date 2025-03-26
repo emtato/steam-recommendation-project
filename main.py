@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import ast
 import csv
-from codecs import ignore_errors
-from importlib.metadata import files
 from typing import Any, Union
 
 from attr import dataclass
@@ -184,12 +182,44 @@ def load_graph(data_file: str, amount: int) -> Graph:
                 break
             if len(row) != 12:
                 print(i, row[0])
-            (id, name, price_overview, description, supported_languages, capsule_image, requirements,
-             developers, platforms, categories, genres, dlc) = row
-            id = int()
-            Game(id, name, price_overview, description, supported_languages, capsule_image, requirements,
-                 developers, platforms, categories, genres, dlc)
+
+            game = _load_game_object(row)
+
     return graph
+
+
+def _load_game_object(game_data: list[str]) -> Game:
+    """
+
+    """
+    (id, name, price_overview, description, supported_languages, capsule_image, requirements,
+     developers, platforms, categories, genres, dlc) = game_data
+    id = int(id)
+    if price_overview == '':
+        price_overview = None
+    else:
+        price_overview = ast.literal_eval(price_overview)
+    if requirements == '':
+        requirements = None
+    else:
+        requirements = ast.literal_eval(requirements)
+    if developers == '':
+        developers = None
+    else:
+        developers = ast.literal_eval(developers)
+    if platforms == '':
+        platforms = None
+    else:
+        platforms = ast.literal_eval(platforms)
+    if categories == '':
+        categories = None
+    else:
+        categories = ast.literal_eval(categories)
+    if genres == '':
+        genres = None
+    else:
+        genres = ast.literal_eval(genres)
+
 
 
 def extract_freq(data_file: str):
