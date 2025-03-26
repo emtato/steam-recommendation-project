@@ -131,6 +131,7 @@ class Graph:
 
 
 def extract_freq(data_file: str):
+
     with open(data_file, 'r') as file:
         reader = csv.reader(file)
         row = next(reader)
