@@ -197,9 +197,10 @@ def brokeness_level():
 def lnaugeg():
     selected = st.selectbox("language", (), index=None, placeholder='im hungry')
     if st.button("next"):
-        st.session_state[3] = False
-        st.session_state[4] = True
+        st.session_state[4] = False
+        st.session_state[5] = True
         st.rerun()
+
 
 def final_page():
     """
