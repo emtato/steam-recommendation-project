@@ -2,7 +2,6 @@
 # Created by Emilia on 2025-02-27
 from typing import Any
 
-
 class Game:
     '''yap herre'''
     id: int

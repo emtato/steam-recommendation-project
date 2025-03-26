@@ -6,11 +6,30 @@ import ast
 import csv
 from codecs import ignore_errors
 from importlib.metadata import files
-from typing import Any
+from typing import Any, Union
+
+from attr import dataclass
 
 # weight of each category for determining matches
 # we can create a simple ranking system where the user ranks whats most important to them for personalization
 genre, languages, platforms = 0, 0, 0
+
+
+@dataclass
+class Game:
+    '''yap herre'''
+    id: int
+    name: str
+    price: dict[str:Any]
+    description: str
+    languages: str
+    image: str
+    requirements: dict[str: str]
+    developers: list[str]
+    platforms: dict[str: bool]
+    categories: list[str]
+    genres: list[str]
+    dlc: bool
 
 
 class _Vertex:
@@ -24,8 +43,9 @@ class _Vertex:
         - self not in self.neighbours
         - all(self in u.neighbours for u in self.neighbours)
     """
+
     item: Any
-    neighbours: set[_Vertex]
+    neighbours: dict[_Vertex, Union[int, float]]
 
     def __init__(self, item: Any, neighbours: set[_Vertex]) -> None:
         """Initialize a new vertex with the given item and neighbours."""
@@ -78,8 +98,9 @@ class Graph:
         if item not in self._vertices:
             self._vertices[item] = _Vertex(item, set())
 
-    def add_edge(self, item1: Any, item2: Any) -> None:
-        """Add an edge between the two vertices with the given items in this graph.
+    def add_edge(self, item1: Any, item2: Any, weight: Union[int, float]) -> None:
+        """Add an edge between the two vertices with the given items in this graph,
+        with the given weight.
 
         Raise a ValueError if item1 or item2 do not appear as vertices in this graph.
 
@@ -90,15 +111,30 @@ class Graph:
             v1 = self._vertices[item1]
             v2 = self._vertices[item2]
 
-            v1.neighbours.add(v2)
-            v2.neighbours.add(v1)
+            # Add the new edge
+            v1.neighbours[v2] = weight
+            v2.neighbours[v1] = weight
         else:
+            # We didn't find an existing vertex for both items.
             raise ValueError
 
-    # to determine the most popular categories and genres in csv to sort by most popular when user is presented with
-    # the option to chose genres
+    def get_weight(self, item1: Any, item2: Any) -> Union[int, float]:
+        """Return the weight of the edge between the given items.
 
-    # add weights to graph so can sort by weight -> most similar
+        Return 0 if item1 and item2 are not adjacent.
+
+        Preconditions:
+            - item1 and item2 are vertices in this graph
+        """
+        v1 = self._vertices[item1]
+        v2 = self._vertices[item2]
+        return v1.neighbours.get(v2, 0)
+
+    def get_vertex(self, item: Any):
+        """
+        Returns the vertex given a corresponding item.
+        """
+        return self._vertices[item]
 
     def build_graph(self, data_file: str, amount: int) -> Graph:
         # Here we are using the 'encoding=' to make sure everyone's computer will be able to use the csv file
@@ -118,8 +154,9 @@ class Graph:
                     print("NOOOO")
                 try:
                     (
-                    id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
-                    platforms, categories, genres, dlc) = row
+                        id, name, price_overview, description, supported_languages, capsule_image, requirements,
+                        developers,
+                        platforms, categories, genres, dlc) = row
                 except(Exception):
                     raise ValueError(
                         "shit")  # this shold be fine i think cuz all the rows have , even if no value  # so some  #
@@ -129,6 +166,28 @@ class Graph:
                     print(f"Duplicate game name found: {name}")
                 else:
                     dic[name] = True
+
+
+def load_graph(data_file: str, amount: int) -> Graph:
+    """
+
+    Preconditions
+    """
+    graph = Graph()
+    with open(data_file, 'r', encoding='utf8') as file:
+        reader = csv.reader(file)
+        row = next(reader)
+        for i, row in enumerate(reader):
+            if i >= amount - 1:
+                break
+            if len(row) != 12:
+                print(i, row[0])
+            (id, name, price_overview, description, supported_languages, capsule_image, requirements,
+             developers, platforms, categories, genres, dlc) = row
+            id = int()
+            Game(id, name, price_overview, description, supported_languages, capsule_image, requirements,
+                 developers, platforms, categories, genres, dlc)
+    return graph
 
 
 def extract_freq(data_file: str):
