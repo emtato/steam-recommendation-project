@@ -10,6 +10,8 @@ from typing import Any, Union
 
 from attr import dataclass
 
+from typing import Any
+
 # weight of each category for determining matches
 # we can create a simple ranking system where the user ranks whats most important to them for personalization
 genre, languages, platforms = 0, 0, 0
