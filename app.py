@@ -70,8 +70,8 @@ def pc_page():
                               index=None, placeholder="-", )
 
 
-option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO
-# INTEGERS ONLY
+    option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO
+    # INTEGERS ONLY
 
 
 def mac_page():
