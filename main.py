@@ -168,27 +168,28 @@ class Graph:
                     dic[name] = True
 
 
-def load_graph(data_file: str, amount: int, filters: list[Any], game_id: int) -> Graph:
+def load_graph(data_file: str) -> Graph:
     """
 
     Preconditions
     """
-    graph = Graph()
-    games = {}
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
-        for i, row in enumerate(reader):
-            if i >= amount - 1:
-                break
+        for row in reader:
             if len(row) != 12:
                 print(i, row[0])
             game = _load_game_object(row)
-            games{}
-            graph.add_vertex(game)
 
-    return graph
+            games[game.id] = game
+    return _build_graph(games, filters, game_id)
 
+
+def _build_graph(games: dict[int, Game], filters: list[Any], game_id: int) -> Graph:
+    """ Helper function for load_graph that builds a graph using a dictionary mapping game ids to games,
+    a list specifying the user's choice of filters, and the game_id of a target game
+    """
+#filters: list[Any], game_id: int
 
 def _load_game_object(game_data: list[str | bool]) -> Game:
     """
