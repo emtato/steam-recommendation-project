@@ -168,12 +168,13 @@ class Graph:
                     dic[name] = True
 
 
-def load_graph(data_file: str, amount: int) -> Graph:
+def load_graph(data_file: str, amount: int, filters: list[Any], game_id: int) -> Graph:
     """
 
     Preconditions
     """
     graph = Graph()
+    games = {}
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
@@ -182,13 +183,14 @@ def load_graph(data_file: str, amount: int) -> Graph:
                 break
             if len(row) != 12:
                 print(i, row[0])
-
             game = _load_game_object(row)
+            games{}
+            graph.add_vertex(game)
 
     return graph
 
 
-def _load_game_object(game_data: list[str]) -> Game:
+def _load_game_object(game_data: list[str | bool]) -> Game:
     """
 
     """
@@ -220,6 +222,8 @@ def _load_game_object(game_data: list[str]) -> Game:
     else:
         genres = ast.literal_eval(genres)
 
+    return Game(id, name, price_overview, description, supported_languages, capsule_image, requirements,
+                developers, platforms, categories, genres, dlc)
 
 
 def extract_freq(data_file: str):
