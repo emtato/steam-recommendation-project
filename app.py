@@ -1,7 +1,3 @@
-# Description: This python file contains the UI for the project. Here we are using streamlit. You'll need to download
-# the streamlit library and follow the directions in the guide to utilize this.
-# WARNING: for the app to function, please use streamlit version 1.43.2
-# Created by Emilia on 2025-03-25
 from http.client import responses
 
 import streamlit as st
@@ -11,26 +7,17 @@ results = []
 
 def start_page():
     """
-    This serves as the starting page for the application, it contains basic information of what the app does
-    how the user can use it, and a button that begins the process.
-    """
-    st.title("Steam game recommendation system!")
+    Hello user! 👋😎 Are you interested in playing games 🎮🕹️ on Steam but don't really know where to start? 🤔📉 Are you overwhelmed 😵‍💫🌊 by the sheer amount of options 📚💥 on Steam?
 
-    st.markdown(
-        """ 
-        Hello user! Are you interested in playing games on Steam but don't really know where to start? Are you 
-        overwhelmed by the sheer amount of options on Steam?
-        
-        Well, boy do I have news for you! 
-    
-        This is the :rainbow[Steam Game Recommendation System]! 
-        Here we'll recommend games that YOU can play/buy on Steam based on YOUR OWN necessities! Cool right?
-        
-        (insert some for stuff here / desc)
-    
-        Click the button below to get started.
-        """
-    )
+    Well, boy do I have news 📢👀 for you! 🚨🧠
+
+    This is the :rainbow[Steam Game Recommendation System] 🌈✨🎮🧃🧠!!
+    Here we'll recommend games 🎲🔥 that YOU 🫵💯 can play/buy 💸🧾 on Steam based on YOUR OWN necessities 🧍‍♀️💅📋! Cool right? 😎😜
+
+    (insert some for stuff here / desc 📝💭🛠️)
+
+    Click the button below 🔘👇 to get started 🚀🎉🎯
+    """
 
     if st.button("Start"):
         st.balloons()
