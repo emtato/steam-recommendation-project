@@ -454,16 +454,39 @@ def filtering_games(data_file: str, requirements: {}) -> list:
         if g.price['final'] <= requirements["PRICE"]:
             total_sim += 1
 
+        # comparing OS specifics:
+
         # UNFINISHED FOR PC/MAC/LINUX REQUIREMENTS LIKE GB AND STUFF
         # if requirements[""]
 
-        # NEED TO ADD FOR PRICE
         # NEED TO ADD FOR OS TYPE
 
         if total_sim == max_sim:
             similiar.append(g)
 
     return similiar
+
+
+def minimum_requirements(g: Game, key: str) -> tuple:
+    """
+    Returns 3 lists composing of the games' minimum requirements
+    - List 1: OS
+    - List 2: RAM (memory)
+    - List 3: Storage (in GB)
+    """
+    os_list, ram_list, storage_list = [], [], []
+
+    # for key in g.requirements.keys()
+
+gamesNogames = list_games('data.csv')
+for g in gamesNogames:
+    for k in g.requirements.keys():
+        g_storage = g.requirements[k].split('Storage:')
+        if (g_storage[0] != '') and len(g_storage) == 2:
+            a = g_storage[1].split('available space')[0]
+            print(k)
+            #a = [int(s) for s in g_storage[1].split() if s.isdigit()]
+            print(a)
 
 
 """
@@ -475,14 +498,6 @@ for l in lst:
 
 print(len(lst))
 """
-
-# with open('data.csv', 'r', encoding='utf8') as file:
-#     reader = csv.reader(file)
-#     row = next(reader)
-#     row = ''
-#     row = ''
-#     for i, row in enumerate(reader):
-#         if FUCK in row[i]
 
 
 if __name__ == "__main__":
