@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import ast
 import csv
-from random import randint, random
-from typing import Any, Optional, Union
-from unittest import removeResult
+import networkx as nx
+
+from random import randint
+from typing import Optional, Union
 
 from attr import dataclass
 
@@ -119,7 +120,7 @@ class _Vertex:
         one_true_platforms = 0
         for plat in this_game.platforms:
             both_true_platforms += int(this_game.platforms[plat] and other_game.platforms[plat])
-            both_true_platforms += int(this_game.platforms[plat] or other_game.platforms[plat])
+            one_true_platforms += int(this_game.platforms[plat] or other_game.platforms[plat])
         if one_true_platforms == 0:
             plat_sim = 0
         else:
@@ -282,6 +283,30 @@ class Graph:
                 return
         game_list.append(new_vertex.item_id)
         return
+
+    def to_networkx(self, max_vertices: int = 5000) -> nx.Graph:
+        """Convert this graph into a networkx Graph.
+
+        max_vertices specifies the maximum number of vertices that can appear in the graph.
+        (This is necessary to limit the visualization output for large graphs.)
+
+        Note that this method is provided for you, and you shouldn't change it.
+        """
+        graph_nx = nx.Graph()
+        for v in self._vertices.values():
+            graph_nx.add_node(v.item.name)
+
+            for u in v.neighbours:
+                if graph_nx.number_of_nodes() < max_vertices:
+                    graph_nx.add_node(u.item.name)
+
+                if u.item.name in graph_nx.nodes:
+                    graph_nx.add_edge(v.item.name, u.item.name)
+
+            if graph_nx.number_of_nodes() >= max_vertices:
+                break
+
+        return graph_nx
 
 def list_games(data_file: str) -> list:
     """
@@ -489,6 +514,7 @@ def filtering_games(data_file: str, requirements: {}) -> list:
 
     return similiar
 
+"""
 res = {"OS": 'windows', "LANGUAGES": ['English'], "GENRE": ['Action'], "CATEGORY": ['Single-player']}
 lst = filtering_games('data.csv', res)
 
@@ -496,6 +522,7 @@ for l in lst:
     print(">>>>>>>>>>>>>" + str(l))
 
 print(len(lst))
+"""
 
 # with open('data.csv', 'r', encoding='utf8') as file:
 #     reader = csv.reader(file)
@@ -509,7 +536,11 @@ print(len(lst))
 if __name__ == "__main__":
     graph = load_graph('data.csv')
     graph.build_edges([100, 100, 100, 100, 100, 100])
-    graph.testing_thing_hi()
-    print(graph.get_score(1291240, 1291170, [100, 100, 100, 100, 100, 100]))
-    print(graph.get_weight(1291240, 1291170))
+    #graph.testing_thing_hi()
+    print(graph.get_score(7, 1291170, [100, 100, 100, 100, 100, 100]))
+    #print(graph.get_weight(7, 1291170))
     print(graph.recommend_games(1291170, 10))
+    print(graph._vertices[1291170].item.name)
+
+    from graph_visualization import visualize_weighted_graph
+    visualize_weighted_graph(graph)
