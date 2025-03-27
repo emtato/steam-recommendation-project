@@ -49,11 +49,11 @@ class _Vertex:
     item: Game
     neighbours: dict[_Vertex, Union[int, float]]
 
-    def __init__(self, item: Game, neighbours: set[_Vertex]) -> None:
+    def __init__(self, item: Game) -> None:
         """Initialize a new vertex with the given item and neighbours."""
         self.item_id = item.id
         self.item = item
-        self.neighbours = neighbours
+        self.neighbours = {}
 
     def check_connected(self, target_item_id: int, visited: set[_Vertex]) -> bool:
         """Return whether this vertex is connected to a vertex corresponding to the target_item_id,
@@ -71,6 +71,29 @@ class _Vertex:
                     if u.check_connected(target_item_id, visited):
                         return True
             return False
+
+    def clear_neighbours(self) -> None:
+        """ Remove all neighbours of this vertex and remove this vertex from the list of neighbours of each neighbour
+        """
+        for neighbour in self.neighbours:
+            neighbour.neighbours.pop(self)
+        self.neighbours = {}
+
+    def clear_all_edges(self) -> None:
+        """ Remove all neighbours of this vertex and remove this vertex from the list of neighbours of each neighbour,
+        then clear all neighbours of each neighbour etc?
+        """
+        for neighbour in self.neighbours:
+            neighbour.neighbours.pop(self)
+            self.neighbours.pop(neighbour)
+            neighbour.clear_neighbours()
+
+    def calculate_score(self, other: _Vertex, preferences) -> float:
+        """ Calculate the score between this vertex and another vertex based on a dictionary? of weighted preferences.
+
+        """
+        # TODO: implement this
+        return 69
 
 
 class Graph:
@@ -98,9 +121,9 @@ class Graph:
             - item not in self._vertices
         """
         if item.id not in self._vertices:
-            self._vertices[item.id] = _Vertex(item, set())
+            self._vertices[item.id] = _Vertex(item)
 
-    def add_edge(self, item_id1: Any, item_id2: Any, weight: Union[int, float]) -> None:
+    def add_edge(self, item_id1: int, item_id2: int, weight: Union[int, float]) -> None:
         """Add an edge between the two vertices with the given item_ids in this graph,
         with the given weight.
 
@@ -120,7 +143,7 @@ class Graph:
             # We didn't find an existing vertex for both items.
             raise ValueError
 
-    def get_weight(self, item_id1: Any, item_id2: Any) -> Union[int, float]:
+    def get_weight(self, item_id1: int, item_id2: int) -> Union[int, float]:
         """Return the weight of the edge between the given item_ids.
 
         Return 0 if item_id1 and item_id2 are not adjacent.
@@ -132,7 +155,7 @@ class Graph:
         v2 = self._vertices[item_id2]
         return v1.neighbours.get(v2, 0)
 
-    def get_vertex(self, item_id: Any):
+    def get_vertex(self, item_id: Any) -> _Vertex:
         """
         Returns the vertex given a corresponding item_id.
         """
@@ -170,6 +193,9 @@ class Graph:
                     dic[name] = True
 
     def testing_thing_hi(self):
+        """
+        just testing stuff out
+        """
         for game_id in self._vertices:
             g = self._vertices[game_id].item
             print(g.id)
@@ -185,6 +211,76 @@ class Graph:
             print(g.genres)
             print(g.dlc)
             break
+
+    def clear_edges(self) -> None:
+        """ Clear/remove all edges in this graph
+        """
+        for game_id in self._vertices:
+            self._vertices[game_id].clear_neighbours()
+
+    def clear_edges_alt(self, target_id) -> None:
+        """ Starting from a target vertex with the target_id, clear all the edges of every vertex connected to this
+        target vertex. (this might be more efficient if we make the graph using only one starting game and keep
+        track of the id of that game)
+        """
+        self._vertices[target_id].clear_all_edges()
+
+    def build_edges(self, filters, preferences, target_id: int) -> None:
+        """ Given a dictionary? or something of filters and preferences, add edges in the graph.
+        filters are mandatory (like os and stuff), which preferences are not (maybe weighted based on importance).
+        Create edges between the vertex with target_id and all other vertexes that satisfy the filters, and add weights
+        to each edge calculated using preferences and maybe other factors?
+
+        we should also build edges between other vertexes that arent the target one but idk how that would work
+        """
+        for vertex_id in self._vertices:
+            # if satisfy_filters(target_id, vertex_id):
+            if vertex_id != target_id:
+                score = self.get_score(target_id, vertex_id, preferences)
+                self.add_edge(target_id, vertex_id, score)
+
+    def get_score(self, item_id1: int, item_id2: int, preferences) -> float:
+        """Return the score between the two given games in this graph given their ids.
+
+        Preferences is a collection of weighted preferences of the user used to calculate the score
+
+        Raise a ValueError if item_id1 or item_id2 do not appear as vertices in this graph.
+
+        Preconditions:
+            -
+        """
+        if item_id1 not in self._vertices or item_id2 not in self._vertices:
+            raise ValueError
+        else:
+            return self._vertices[item_id1].calculate_score(self._vertices[item_id2], preferences)
+
+    def recommend_games(self, target_id: int, limit: int) -> list[str]:
+        """ call this to return a list of game ids or names or something, closest to game with target_id, with
+        limited number of recommendations
+        """
+        games = []
+        vertex = self._vertices[target_id]
+        visited = {vertex}
+        for game_vertex in vertex.neighbours:
+            self._add_recommendation_in_order(vertex, game_vertex, games)
+        return games[0:limit]
+
+    def _add_recommendation_in_order(self, target_vertex: _Vertex, new_vertex: _Vertex, game_list: list[int]) -> None:
+        """
+        Helper function for recommend_games that adds a new_game to a list of game ids (game_list) in
+        descending order of similarity score with target_book, and in alphabetical order of game name in the case of
+        equal similarity scores.
+        """
+        for i in range(len(game_list)):
+            game_id = game_list[i]
+            sim_score = self.get_weight(target_vertex.item_id, game_id)
+            new_sim_score = self.get_weight(target_vertex.item_id, new_vertex.item_id)
+            if sim_score < new_sim_score or (sim_score == new_sim_score and self._vertices[game_id].item.name <
+                                             new_vertex.item.name):
+                game_list.insert(i, new_vertex.item_id)
+                return
+        game_list.append(new_vertex.item_id)
+        return
 
 
 def load_graph(data_file: str) -> Graph:
@@ -224,6 +320,7 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
     """
     (id, name, price_overview, description, supported_languages, capsule_image, requirements, developers, platforms,
      categories, genres, dlc) = game_data
+    id = int(id)
     name = name[1:-1]
     price_overview = _get_object_from_string(price_overview, 'unknown')
     supported_languages = _get_object_from_string(supported_languages)
@@ -304,4 +401,7 @@ with open('data.csv', 'r', encoding='utf8') as file:
 
 if __name__ == "__main__":
     graph = load_graph('data.csv')
+    graph.build_edges(1, 1, 1291240)
     graph.testing_thing_hi()
+    print(graph.get_score(1291240, 1291170, 1))
+    print(graph.get_weight(1291240, 1291170))
