@@ -119,9 +119,9 @@ def window_page():
             st.session_state[0] = True
             st.session_state['start'] = 2
 
-            st.session_state["results"].append(option_OS)
-            st.session_state["results"].append(option_RAM)
-            st.session_state["results"].append(option_STORAGE)
+            st.session_state["results"].append("OS: " + str(option_OS))
+            st.session_state["results"].append("RAM: " + str(option_RAM))
+            st.session_state["results"].append("STORAGE (GB): " + str(option_STORAGE))
 
             st.rerun()
 
@@ -145,9 +145,9 @@ def mac_page():
             st.session_state[0] = True
             st.session_state['start'] = 2
 
-            st.session_state["results"].append(option_OS)
-            st.session_state["results"].append(option_RAM)
-            st.session_state["results"].append(option_STORAGE)
+            st.session_state["results"].append("OS: " + str(option_OS))
+            st.session_state["results"].append("RAM: " + str(option_RAM))
+            st.session_state["results"].append("STORAGE (GB): " + str(option_STORAGE))
 
             st.rerun()
     elif option_STORAGE != "":
@@ -169,9 +169,9 @@ def linux_page():
             st.session_state[0] = True
             st.session_state['start'] = 2
 
-            st.session_state["results"].append(option_OS)
-            st.session_state["results"].append(option_RAM)
-            st.session_state["results"].append(option_STORAGE)
+            st.session_state["results"].append("OS: " + str(option_OS))
+            st.session_state["results"].append("RAM: " + str(option_RAM))
+            st.session_state["results"].append("STORAGE (GB): " + str(option_STORAGE))
 
             st.rerun()
     elif option_STORAGE != "":
