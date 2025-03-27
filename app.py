@@ -59,8 +59,8 @@ def pc_req_page():
         mac_page()
     elif option_comp == "Linux":
         linux_page()  # st.write("You chose: " + results.pop())  # game_genre_page()
-        st.write()
-        st.write()
+    st.write(' ')
+    st.write(' ')
     if st.button('back', key="back from page 1"):
         st.session_state['start'] = 0
         st.rerun()
@@ -182,8 +182,8 @@ def category_pick():
 
         st.rerun()
 
-    st.write()
-    st.write()
+    st.write(' ')
+    st.write(' ')
     if st.button('back', key='back from page 3'):
         st.session_state['start'] = True
         st.session_state[1] = False
@@ -217,8 +217,8 @@ def game_genre_page():
         st.session_state["results"].append("GENRES: " + str(st.session_state['chosen_genres']))
 
         st.rerun()
-    st.write()
-    st.write()
+    st.write(' ')
+    st.write(' ')
     if st.button('back', key='back from page 4'):
         st.session_state[1] = True
         st.session_state[2] = False
@@ -238,8 +238,8 @@ def brokeness_level():
         st.session_state["results"].append(selected)
         st.rerun()
 
-    st.write()
-    st.write()
+    st.write(' ')
+    st.write(' ')
     if st.button('back', key='back from page 5'):
         st.session_state[2] = True
         st.session_state[3] = False
@@ -269,8 +269,8 @@ def lnaugeg():
 
         st.session_state["results"].append("LANGUAGES: " + str(st.session_state['chosen_lang']))
         st.rerun()
-    st.write()
-    st.write()
+    st.write(' ')
+    st.write(' ')
     if st.button('back', key='back from page 6'):
         st.session_state[3] = True
         st.session_state[4] = False
@@ -297,8 +297,8 @@ def final_page():
             css = f"<style>{fe.read()}</style>"
             st.markdown(css, unsafe_allow_html=True)
         st.markdown(final_html, unsafe_allow_html=True)
-    st.write()
-    st.write()
+    st.write(' ')
+    st.write(' ')
     if st.button('back', key='back from page 4'):
         st.session_state[4] = True
         st.session_state[5] = False
@@ -306,10 +306,29 @@ def final_page():
 
 
 def RANDOM_SELECT():
-    games = random_selection()
+    gamers = random_selection()
     st.session_state[69] = False
-    st.session_state[
-        5] = True  # this section checks the session_state and loads the next page, this is to prevent the app's   #
+
+    with open('scrolly.html', 'r') as f:
+        hrml = f.read()
+
+        games = [f"Game {i}" for i in range(30)]  # placeholder
+
+        games = [f'{game}<br>' for game in games]  # add image display later
+        htmlformatted = ''.join(games)
+        final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
+        with open('scrolly.css') as fe:
+            css = f"<style>{fe.read()}</style>"
+            st.markdown(css, unsafe_allow_html=True)
+        st.markdown(final_html, unsafe_allow_html=True)
+    st.write(' ')
+    st.write(' ')
+    if st.button('back', key='back from page 4'):
+        st.session_state[4] = True
+        st.session_state[5] = False
+        st.rerun()
+
+    # this section checks the session_state and loads the next page, this is to prevent the app's   #
     # cache from maxing  # and  # restarting the app, making the user lose progress.
 
 
