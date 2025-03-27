@@ -279,18 +279,17 @@ def random_selection():
         row = 'useless'
         row = ':('
 
-        l = [[row[0], row[1], row[2], row[3], row[10]] for row in reader]
+        l = [[row[0], row[1], row[2], row[3], row[5], ast.literal_eval(row[10])] for row in reader]
         for i,row in enumerate(l):
             try:
-                dictified = ast.literal_eval(row[2])
+                dictified = ast.literal_eval(row[2])['final']
                 l[i][2] = dictified
             except:
                 l[i][2] = 'unknown'
-    while len(gamers) < 1:
+    while len(gamers) < 25:
         num = randint(2, 2069)
         gamers.append(l[num-2])
     return gamers
-
 
 
 """
