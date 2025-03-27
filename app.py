@@ -295,24 +295,30 @@ def game_genre_page():
 
 
 def brokeness_level():
-    st.title('bald')
-    selected = st.selectbox("how broke are u be fr", (
-        "free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
+    """
+    This sections asks the user for a MAXIMUM (inclusive) price in USD
+    """
+    st.title('Price? (please write your MAX (inclusive) price in USD)')
+    #selected = st.selectbox("how broke are u be fr", (
+        #"free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
+    selected = st.text_input("How much are you willing to pay? (input 0 for Free)")
 
-    if st.button("next"):
-        st.session_state[3] = False
-        st.session_state[4] = True
+    if selected.isdigit() or selected == '':
+        if st.button("next"):
+            st.session_state[3] = False
+            st.session_state[4] = True
 
-        # Will have to change eventually
-        st.session_state["results"]["PRICE"] = str(selected)
-        st.rerun()
+            st.session_state["results"]["PRICE"] = selected
+            st.rerun()
 
-    st.write(' ')
-    st.write(' ')
-    if st.button('back', key='back from page 5'):
-        st.session_state[2] = True
-        st.session_state[3] = False
-        st.rerun()
+        st.write(' ')
+        st.write(' ')
+        if st.button('back', key='back from page 5'):
+            st.session_state[2] = True
+            st.session_state[3] = False
+            st.rerun()
+    else:
+        st.warning("Price must be an INTEGER! :)")
 
 
 def lnaugeg():

@@ -450,6 +450,10 @@ def filtering_games(data_file: str, requirements: {}) -> list:
         if has_cat:
             total_sim += 1
 
+        # compares prices
+        if g.price['final'] <= requirements["PRICE"]:
+            total_sim += 1
+
         # UNFINISHED FOR PC/MAC/LINUX REQUIREMENTS LIKE GB AND STUFF
         # if requirements[""]
 
