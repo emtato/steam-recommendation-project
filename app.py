@@ -385,21 +385,30 @@ def final_page():
         col1, col2, col3 = st.columns([1, 1, 1])  # can add more columns
         # weights: price, language, dev, platform, category, genre
         with col1:
-            price = int(st.text_input('price', key='price'))
-            platform =  int(st.text_input('platform', key='platform'))
+            price = st.text_input('price', key='price', placeholder="0")
+            price = int(price) if price.isdigit() else 0
+            platform = st.text_input('platform', key='platform', placeholder="0")
+            platform = int(platform) if platform.isdigit() else 0
         with col2:
-            languages =  int(st.text_input('language', key='language'))
-            category =  int(st.text_input('category', key='category'))
-
+            languages = st.text_input('language', key='language', placeholder="0")
+            languages = int(languages) if languages.isdigit() else 0
+            category = st.text_input('category', key='category', placeholder="0")
+            category = int(category) if category.isdigit() else 0
         with col3:
-            dev =  int(st.text_input('dev', key='dev'))
-            genre =  int(st.text_input('genre', key='genre'))
+            dev = st.text_input('dev', key='dev', placeholder="0")
+            dev = int(dev) if dev.isdigit() else 0
+            genre = st.text_input('genre', key='genre', placeholder="0")
+            genre = int(genre) if genre.isdigit() else 0
+
         if st.button("make  grpah !!"):
             # call make graph function
             graph.clear_edges()
             st.write({type(price)}, price)
             graph.build_edges([price, languages, dev, platform, category, genre])
-            suggestions = graph.recommend_games(1291170, 30)
+            suggestions = graph.recommend_games(3075690, 30)
+
+            suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
+                            s.description, s.image, s.genres] for s in suggestions]
     with coll2:
         st.write('recommended games according to weights. click on image for link')
         if suggestions != []:
@@ -457,9 +466,11 @@ def format_game(game):
     paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
 
-    return (f"<a href=\"https://google.com/search?q={name}\"><img src={image}></a><div style='font-family: monospace; "
-            f"white-space: nowrap; font-size: 13px;'>{name}</a>"
-            f"{paddingname}{price}{paddingprice}{genre}<div>")
+    return (
+        f"<a href=\"https://google.com/search?q={name} {game[0]}\"><img src={image}></a><div style='font-family: "
+        f"monospace; "
+        f"white-space: nowrap; font-size: 13px;'>{name}</a>"
+        f"{paddingname}{price}{paddingprice}{genre}<div>")
 
 
 def RANDOM_SELECT():
