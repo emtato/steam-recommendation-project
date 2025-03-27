@@ -17,7 +17,7 @@ def start_page():
     """
          This serves as the starting page for the application, it contains basic information of what the app does
          how the user can use it, and a button that begins the process.
-         """
+    """
     st.title("Steam game recommendation system!")
 
     st.markdown("""
@@ -58,6 +58,7 @@ def start_page():
 
 
 def password():
+    """test function to skip setup and reach the end"""
     password = st.text_input("password please")
     if password and 'e>a' in password:
         st.session_state['start'] = 2
@@ -74,6 +75,7 @@ def password():
 
 
 def prestart():
+    """informs user about wide mode"""
     with col1:
         if st.button('no'):
             for i in range(0, 30):
@@ -368,14 +370,25 @@ def first_pick():
         st.rerun()
 
 
-
 def final_page():
     # function i can use later to split by the middle right side is the box left side filters!!
-
-    col1, col2 = st.columns([1, 3]) #can add more columns
-    with col1:
-        st.write('4SFSDNFKJSD FKJSFJKSNFKJSFKJSNFJKNAKJF')
-    with col2:
+    st.title('additional recommendations :3')
+    st.write(" ")
+    coll1, coll2 = st.columns([1, 2])
+    with coll1:
+        st.markdown("Assign weights to what you think is most important when comparing game similarities. "
+                    "Assign a weight of <strong>100</strong> if you think the condition is critically important when "
+                    "sorting, and <strong>0</strong> if its not important at all.", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([1, 1, 1])  # can add more columns
+        # weights: price, language, dev, platform, category, genre
+        with col1:
+            st.text_input('i')
+        with col2:
+            st.write('4SFSDNFKJSD FKJSFJKSNFKJSFKJSNFJKNAKJF')
+        with col3:
+            st.write('4SFSDNFKJSD FKJSFJKSNFKJSFKJSNFJKNAKJF')
+    with coll2:
+        st.write('recommended games according to weights. click on image for link')
         gamers = random_selection()
         with open('scrolly.html', 'r') as f:
             hrml = f.read()
@@ -389,10 +402,10 @@ def final_page():
             st.markdown(final_html, unsafe_allow_html=True)
         st.write(' ')
         st.write(' ')
-        if st.button('back', key='back from final page'):
-            st.session_state[5] = True
-            st.session_state[6] = False
-            st.rerun()
+    if st.button('back', key='back from final page'):
+        st.session_state[5] = True
+        st.session_state[6] = False
+        st.rerun()
 
 
 def contains_cjk(text):
@@ -422,8 +435,8 @@ def format_game(game):
     paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
 
-    return (f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'><a "
-            f"href=\"https://google.com/search?q={name}\">{name}</a>"
+    return (f"<a href=\"https://google.com/search?q={name}\"><img src={image}></a><div style='font-family: monospace; "
+            f"white-space: nowrap; font-size: 13px;'>{name}</a>"
             f"{paddingname}{price}{paddingprice}{genre}<div>")
 
 
@@ -431,7 +444,7 @@ def RANDOM_SELECT():
     gamers = random_selection()
     with open('scrolly.html', 'r') as f:
         hrml = f.read()
-
+        st.write('recommended games according to weights. click on image for link')
         games = [format_game(game) for game in gamers]
         htmlformatted = '<br>'.join(games)
         final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
@@ -452,7 +465,7 @@ def RANDOM_SELECT():
 
 if 'start' not in st.session_state or st.session_state['start'] == 0:
     start_page()
-elif st.session_state['prestart'] == True:
+elif st.session_state['prestart']:
     prestart()
 elif st.session_state['skip']:
     password()
