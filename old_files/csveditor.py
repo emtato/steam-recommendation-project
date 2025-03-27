@@ -1,6 +1,6 @@
 import csv
 #dont touch or run!
-
+"""
 with open('../data.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
     list = []
@@ -23,3 +23,4 @@ with open('../data.csv', 'r', encoding='utf8') as file:
 with open('../data.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(list)
+"""

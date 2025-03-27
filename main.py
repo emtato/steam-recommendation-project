@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import ast
 import csv
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 from attr import dataclass
 
@@ -200,6 +200,21 @@ def load_graph(data_file: str) -> Graph:
     return graph
 
 
+def _get_object_from_string(string: str, exclude: Optional[str] = "") -> Any:
+    """ Helper for _load_game_object
+
+    """
+    if string == exclude:
+        return None
+    else:
+        try:
+            return ast.literal_eval(string)
+        except:
+            print(string)
+            print('L')
+
+
+
 def _load_game_object(game_data: list[str | bool]) -> Game:
     """ Helper function for load_graph which creates a Game object using a list of game_data
 
@@ -207,14 +222,12 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
     (id, name, price_overview, description, supported_languages, capsule_image, requirements, developers, platforms,
      categories, genres, dlc) = game_data
     name = name[1:-1]
-    if price_overview == 'unknown':
-        price_overview = None
-    else:
-        price_overview = ast.literal_eval(price_overview)
-    if supported_languages == '':
-        supported_languages = None
-    else:
-        supported_languages = ast.literal_eval(supported_languages)
+    price_overview = _get_object_from_string(price_overview, 'unknown')
+    supported_languages = _get_object_from_string(supported_languages)
+    developers = _get_object_from_string(developers, 'unknown')
+    platforms = _get_object_from_string(platforms)
+    categories = _get_object_from_string(categories)
+    genres = _get_object_from_string(genres)
 
     requirements = requirements[7:-1]
     lst1 = requirements.split(", 'Mac': ")
@@ -224,22 +237,6 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
     linux = lst2[1][1:-1]
     requirements = {'PC': pc, 'Mac': mac, 'Linux': linux}
 
-    if developers == '':
-        developers = None
-    else:
-        developers = ast.literal_eval(developers)
-    if platforms == '':
-        platforms = None
-    else:
-        platforms = ast.literal_eval(platforms)
-    if categories == '':
-        categories = None
-    else:
-        categories = ast.literal_eval(categories)
-    if genres == '':
-        genres = None
-    else:
-        genres = ast.literal_eval(genres)
     dlc = dlc == 'True'
 
     return Game(id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
@@ -295,11 +292,10 @@ with open('data.csv', 'r', encoding='utf8') as file:
     dic = {}
 
     for x in reader:
-        x = x[4]
-        list = ast.literal_eval(x)
-        for i in list:
-            dic[i] = dic.get(i, 0) + 1
+        x = x[7]
+        dic[x] = dic.get(x, 0) + 1
 
+"""
 with open('data.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
     row = next(reader)
@@ -317,5 +313,5 @@ with open('data.csv', 'r', encoding='utf8') as file:
         linux = lst2[1][1:-1]
         dic = {'PC': pc, 'Mac': mac, 'Linux': linux}
         #print(dic)
-
+"""
 print(dic)
