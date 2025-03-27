@@ -61,7 +61,6 @@ def start_page():
         st.session_state[69] = True
         st.rerun()
 
-
 def password():
     """test function to skip setup and reach the end"""
     password = st.text_input("password please")
