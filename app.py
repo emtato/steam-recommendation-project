@@ -140,7 +140,9 @@ def window_page():
     option_RAM = st.selectbox("How much RAM does your computer "
                               "have?", ("8GB", "16GB", "32GB", "32GB+"), index=None, placeholder="-", )
 
-    option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO
+    option_STORAGE = st.text_input("How much storage do you have?:")  # DONT FORGET TO RESTRICT TO
+    option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
+
     if option_STORAGE.isdigit():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
@@ -150,7 +152,7 @@ def window_page():
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
             res["RAM"] = str(option_RAM)
-            res["STORAGE"] = str(option_STORAGE)
+            res["STORAGE"] = str(option_STORAGE) + ' ' + option_STORAGE_TYPE
 
             st.rerun()
 
@@ -167,7 +169,9 @@ def mac_page():
                              index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer have?", (
         "8GB", "16GB", "18GB", "32GB+"), index=None, placeholder="-", )
-    option_STORAGE = st.text_input("How much storage do you have? (put in GB):")
+    option_STORAGE = st.text_input("How much storage do you have?:")
+    option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
+
     if option_STORAGE.isdigit():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
@@ -177,7 +181,7 @@ def mac_page():
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
             res["RAM"] = str(option_RAM)
-            res["STORAGE"] = str(option_STORAGE)
+            res["STORAGE"] = str(option_STORAGE) + ' ' + option_STORAGE_TYPE
 
             st.rerun()
     elif option_STORAGE != "":
@@ -192,7 +196,9 @@ def linux_page():
                              index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer have?", (
         "8GB", "16GB", "32GB", "32GB+"), index=None, placeholder="-", )
-    option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO  #  #
+    option_STORAGE = st.text_input("How much storage do you have?:")
+    option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
+
     if option_STORAGE.isdigit():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
@@ -202,7 +208,7 @@ def linux_page():
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
             res["RAM"] = str(option_RAM)
-            res["STORAGE"] = str(option_STORAGE)
+            res["STORAGE"] = str(option_STORAGE) + ' ' + option_STORAGE_TYPE
 
             st.rerun()
     elif option_STORAGE != "":
