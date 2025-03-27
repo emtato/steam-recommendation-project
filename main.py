@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 import csv
 from random import randint
-from typing import Any, Optional, Union
+from typing import Optional, Union
 
 from attr import dataclass
 
@@ -37,38 +37,39 @@ class _Vertex:
     """A vertex in a graph.
 
     Instance Attributes:
-        - item: The data stored in this vertex.
+        - id: The id of the Game object
+        - item: The Game object stored in this vertex.
         - neighbours: The vertices that are adjacent to this vertex.
 
     Representation Invariants:
         - self not in self.neighbours
         - all(self in u.neighbours for u in self.neighbours)
     """
-
-    item: Any
+    item_id: int
+    item: Game
     neighbours: dict[_Vertex, Union[int, float]]
 
-    def __init__(self, item: Any, neighbours: set[_Vertex]) -> None:
+    def __init__(self, item: Game, neighbours: set[_Vertex]) -> None:
         """Initialize a new vertex with the given item and neighbours."""
+        self.item_id = item.id
         self.item = item
         self.neighbours = neighbours
 
-    def check_connected(self, target_item: Any, visited: set[_Vertex]) -> bool:
-        """Return whether this vertex is connected to a vertex corresponding to the target_item,
+    def check_connected(self, target_item_id: int, visited: set[_Vertex]) -> bool:
+        """Return whether this vertex is connected to a vertex corresponding to the target_item_id,
         WITHOUT using any of the vertices in visited.
 
         Preconditions:
             - self not in visited
         """
-        if self.item == target_item:
+        if self.item_id == target_item_id:
             return True
         else:
             visited.add(self)
             for u in self.neighbours:
                 if u not in visited:
-                    if u.check_connected(target_item, visited):
+                    if u.check_connected(target_item_id, visited):
                         return True
-
             return False
 
 
@@ -76,41 +77,41 @@ class Graph:
     """A graph.
 
     Representation Invariants:
-        - all(item == self._vertices[item].item for item in self._vertices)
+        - all(item_id == self._vertices[item_id].item_id for item_id in self._vertices)
     """
     # Private Instance Attributes:
     #     - _vertices:
     #         A collection of the vertices contained in this graph.
-    #         Maps item to _Vertex object.
-    _vertices: dict[Any, _Vertex]
+    #         Maps item_id to _Vertex object.
+    _vertices: dict[int, _Vertex]
 
     def __init__(self) -> None:
         """Initialize an empty graph (no vertices or edges)."""
         self._vertices = {}
 
-    def add_vertex(self, item: Any) -> None:
+    def add_vertex(self, item: Game) -> None:
         """Add a vertex with the given item to this graph.
 
         The new vertex is not adjacent to any other vertices.
 
         Preconditions:
-            - item.id not in self._vertices
+            - item not in self._vertices
         """
         if item.id not in self._vertices:
             self._vertices[item.id] = _Vertex(item, set())
 
-    def add_edge(self, item1: Any, item2: Any, weight: Union[int, float]) -> None:
-        """Add an edge between the two vertices with the given items in this graph,
+    def add_edge(self, item_id1: Any, item_id2: Any, weight: Union[int, float]) -> None:
+        """Add an edge between the two vertices with the given item_ids in this graph,
         with the given weight.
 
-        Raise a ValueError if item1 or item2 do not appear as vertices in this graph.
+        Raise a ValueError if item_id1 or item_id2 do not appear as vertices in this graph.
 
         Preconditions:
-            - item1 != item2
+            - item_id1 != item_id2
         """
-        if item1 in self._vertices and item2 in self._vertices:
-            v1 = self._vertices[item1]
-            v2 = self._vertices[item2]
+        if item_id1 in self._vertices and item_id2 in self._vertices:
+            v1 = self._vertices[item_id1]
+            v2 = self._vertices[item_id2]
 
             # Add the new edge
             v1.neighbours[v2] = weight
@@ -119,23 +120,23 @@ class Graph:
             # We didn't find an existing vertex for both items.
             raise ValueError
 
-    def get_weight(self, item1: Any, item2: Any) -> Union[int, float]:
-        """Return the weight of the edge between the given items.
+    def get_weight(self, item_id1: Any, item_id2: Any) -> Union[int, float]:
+        """Return the weight of the edge between the given item_ids.
 
-        Return 0 if item1 and item2 are not adjacent.
+        Return 0 if item_id1 and item_id2 are not adjacent.
 
         Preconditions:
-            - item1 and item2 are vertices in this graph
+            - item_id1 and item_id2 are vertices in this graph
         """
-        v1 = self._vertices[item1]
-        v2 = self._vertices[item2]
+        v1 = self._vertices[item_id1]
+        v2 = self._vertices[item_id2]
         return v1.neighbours.get(v2, 0)
 
-    def get_vertex(self, item: Any):
+    def get_vertex(self, item_id: Any):
         """
-        Returns the vertex given a corresponding item.
+        Returns the vertex given a corresponding item_id.
         """
-        return self._vertices[item]
+        return self._vertices[item_id]
 
     def build_graph(self, data_file: str, amount: int) -> Graph:
         # Here we are using the 'encoding=' to make sure everyone's computer will be able to use the csv file
@@ -155,8 +156,9 @@ class Graph:
                     print("NOOOO")
                 try:
                     (
-                    id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
-                    platforms, categories, genres, dlc) = row
+                        id, name, price_overview, description, supported_languages, capsule_image, requirements,
+                        developers,
+                        platforms, categories, genres, dlc) = row
                 except(Exception):
                     raise ValueError(
                         "shit")  # this shold be fine i think cuz all the rows have , even if no value  # so some  #
@@ -203,8 +205,8 @@ def load_graph(data_file: str) -> Graph:
 
 
 def _get_object_from_string(string: str, exclude: Optional[str] = "") -> Any:
-    """ Helper for _load_game_object
-
+    """ Helper for _load_game_object, use and return ast.literal_eval() on a given string, unless the string is equal to
+    the exclude string, then return None
     """
     if string == exclude:
         return None
@@ -214,7 +216,6 @@ def _get_object_from_string(string: str, exclude: Optional[str] = "") -> Any:
         except:
             print(string)
             print('L')
-
 
 
 def _load_game_object(game_data: list[str | bool]) -> Game:
@@ -276,8 +277,10 @@ def random_selection():
         l = [row[0] for row in reader]
     while len(gamers) < 20:
         num = randint(2, 2069)
-        gamers.append(l[num-2])
+        gamers.append(l[num - 2])
     return gamers
+
+
 """
 with open('data.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
@@ -297,8 +300,8 @@ with open('data.csv', 'r', encoding='utf8') as file:
         dic = {'PC': pc, 'Mac': mac, 'Linux': linux}
         #print(dic)
 """
-#print(dic)
+# print(dic)
 
 if __name__ == "__main__":
-    g = load_graph('data.csv')
-    g.testing_thing_hi()
+    graph = load_graph('data.csv')
+    graph.testing_thing_hi()
