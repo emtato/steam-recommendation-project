@@ -118,7 +118,7 @@ def pc_req_page():
         "Window (ew)", "Mac", "Linux"), index=None, placeholder="-", )
 
     # st.write("You selected:", option)
-    st.session_state["results"] = [option_comp]
+    st.session_state["results"] = {"COMPUTER": option_comp}
     if option_comp == "Window (ew)":
         window_page()
     elif option_comp == "Mac":
@@ -148,9 +148,10 @@ def window_page():
             st.session_state[0] = True
             st.session_state['start'] = 2
 
-            st.session_state["results"].append("OS: " + str(option_OS))
-            st.session_state["results"].append("RAM: " + str(option_RAM))
-            st.session_state["results"].append("STORAGE (GB): " + str(option_STORAGE))
+            res = st.session_state["results"]
+            res["OS"] = str(option_OS)
+            res["RAM"] = str(option_RAM)
+            res["STORAGE"] = str(option_STORAGE)
 
             st.rerun()
 
@@ -174,9 +175,10 @@ def mac_page():
             st.session_state[0] = True
             st.session_state['start'] = 2
 
-            st.session_state["results"].append("OS: " + str(option_OS))
-            st.session_state["results"].append("RAM: " + str(option_RAM))
-            st.session_state["results"].append("STORAGE (GB): " + str(option_STORAGE))
+            res = st.session_state["results"]
+            res["OS"] = str(option_OS)
+            res["RAM"] = str(option_RAM)
+            res["STORAGE"] = str(option_STORAGE)
 
             st.rerun()
     elif option_STORAGE != "":
@@ -198,9 +200,10 @@ def linux_page():
             st.session_state[0] = True
             st.session_state['start'] = 2
 
-            st.session_state["results"].append("OS: " + str(option_OS))
-            st.session_state["results"].append("RAM: " + str(option_RAM))
-            st.session_state["results"].append("STORAGE (GB): " + str(option_STORAGE))
+            res = st.session_state["results"]
+            res["OS"] = str(option_OS)
+            res["RAM"] = str(option_RAM)
+            res["STORAGE"] = str(option_STORAGE)
 
             st.rerun()
     elif option_STORAGE != "":
@@ -244,7 +247,7 @@ def category_pick():
         st.session_state[1] = False
         st.session_state[2] = True
 
-        st.session_state["results"].append("CATEGORIES:" + str(st.session_state['chosen_cat']))
+        st.session_state["results"]["CATEGORIES"] = str(st.session_state['chosen_cat'])
 
         st.rerun()
 
@@ -280,7 +283,7 @@ def game_genre_page():
         st.session_state[2] = False
         st.session_state[3] = True
 
-        st.session_state["results"].append("GENRES: " + str(st.session_state['chosen_genres']))
+        st.session_state["results"]["GENRES"] = str(st.session_state['chosen_genres'])
 
         st.rerun()
     st.write(' ')
@@ -300,7 +303,8 @@ def brokeness_level():
         st.session_state[3] = False
         st.session_state[4] = True
 
-        st.session_state["results"].append(selected)
+        # Will have to change eventually
+        st.session_state["results"]["PRICE"] = str(selected)
         st.rerun()
 
     st.write(' ')
@@ -332,7 +336,7 @@ def lnaugeg():
         st.session_state[4] = False
         st.session_state[5] = True
 
-        st.session_state["results"].append("LANGUAGES: " + str(st.session_state['chosen_lang']))
+        st.session_state["results"]["LANGUAGES"] = str(st.session_state['chosen_lang'])
         st.rerun()
     st.write(' ')
     st.write(' ')

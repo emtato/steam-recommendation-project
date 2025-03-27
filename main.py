@@ -431,7 +431,7 @@ def filtering_games(data_file: str, requirements: {}) -> list:
             total_sim += 1
 
         # compares os
-        if requirements["OS"] in TRUTH:
+        if requirements["COMPUTER"] in TRUTH:
             total_sim += 1
 
         # compares genres
@@ -454,6 +454,7 @@ def filtering_games(data_file: str, requirements: {}) -> list:
         # if requirements[""]
 
         # NEED TO ADD FOR PRICE
+        # NEED TO ADD FOR OS TYPE
 
         if total_sim == max_sim:
             similiar.append(g)
