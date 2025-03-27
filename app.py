@@ -384,7 +384,7 @@ def final_page():
         with col1:
             st.text_input('i')
         with col2:
-            st.write('4SFSDNFKJSD FKJSFJKSNFKJSFKJSNFJKNAKJF')
+            st.text_input('i')
         with col3:
             st.write('4SFSDNFKJSD FKJSFJKSNFKJSFKJSNFJKNAKJF')
     with coll2:
