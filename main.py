@@ -109,7 +109,7 @@ class _Vertex:
             price_sim = 0
         else:
             price_sim = 1 - abs(this_game.price['final'] - other_game.price['final']) / (
-                        2 * (this_game.price['final'] + other_game.price['final']))
+                    2 * (this_game.price['final'] + other_game.price['final']))
 
         lang_sim = self._calculate_sim(this_game.languages, other_game.languages)
         dev_sim = self._calculate_sim(this_game.developers, other_game.developers)
@@ -196,27 +196,6 @@ class Graph:
         """
         return self._vertices[item_id]
 
-    def testing_thing_hi(self):
-        """
-        hii :3
-        just testing stuff out
-        """
-        for game_id in self._vertices:
-            g = self._vertices[game_id].item
-            print(g.id)
-            print(g.name)
-            print(g.price)
-            print(g.description)
-            print(g.languages)
-            print(g.image)
-            print(g.requirements)
-            print(g.developers)
-            print(g.platforms)
-            print(g.categories)
-            print(g.genres)
-            print(g.dlc)
-            break
-
     def clear_edges(self) -> None:
         """ Clear/remove all edges in this graph
         """
@@ -268,7 +247,6 @@ class Graph:
         game_ids = games[0:limit]
         return [self._vertices[game_id].item for game_id in game_ids]
 
-
     def _add_recommendation_in_order(self, target_vertex: _Vertex, new_vertex: _Vertex, game_list: list[int]) -> None:
         """
         Helper function for recommend_games that adds a new_game to a list of game ids (game_list) in
@@ -309,6 +287,7 @@ class Graph:
                 break
 
         return graph_nx
+
 
 def list_games(data_file: str) -> list:
     """
@@ -362,7 +341,8 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
     (id, name, price_overview, description, supported_languages, capsule_image, requirements, developers, platforms,
      categories, genres, dlc) = game_data
     id = int(id)
-    name = name[1:-1]
+    if name[0] == "'" and name[-1] == "'":
+        name = name[1:-1]
     price_overview = _get_object_from_string(price_overview, 'unknown')
     supported_languages = _get_object_from_string(supported_languages)
     developers = _get_object_from_string(developers, 'unknown')
@@ -516,6 +496,7 @@ def filtering_games(data_file: str, requirements: {}) -> list:
 
     return similiar
 
+
 """
 res = {"OS": 'windows', "LANGUAGES": ['English'], "GENRE": ['Action'], "CATEGORY": ['Single-player']}
 lst = filtering_games('data.csv', res)
@@ -538,11 +519,12 @@ print(len(lst))
 if __name__ == "__main__":
     graph = load_graph('data.csv')
     graph.build_edges([100, 100, 100, 100, 100, 100])
-    #graph.testing_thing_hi()
+    # graph.testing_thing_hi()
     print(graph.get_score(7, 1291170, [100, 100, 100, 100, 100, 100]))
-    #print(graph.get_weight(7, 1291170))
+    # print(graph.get_weight(7, 1291170))
     print(graph.recommend_games(1291170, 10))
     print(graph._vertices[1291170].item.name)
 
-    #from graph_visualization import visualize_weighted_graph
-    #visualize_weighted_graph(graph)
+    from graph_visualization import visualize_weighted_graph
+
+    visualize_weighted_graph(graph)
