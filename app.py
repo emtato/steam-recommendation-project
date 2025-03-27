@@ -4,6 +4,11 @@
 # WARNING: for the app to function, please use streamlit version 1.43.2
 # Created by Emilia on 2025-03-25
 
+#update 03-27 5PM
+#random game -> similar games via graph pipeline fully works
+#start -> skip and enter id to quickly test id's and find similar games fully works
+#missing function: filter method from start -> selecting first game
+
 import streamlit as st
 import main
 from main import random_selection
@@ -60,7 +65,8 @@ def start_page():
 def password():
     """test function to skip setup and reach the end"""
     password = st.text_input("password please")
-    if password and 'e>a' in password:
+    st.session_state['chosen'] = password
+    if password:
         st.session_state['start'] = 2
         st.session_state['prestart'] = False
         st.session_state['skip'] = False
@@ -398,7 +404,8 @@ def final_page():
 
     suggestions = []
     chosen = st.session_state['chosen']
-    st.markdown(f'<h6><strong>Current game: {chosen[0]}, {chosen[1]}</strong></h6>',unsafe_allow_html=True)
+    st.markdown(f'<h6><strong>Current game: {chosen[0]}, {chosen[1]}</strong></h6>', unsafe_allow_html=True)
+    chosen = int(chosen[0]) if type(chosen) == tuple else int(chosen)
 
     graph = main.load_graph('data.csv')
     coll1, coll2 = st.columns([1, 2])
@@ -429,7 +436,7 @@ def final_page():
             # call make graph function
             graph.clear_edges()
             graph.build_edges([price, languages, dev, platform, category, genre])
-            suggestions = graph.recommend_games(int(chosen[0]), 50)
+            suggestions = graph.recommend_games(chosen, 50)
 
             suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
                             s.description, s.image, s.genres] for s in suggestions]
