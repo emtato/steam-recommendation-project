@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 import csv
 from random import randint
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 from attr import dataclass
 
@@ -171,6 +171,7 @@ class Graph:
         for game_id in self._vertices:
             g = self._vertices[game_id].item
             print(g.id)
+            print(g.name)
             print(g.price)
             print(g.description)
             print(g.languages)
@@ -193,12 +194,27 @@ def load_graph(data_file: str) -> Graph:
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
-        for i, row in enumerate(reader):
+        for row in reader:
             if len(row) != 12:
-                print(i, row[0])
+                print(row[0])
             game = _load_game_object(row)
             graph.add_vertex(game)
     return graph
+
+
+def _get_object_from_string(string: str, exclude: Optional[str] = "") -> Any:
+    """ Helper for _load_game_object
+
+    """
+    if string == exclude:
+        return None
+    else:
+        try:
+            return ast.literal_eval(string)
+        except:
+            print(string)
+            print('L')
+
 
 
 def _load_game_object(game_data: list[str | bool]) -> Game:
@@ -208,14 +224,12 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
     (id, name, price_overview, description, supported_languages, capsule_image, requirements, developers, platforms,
      categories, genres, dlc) = game_data
     name = name[1:-1]
-    if price_overview == 'unknown':
-        price_overview = None
-    else:
-        price_overview = ast.literal_eval(price_overview)
-    if supported_languages == '':
-        supported_languages = None
-    else:
-        supported_languages = ast.literal_eval(supported_languages)
+    price_overview = _get_object_from_string(price_overview, 'unknown')
+    supported_languages = _get_object_from_string(supported_languages)
+    developers = _get_object_from_string(developers, 'unknown')
+    platforms = _get_object_from_string(platforms)
+    categories = _get_object_from_string(categories)
+    genres = _get_object_from_string(genres)
 
     requirements = requirements[7:-1]
     lst1 = requirements.split(", 'Mac': ")
@@ -225,22 +239,6 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
     linux = lst2[1][1:-1]
     requirements = {'PC': pc, 'Mac': mac, 'Linux': linux}
 
-    if developers == '':
-        developers = None
-    else:
-        developers = ast.literal_eval(developers)
-    if platforms == '':
-        platforms = None
-    else:
-        platforms = ast.literal_eval(platforms)
-    if categories == '':
-        categories = None
-    else:
-        categories = ast.literal_eval(categories)
-    if genres == '':
-        genres = None
-    else:
-        genres = ast.literal_eval(genres)
     dlc = dlc == 'True'
 
     return Game(id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
@@ -280,3 +278,27 @@ def random_selection():
         num = randint(2, 2069)
         gamers.append(l[num-2])
     return gamers
+"""
+with open('data.csv', 'r', encoding='utf8') as file:
+    reader = csv.reader(file)
+    row = next(reader)
+    row = 'useless'
+    row = ':('
+    dic = {}
+    for x in reader:
+        x = x[6]
+        x = x[7:-1]
+        #print(x)
+        lst1 = x.split(", 'Mac': ")
+        pc = lst1[0][1:-1]
+        lst2 = lst1[1].split(", 'Linux': ")
+        mac = lst2[0][1:-1]
+        linux = lst2[1][1:-1]
+        dic = {'PC': pc, 'Mac': mac, 'Linux': linux}
+        #print(dic)
+"""
+#print(dic)
+
+if __name__ == "__main__":
+    g = load_graph('data.csv')
+    g.testing_thing_hi()
