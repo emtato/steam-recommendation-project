@@ -125,6 +125,7 @@ def get_data():
                                                                                                             4)
     st.session_state['cat'] = cat
     st.session_state['gen'] = gen
+    st.session_state['lang'] = lang
     st.session_state[0], st.session_state[1] = False, True
     st.session_state['undo_pressed'] = False
     st.rerun()
@@ -196,7 +197,7 @@ def brokeness_level():
 
 
 def lnaugeg():
-    selected = st.selectbox("language", (), index=None, placeholder='im hungry')
+    selected = st.selectbox("language", st.session_state['lang'], index=None, placeholder='im hungry')
     if st.button("next"):
         st.session_state[4] = False
         st.session_state[5] = True
