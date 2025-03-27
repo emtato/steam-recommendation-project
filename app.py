@@ -340,7 +340,6 @@ def first_pick():
        """
     st.title('zaza')
     st.write(str(st.session_state["results"]))
-    st.write("Game name                            Price (CAD$)          Genres")
     with open('scrolly.html', 'r') as f:
         hrml = f.read()
         # input first game rec cycle games here
@@ -419,7 +418,6 @@ def format_game(game):
 
 def RANDOM_SELECT():
     gamers = random_selection()
-    st.markdown("Game name                            Price (CAD$)          Genres", unsafe_allow_html=True)
     with open('scrolly.html', 'r') as f:
         hrml = f.read()
 
