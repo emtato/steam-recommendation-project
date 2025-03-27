@@ -202,7 +202,8 @@ def linux_page():
 
 
 def get_data():
-    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv', 4)
+    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq(
+        'data.csv', 4)
     st.session_state['cat'] = cat
     gen = [one for one in gen if one != 'mac' and one != 'windows' and one != 'linux']
     st.session_state['gen'] = gen
@@ -373,40 +374,55 @@ def final_page():
     # function i can use later to split by the middle right side is the box left side filters!!
     st.title('additional recommendations :3')
     st.write(" ")
+    suggestions = []
+    graph = main.load_graph('data.csv')
     coll1, coll2 = st.columns([1, 2])
     with coll1:
         st.markdown("Assign weights to what you think is most important when comparing game similarities. "
-                    "Assign a weight of <strong>100</strong> if you think the condition is critically important when "
-                    "sorting, and <strong>0</strong> if its not important at all.", unsafe_allow_html=True)
+                    "Assign a weight of <strong><u>100</u></strong> if you think the condition is critically "
+                    "important when "
+                    "sorting, and <strong><u>0</u></strong> if its not important at all.", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1, 1, 1])  # can add more columns
         # weights: price, language, dev, platform, category, genre
         with col1:
-            st.text_input('price')
-            st.text_input('platform', key = 4)
-
+            price = int(st.text_input('price', key='price'))
+            platform =  int(st.text_input('platform', key='platform'))
         with col2:
-            st.text_input('language', key = 2)
-            st.text_input('category', key = 5)
+            languages =  int(st.text_input('language', key='language'))
+            category =  int(st.text_input('category', key='category'))
 
         with col3:
-            st.text_input('dev', key = 3)
-            st.text_input('genre', key = 6)
-
+            dev =  int(st.text_input('dev', key='dev'))
+            genre =  int(st.text_input('genre', key='genre'))
+        if st.button("make  grpah !!"):
+            # call make graph function
+            graph.clear_edges()
+            st.write({type(price)}, price)
+            graph.build_edges([price, languages, dev, platform, category, genre])
+            suggestions = graph.recommend_games(1291170, 30)
     with coll2:
         st.write('recommended games according to weights. click on image for link')
-        gamers = random_selection()
-        with open('scrolly.html', 'r') as f:
-            hrml = f.read()
+        if suggestions != []:
+            with open('scrolly.html', 'r') as f:
+                hrml = f.read()
 
-            games = [format_game(game) for game in gamers]
-            htmlformatted = '<br>'.join(games)
-            final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-            with open('scrolly.css') as fe:
-                css = f"<style>{fe.read()}</style>"
-                st.markdown(css, unsafe_allow_html=True)
-            st.markdown(final_html, unsafe_allow_html=True)
-        st.write(' ')
-        st.write(' ')
+                games = [format_game(game) for game in suggestions]
+                htmlformatted = '<br>'.join(games)
+                final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
+                with open('scrolly.css') as fe:
+                    css = f"<style>{fe.read()}</style>"
+                    st.markdown(css, unsafe_allow_html=True)
+                st.markdown(final_html, unsafe_allow_html=True)
+            st.write(' ')
+            st.write(' ')
+        else:
+            st.markdown(""" <span style = "color:red"> No data</span>""", unsafe_allow_html=True)
+
+    st.write(" ")
+    st.write(" ")
+    st.write(" ")
+    st.write(" ")
+
     if st.button('back', key='back from final page'):
         st.session_state[5] = True
         st.session_state[6] = False
@@ -417,7 +433,8 @@ def contains_cjk(text):
     for char in text:
         code = ord(char)
         if (
-                0x4E00 <= code <= 0x9FFF or 0x3400 <= code <= 0x4DBF or 0x3040 <= code <= 0x309F or 0x30A0 <= code <= 0x30FF or 0xAC00 <= code <= 0xD7AF):
+                0x4E00 <= code <= 0x9FFF or 0x3400 <= code <= 0x4DBF or 0x3040 <= code <= 0x309F or 0x30A0 <= code <=
+                0x30FF or 0xAC00 <= code <= 0xD7AF):
             return True
     return False
 
@@ -463,7 +480,8 @@ def RANDOM_SELECT():
         st.session_state[69] = False
         st.rerun()
 
-    # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from  # maxing  # and  # restarting the app, making the user lose progress.
+    # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
+    # maxing  # and  # restarting the app, making the user lose progress.
 
 
 if 'start' not in st.session_state or st.session_state['start'] == 0:
