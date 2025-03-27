@@ -93,10 +93,10 @@ class Graph:
         The new vertex is not adjacent to any other vertices.
 
         Preconditions:
-            - item not in self._vertices
+            - item.id not in self._vertices
         """
-        if item not in self._vertices:
-            self._vertices[item] = _Vertex(item, set())
+        if item.id not in self._vertices:
+            self._vertices[item.id] = _Vertex(item, set())
 
     def add_edge(self, item1: Any, item2: Any, weight: Union[int, float]) -> None:
         """Add an edge between the two vertices with the given items in this graph,
@@ -154,8 +154,9 @@ class Graph:
                     print("NOOOO")
                 try:
                     (
-                    id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
-                    platforms, categories, genres, dlc) = row
+                        id, name, price_overview, description, supported_languages, capsule_image, requirements,
+                        developers,
+                        platforms, categories, genres, dlc) = row
                 except(Exception):
                     raise ValueError("shit")  # this shold be fine i think cuz all the rows have , even if no value
                     # so some  #  # should  # just be an empty string
@@ -164,6 +165,7 @@ class Graph:
                     print(f"Duplicate game name found: {name}")
                 else:
                     dic[name] = True
+
     def testing_thing_hi(self):
         for game_id in self._vertices:
             g = self._vertices[game_id].item
@@ -179,7 +181,6 @@ class Graph:
             print(g.genres)
             print(g.dlc)
             break
-
 
 
 def load_graph(data_file: str) -> Graph:
@@ -205,8 +206,8 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
     """
     (id, name, price_overview, description, supported_languages, capsule_image, requirements, developers, platforms,
      categories, genres, dlc) = game_data
-    id = int(id)
-    if price_overview == '':
+    name = name[1:-1]
+    if price_overview == 'unknown':
         price_overview = None
     else:
         price_overview = ast.literal_eval(price_overview)
@@ -214,10 +215,15 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
         supported_languages = None
     else:
         supported_languages = ast.literal_eval(supported_languages)
-    if requirements == '':
-        requirements = None
-    else:
-        requirements = ast.literal_eval(requirements)
+
+    requirements = requirements[7:-1]
+    lst1 = requirements.split(", 'Mac': ")
+    pc = lst1[0][1:-1]
+    lst2 = lst1[1].split(", 'Linux': ")
+    mac = lst2[0][1:-1]
+    linux = lst2[1][1:-1]
+    requirements = {'PC': pc, 'Mac': mac, 'Linux': linux}
+
     if developers == '':
         developers = None
     else:
@@ -234,50 +240,82 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
         genres = None
     else:
         genres = ast.literal_eval(genres)
+    dlc = dlc == 'True'
 
     return Game(id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
                 platforms, categories, genres, dlc)
 
 
-def extract_freq(data_file: str, col: int):
+def extract_freq(data_file: str):
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
         row = 'useless'
         row = ':('
-        dic = {}
+        dic_categories = {}
+        dic_genres = {}
         for i, row in enumerate(reader):
-            colle = ast.literal_eval(row[col])
-            for x in colle:
-                dic[x] = dic.get(x, 0) + 1
+            categories = ast.literal_eval(row[9])
+            genres = ast.literal_eval(row[10])
+            for x in categories:
+                dic_categories[x] = dic_categories.get(x, 0) + 1
+            for x in genres:
+                dic_genres[x] = dic_genres.get(x, 0) + 1
+            categories_items = sorted(dic_categories.items(), key=lambda x: (-x[1], x[0]))
+            genres_items = sorted(dic_genres.items(), key=lambda x: (-x[1], x[0]))
+        return [x[0] for x in categories_items], [x[0] for x in genres_items]
 
-            col_items = sorted(dic.items(), key=lambda x: (-x[1], x[0]))
-        return [x[0] for x in col_items]
 
-
+print(extract_freq('data.csv'))
 g = Graph()
 g.build_graph('data.csv', 10)
 
+with open('old_files/old_data.csv', 'r', encoding='utf8') as file:
+    reader = csv.reader(file)
+    row = next(reader)
+    row = 'useless'
+    row = ':('
+    dic = {}
 
-# testing the lang
-# with open('data.csv', 'r', encoding='utf8') as file:
-#     reader = csv.reader(file)
-#     row = next(reader)
-#     row = 'useless'
-#     row = ':('
-#     dic = {}
-#
-#     for x in reader:
-#         x = x[4]
-#         lst = x.split(',')
-#
-#         for i, a in enumerate(lst):
-#             if '<' in a:
-#                 val = a.split('<')
-#                 lst[i] = val[0]
-#         print(lst)
-#         for x in lst:
-#             dic[x] = dic.get(x, 0) + 1
-#
-# print(dic)
-# print(dic.keys())
+    for x in reader:
+        x = x[4]
+        list = x.split(',')
+        for i, a in enumerate(list):
+            if '<' in a:
+                list.pop(i)
+                list.extend(a.split('<'))
+        for x in list:
+            dic[x] = dic.get(x, 0) + 1
+
+with open('data.csv', 'r', encoding='utf8') as file:
+    reader = csv.reader(file)
+    row = next(reader)
+    row = 'useless'
+    row = ':('
+    dic = {}
+
+    for x in reader:
+        x = x[4]
+        list = ast.literal_eval(x)
+        for i in list:
+            dic[i] = dic.get(i, 0) + 1
+
+with open('data.csv', 'r', encoding='utf8') as file:
+    reader = csv.reader(file)
+    row = next(reader)
+    row = 'useless'
+    row = ':('
+    dic = {}
+    for x in reader:
+        x = x[6]
+        x = x[7:-1]
+        #print(x)
+        lst1 = x.split(", 'Mac': ")
+        pc = lst1[0][1:-1]
+        lst2 = lst1[1].split(", 'Linux': ")
+        mac = lst2[0][1:-1]
+        linux = lst2[1][1:-1]
+        dic = {'PC': pc, 'Mac': mac, 'Linux': linux}
+        #print(dic)
+
+print(dic)
