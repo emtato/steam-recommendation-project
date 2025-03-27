@@ -57,7 +57,8 @@ def setup_graph(graph: main.Graph,
 
     weights = nx.get_edge_attributes(graph_nx, 'weight')
 
-    colours = ['rgb(' + str(200 * weight) + ', ' + str(200 * weight) + ', 100)' for weight in weights]
+    #colours = ['rgb(' + str(200 * weight) + ', ' + str(200 * weight) + ', 100)' for weight in weights]
+    colours = ['rgb(50,50,90)' for weight in weights]
 
     x_edges = []
     y_edges = []

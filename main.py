@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import ast
 import csv
-import networkx as nx
+#import networkx as nx
 
 from random import randint
 from typing import Optional, Union
@@ -263,8 +263,8 @@ class Graph:
                 return
         game_list.append(new_vertex.item_id)
         return
-
-    def to_networkx(self, max_vertices: int = 5000) -> nx.Graph:
+"""
+    def to_networkx(self, max_vertices: int = 50) -> nx.Graph:
         """Convert this graph into a networkx Graph.
 
         max_vertices specifies the maximum number of vertices that can appear in the graph.
@@ -281,13 +281,13 @@ class Graph:
                     graph_nx.add_node(u.item_id)
 
                 if u.item_id in graph_nx.nodes:
-                    graph_nx.add_edge(v.item_id, u.item_id)
+                    graph_nx.add_edge(v.item_id, u.item_id, weight=self.get_weight(v.item_id, u.item_id))
 
             if graph_nx.number_of_nodes() >= max_vertices:
                 break
 
         return graph_nx
-
+"""
 
 def list_games(data_file: str) -> list:
     """
@@ -517,14 +517,10 @@ print(len(lst))
 
 
 if __name__ == "__main__":
-    graph = load_graph('data.csv')
-    graph.build_edges([100, 100, 100, 100, 100, 100])
+    #graph = load_graph('data.csv')
+    #graph.build_edges([100, 100, 100, 100, 100, 100])
     # graph.testing_thing_hi()
-    print(graph.get_score(7, 1291170, [100, 100, 100, 100, 100, 100]))
+    #print(graph.get_score(3076100, 1291170, [100, 100, 100, 100, 100, 100]))
     # print(graph.get_weight(7, 1291170))
-    print(graph.recommend_games(1291170, 10))
-    print(graph._vertices[1291170].item.name)
-
-    from graph_visualization import visualize_weighted_graph
-
-    visualize_weighted_graph(graph)
+    #print(graph.recommend_games(3076100, 20))
+    #print(graph._vertices[1291170].item.name)
