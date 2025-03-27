@@ -256,12 +256,14 @@ def final_page():
     with open('scrolly.html','r') as f:
         hrml = f.read()
 
-        games = [f"Game {i}" for i in range(10)] #placeholder
+        games = [f"Game {i}" for i in range(30)] #placeholder
         games = [f'{game}<br>' for game in games] #add image display later
         htmlformatted = ''.join(games)
         final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-        st.markdown(final_html, unsafe_allow_html=True)
-
+        with open('scrolly.css') as fe:
+            css =f"<style>{fe.read()}</style>"
+            st.markdown(css, unsafe_allow_html=True)
+        st.markdown(final_html,unsafe_allow_html=True)
 
 
 
