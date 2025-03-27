@@ -82,6 +82,8 @@ def pc_req_page():
     A page that lets the user choose their type of computer.
     1 OPTION TEST
     """
+    col1, col2 = st.columns([1, 1])
+    #TEST EEEPEPEPEEPEPEPE
     st.title("Choosing your pc requirements")
     option_comp = st.selectbox("What type of computer do you have?", ("Window (ew)", "Mac", "Linux"), index=None,
                                placeholder="-", )
