@@ -14,3 +14,10 @@
   white-space: normal;
   overflow-wrap: break-word;
 }
+.header-row {
+    display: flex;
+    width: 950px;
+    justify-content: space-between;
+    font-weight: bold;
+    padding: 0 20px;
+}

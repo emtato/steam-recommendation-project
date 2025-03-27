@@ -36,6 +36,7 @@ def start_page():
     
     Click the button below 🔘👇 to get started 🚀🎉🎯
     """)
+
     if st.button("Start"):
         st.balloons()
         st.session_state["prestart"] = True
@@ -44,6 +45,7 @@ def start_page():
     if st.button("im feeling lucky (dont sue us)"):
         st.session_state['start'] = 2
         st.session_state['prestart'] = False
+        st.session_state['skip'] = False
         st.session_state[0] = False
         st.session_state[1] = False
         st.session_state[2] = False
@@ -52,6 +54,22 @@ def start_page():
         st.session_state[5] = False
         st.session_state[6] = False
         st.session_state[69] = True
+        st.rerun()
+
+
+def password():
+    password = st.text_input("password please")
+    if password and 'e>a' in password:
+        st.session_state['start'] = 2
+        st.session_state['prestart'] = False
+        st.session_state['skip'] = False
+        st.session_state[0] = False
+        st.session_state[1] = False
+        st.session_state[2] = False
+        st.session_state[3] = False
+        st.session_state[4] = False
+        st.session_state[5] = False
+        st.session_state[6] = True
         st.rerun()
 
 
@@ -66,12 +84,17 @@ def prestart():
                 st.write(' ')
             st.write('you will pay.')
             st.stop()
+        if st.button('skip'):
+            st.session_state['prestart'] = False
+            st.session_state['skip'] = True
+            st.rerun()
     with col2:
         st.markdown("<div style='text-align: right;'>Psst, click the 3 dots, ---------------------------------------> "
                     "settings and activate <strong>W I D E</strong> "
                     "mode for a better viewing experience!</div>", unsafe_allow_html=True)
         if st.button('oki'):
             st.session_state['start'] = 1
+            st.session_state['skip'] = False
             st.session_state['prestart'] = False
             st.rerun()
         st.write("if youre on mobile, we hate you")
@@ -82,8 +105,6 @@ def pc_req_page():
     A page that lets the user choose their type of computer.
     1 OPTION TEST
     """
-    col1, col2 = st.columns([1, 1])
-    # TEST EEEPEPEPEEPEPEPE
     st.title("Choosing your pc requirements")
     option_comp = st.selectbox("What type of computer do you have?", (
         "Window (ew)", "Mac", "Linux"), index=None, placeholder="-", )
@@ -232,7 +253,7 @@ def game_genre_page():
     st.write('pick gaming stuff :DD | currently chosen game genres:')
 
     if 'chosen_genres' not in st.session_state:
-        st.session_state['chosen_genres'] = []  # list of sleected categories ^•ω•^
+        st.session_state['chosen_genres'] = []  # list of sleected genres ^•ω•^
 
     st.write(' | '.join(st.session_state['chosen_genres']))
 
@@ -284,7 +305,7 @@ def brokeness_level():
 
 def lnaugeg():
     if 'chosen_lang' not in st.session_state:
-        st.session_state['chosen_lang'] = []  # list of sleected categories ^•ω•^
+        st.session_state['chosen_lang'] = []  # list of sleected lanusggage ^•ω•^
 
     st.write(' | '.join(st.session_state['chosen_lang']))
 
@@ -317,9 +338,8 @@ def first_pick():
     """
        A page that shows the results the user chose, aka the options.
        """
-    st.write('zaza')
+    st.title('zaza')
     st.write(str(st.session_state["results"]))
-
     with open('scrolly.html', 'r') as f:
         hrml = f.read()
         # input first game rec cycle games here
@@ -334,20 +354,45 @@ def first_pick():
             css = f"<style>{fe.read()}</style>"
             st.markdown(css, unsafe_allow_html=True)
         st.markdown(final_html, unsafe_allow_html=True)
-    st.write(' ')
-    st.write(' ')
-    if st.button('back', key='back from page 69'):
-        st.session_state['start'] = 0
-        st.session_state[69] = False
+
+    if st.button("choose game (temp button to get to next page)"):
+        st.session_state[5] = False
+        st.session_state[6] = True
         st.rerun()
+    st.write(' ')
+    st.write(' ')
+
+    if st.button('back', key='back from page 7'):
+        st.session_state[3] = True
+        st.session_state[4] = False
+        st.rerun()
+
 
 
 def final_page():
     # function i can use later to split by the middle right side is the box left side filters!!
+
+    col1, col2 = st.columns([1, 3]) #can add more columns
     with col1:
-        st.write('o')
+        st.write('4SFSDNFKJSD FKJSFJKSNFKJSFKJSNFJKNAKJF')
     with col2:
-        st.write('i')
+        gamers = random_selection()
+        with open('scrolly.html', 'r') as f:
+            hrml = f.read()
+
+            games = [format_game(game) for game in gamers]
+            htmlformatted = '<br>'.join(games)
+            final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
+            with open('scrolly.css') as fe:
+                css = f"<style>{fe.read()}</style>"
+                st.markdown(css, unsafe_allow_html=True)
+            st.markdown(final_html, unsafe_allow_html=True)
+        st.write(' ')
+        st.write(' ')
+        if st.button('back', key='back from final page'):
+            st.session_state[5] = True
+            st.session_state[6] = False
+            st.rerun()
 
 
 def contains_cjk(text):
@@ -377,15 +422,13 @@ def format_game(game):
     paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
 
-    return (
-        f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'><a "
-        f"href=\"https://google.com/search?q={name}\">{name}</a>"
-        f"{paddingname}{price}{paddingprice}{genre}<div>")
+    return (f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'><a "
+            f"href=\"https://google.com/search?q={name}\">{name}</a>"
+            f"{paddingname}{price}{paddingprice}{genre}<div>")
 
 
 def RANDOM_SELECT():
     gamers = random_selection()
-    st.write('pss scroll right these game titles are so long like why')
     with open('scrolly.html', 'r') as f:
         hrml = f.read()
 
@@ -411,6 +454,8 @@ if 'start' not in st.session_state or st.session_state['start'] == 0:
     start_page()
 elif st.session_state['prestart'] == True:
     prestart()
+elif st.session_state['skip']:
+    password()
 elif st.session_state['start'] == 1:
     pc_req_page()
 elif st.session_state[0]:
