@@ -67,15 +67,15 @@ def prestart():
             st.write('you will pay.')
             st.stop()
     with col2:
-        st.markdown(
-            "<div style='text-align: right;'>Psst, click the 3 dots, ---------------------------------------> "
-            "settings and activate <strong>W I D E</strong> "
-            "mode for a better viewing experience!</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: right;'>Psst, click the 3 dots, ---------------------------------------> "
+                    "settings and activate <strong>W I D E</strong> "
+                    "mode for a better viewing experience!</div>", unsafe_allow_html=True)
         if st.button('oki'):
             st.session_state['start'] = 1
             st.session_state['prestart'] = False
             st.rerun()
         st.write("if youre on mobile, we hate you")
+
 
 def pc_req_page():
     """
@@ -83,10 +83,10 @@ def pc_req_page():
     1 OPTION TEST
     """
     col1, col2 = st.columns([1, 1])
-    #TEST EEEPEPEPEEPEPEPE
+    # TEST EEEPEPEPEEPEPEPE
     st.title("Choosing your pc requirements")
-    option_comp = st.selectbox("What type of computer do you have?", ("Window (ew)", "Mac", "Linux"), index=None,
-                               placeholder="-", )
+    option_comp = st.selectbox("What type of computer do you have?", (
+        "Window (ew)", "Mac", "Linux"), index=None, placeholder="-", )
 
     # st.write("You selected:", option)
     st.session_state["results"] = [option_comp]
@@ -107,8 +107,8 @@ def window_page():
     """"""
     st.write('To whoever who stole my Microsoft Office copy, I will find you..')
     st.write('You have my Word.')
-    option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10", "Windows 7"),
-                             index=None, placeholder="-", )
+    option_OS = st.selectbox("What Windows (ew) OS version do you use?", (
+        "Windows 11", "Windows 10", "Windows 7"), index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer "
                               "have?", ("8GB", "16GB", "32GB", "32GB+"), index=None, placeholder="-", )
 
@@ -136,8 +136,8 @@ def mac_page():
 
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
-    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "18GB", "32GB+"), index=None,
-                              placeholder="-", )
+    option_RAM = st.selectbox("How much RAM does your computer have?", (
+        "8GB", "16GB", "18GB", "32GB+"), index=None, placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")
     if option_STORAGE.isdigit():
 
@@ -157,11 +157,11 @@ def mac_page():
 def linux_page():
     """"""
     st.write('computers are like air conditioners—they stop working properly if you open windows')
-    option_OS = st.selectbox("What Linux OS version do you use?", ("isert"),
-                             # May have to replace this with a POSSIBLE OS list from data
+    option_OS = st.selectbox("What Linux OS version do you use?", (
+        "isert"),  # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
-    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "32GB", "32GB+"), index=None,
-                              placeholder="-", )
+    option_RAM = st.selectbox("How much RAM does your computer have?", (
+        "8GB", "16GB", "32GB", "32GB+"), index=None, placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO  #  #
     if option_STORAGE.isdigit():
 
@@ -179,8 +179,8 @@ def linux_page():
 
 
 def get_data():
-    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv',
-                                                                            4)
+    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq(
+        'data.csv', 4)
     st.session_state['cat'] = cat
     gen = [one for one in gen if one != 'mac' and one != 'windows' and one != 'linux']
     st.session_state['gen'] = gen
@@ -199,8 +199,8 @@ def category_pick():
 
     st.write(' | '.join(st.session_state['chosen_cat']))
 
-    selected = st.selectbox("Choose categories okay", st.session_state['cat'], index=None,
-                            placeholder='I AM GOING CUCKOO')
+    selected = st.selectbox("Choose categories okay",
+                            st.session_state['cat'], index=None, placeholder='I AM GOING CUCKOO')
     if st.button("undo select"):
         st.session_state["undo_pressed"] = True
         if len(st.session_state['chosen_cat']) > 0:
@@ -264,8 +264,8 @@ def game_genre_page():
 
 def brokeness_level():
     st.title('bald')
-    selected = st.selectbox("how broke are u be fr", ("free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None,
-                            placeholder='im hungry')
+    selected = st.selectbox("how broke are u be fr", (
+        "free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
 
     if st.button("next"):
         st.session_state[3] = False
@@ -342,28 +342,45 @@ def first_pick():
         st.rerun()
 
 
-def format_game(game):
-    spacesname, spacesprice = 70, 20
-
-    name = game[1].strip("'")
-    spacesname -= len(name)
-    price = f"${float(game[2]):.2f}" if game[2] != 'unknown' else 'idk :('
-    spacesprice -= len(price)
-    genre = ', '.join(game[5]) if isinstance(game[5], list) else 'im lost too okay :('
-    image = game[4]
-    paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the (bad) spacing
-    paddingprice = '&nbsp;' * max(1, spacesprice)
-    return (f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>{name}"
-            f"{paddingname}"
-            f"{price}{paddingprice}{genre} <div>")
-
-
 def final_page():
     # function i can use later to split by the middle right side is the box left side filters!!
     with col1:
         st.write('o')
     with col2:
         st.write('i')
+
+
+def contains_cjk(text):
+    for char in text:
+        code = ord(char)
+        if (
+                0x4E00 <= code <= 0x9FFF or 0x3400 <= code <= 0x4DBF or 0x3040 <= code <= 0x309F or 0x30A0 <= code <=
+                0x30FF or 0xAC00 <= code <= 0xD7AF):
+            return True
+    return False
+
+
+def format_game(game):
+    spacesname, spacesprice = 70, 20
+
+    name = game[1].strip("'")
+
+    if len(name) > 55:
+        name = name[:55] + '...'
+    if contains_cjk(name):
+        spacesname = int(spacesname / 1.15)
+    spacesname -= len(name)
+    price = f"${float(game[2]):.2f}" if game[2] != 'unknown' else 'idk :('
+    spacesprice -= len(price)
+    genre = ', '.join(game[5]) if isinstance(game[5], list) else 'im lost too okay :('
+    image = game[4]
+    paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the spacing
+    paddingprice = '&nbsp;' * max(1, spacesprice)
+
+    return (
+        f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'><a "
+        f"href=\"https://google.com/search?q={name}\">{name}</a>"
+        f"{paddingname}{price}{paddingprice}{genre}<div>")
 
 
 def RANDOM_SELECT():

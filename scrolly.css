@@ -8,7 +8,9 @@
         }
 .meow {
         yes: true;
-
-
-
+}
+.wrap-text {
+  max-width: 30ch;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
