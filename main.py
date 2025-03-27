@@ -257,3 +257,27 @@ def extract_freq(data_file: str, col: int):
 
 g = Graph()
 g.build_graph('data.csv', 10)
+
+
+# testing the lang
+# with open('data.csv', 'r', encoding='utf8') as file:
+#     reader = csv.reader(file)
+#     row = next(reader)
+#     row = 'useless'
+#     row = ':('
+#     dic = {}
+#
+#     for x in reader:
+#         x = x[4]
+#         lst = x.split(',')
+#
+#         for i, a in enumerate(lst):
+#             if '<' in a:
+#                 val = a.split('<')
+#                 lst[i] = val[0]
+#         print(lst)
+#         for x in lst:
+#             dic[x] = dic.get(x, 0) + 1
+#
+# print(dic)
+# print(dic.keys())
