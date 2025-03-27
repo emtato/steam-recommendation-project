@@ -7,6 +7,7 @@
 
 import streamlit as st
 import main
+from main import random_selection
 
 
 # states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost
@@ -36,6 +37,7 @@ def start_page():
         st.balloons()
         st.session_state["start"] = True
         st.rerun()
+    if st.button("im feeling lucky (dont sue us)"):
 
 
 def pc_req_page():
@@ -255,8 +257,10 @@ def final_page():
 
     with open('scrolly.html','r') as f:
         hrml = f.read()
+        #input first game rec cycle games here
 
         games = [f"Game {i}" for i in range(30)] #placeholder
+
         games = [f'{game}<br>' for game in games] #add image display later
         htmlformatted = ''.join(games)
         final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
@@ -267,6 +271,8 @@ def final_page():
 
 
 
+def RANDOM_SELECT():
+    games = random_selection()
 
     # this section checks the session_state and loads the next page, this is to prevent the app's cache from maxing
     # and  # restarting the app, making the user lose progress.
@@ -287,7 +293,10 @@ elif st.session_state[3]:
 elif st.session_state[4]:
     lnaugeg()
 elif st.session_state[5]:
-    final_page()  # The code below creates tabs! We can use this to show the results later  #   # tab1,
+    final_page()
+elif st.session_state[69]:
+    RANDOM_SELECT()
+    # The code below creates tabs! We can use this to show the results later  #   # tab1,
     # tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
 
 # g = Graph()

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import csv
+from random import randint
 from typing import Any, Union
 
 from attr import dataclass
@@ -154,12 +155,12 @@ class Graph:
                     print("NOOOO")
                 try:
                     (
-                        id, name, price_overview, description, supported_languages, capsule_image, requirements,
-                        developers,
-                        platforms, categories, genres, dlc) = row
+                    id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
+                    platforms, categories, genres, dlc) = row
                 except(Exception):
-                    raise ValueError("shit")  # this shold be fine i think cuz all the rows have , even if no value
-                    # so some  #  # should  # just be an empty string
+                    raise ValueError(
+                        "shit")  # this shold be fine i think cuz all the rows have , even if no value  # so some  #
+                    # should  # just be an empty string
 
                 if name in dic:
                     print(f"Duplicate game name found: {name}")
@@ -192,7 +193,7 @@ def load_graph(data_file: str) -> Graph:
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
-        for row in reader:
+        for i, row in enumerate(reader):
             if len(row) != 12:
                 print(i, row[0])
             game = _load_game_object(row)
@@ -246,6 +247,10 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
                 platforms, categories, genres, dlc)
 
 
+g = Graph()
+g.build_graph('data.csv', 10)
+
+
 def extract_freq(data_file: str, col: int):
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
@@ -262,6 +267,16 @@ def extract_freq(data_file: str, col: int):
         return [x[0] for x in col_items]
 
 
-
-g = Graph()
-g.build_graph('data.csv', 10)
+# random button in main menu to select random games to look through
+def random_selection():
+    gamers = []
+    with open('data.csv', 'r', encoding='utf8') as file:
+        reader = csv.reader(file)
+        row = next(reader)
+        row = 'useless'
+        row = ':('
+        l = [row[0] for row in reader]
+    while len(gamers) < 20:
+        num = randint(2, 2069)
+        gamers.append(l[num-2])
+    return gamers
