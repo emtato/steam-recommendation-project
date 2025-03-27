@@ -1,16 +1,18 @@
-# Description:
-# Description: This python file contains the UI for the project. Here we are using streamlit. You'll need to download
-# the streamlit library and follow the directions in the guide to utilize this.
+# Description: This piethon file contains the UI for the project. Here we are using streamlit.
+# Run locally: install streamlit and run shell command
+# View finished product: https://emtato.streamlit.app (not as up to date if not completed)
 # WARNING: for the app to function, please use streamlit version 1.43.2
-# Or if you'd like use: emtato.streamlit.app in your browser to utilize the app that way.
 # Created by Emilia on 2025-03-25
 
 import streamlit as st
 import main
 from main import random_selection
 
+# states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost, 4: language, 5: first game pick page
+# 6: probably full filter and next game picks menu
+col1, col2 = st.columns([1, 1])  # or adjust the ratio like [2, 1] if you want left side bigger
 
-# states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost
+
 def start_page():
     """
          This serves as the starting page for the application, it contains basic information of what the app does
@@ -29,38 +31,67 @@ def start_page():
     Cool right? 😎😜
 
     (insert some for stuff here / desc 📝💭🛠️)
-
+    
+    Made by Emilia 🐱, Amanda 🦆, Nicole 🐔 & Grace 🐸
+    
     Click the button below 🔘👇 to get started 🚀🎉🎯
     """)
     if st.button("Start"):
         st.balloons()
-        st.session_state["start"] = 1
+        st.session_state["prestart"] = True
+        st.session_state['start'] = 0.5
         st.rerun()
     if st.button("im feeling lucky (dont sue us)"):
         st.session_state['start'] = 2
+        st.session_state['prestart'] = False
         st.session_state[0] = False
         st.session_state[1] = False
         st.session_state[2] = False
         st.session_state[3] = False
         st.session_state[4] = False
         st.session_state[5] = False
+        st.session_state[6] = False
         st.session_state[69] = True
         st.rerun()
 
 
+def prestart():
+    with col1:
+        if st.button('no'):
+            for i in range(0, 30):
+                st.write("ḥ̸̨̧̗̮̖̽̂̓̀̍̋͋́̅̃͘͜͝ŏ̸̡̼̺̫̥̻͈̞̍͆̏̓́͜͝ͅẃ̸̝̝̰͋͒ "
+                         "d̶̡̲̗̼̮̤̤̳̲͖͓͍͔͓̓̎̽́̽̏̐͂̆͆͘͘͘ǎ̴̯̀͠r̵̡͕͈͚͍͍̼͕̍̀̈́̽̎̍͗̍́̏̚͜͠ë̸͓̮͉͈͇͍̖͎̩̞͈́́́̋̇̾͋̈́̾͆͑͘͘͜͠͝ "
+                         "y̶͔͗ŏ̸̡̼̺̫̥̻͈̞̍͆̏̓́͜͝ͅu̷̬̩̰̫͕̘͎̔́̃̄̍͋̓")
+                st.write(' ')
+                st.write(' ')
+            st.write('you will pay.')
+            st.stop()
+    with col2:
+        st.markdown("<div style='text-align: right;'>Psst, click the 3 dots, ---------------------------------------> "
+                    "settings and activate <strong>W I D E</strong> "
+                    "mode for a better viewing experience!</div>", unsafe_allow_html=True)
+        if st.button('oki'):
+            st.session_state['start'] = 1
+            st.session_state['prestart'] = False
+            st.rerun()
+        st.write("if youre on mobile, we hate you")
+
+
 def pc_req_page():
     """
-    A page that lets the user choose their type of PC.
+    A page that lets the user choose their type of computer.
     1 OPTION TEST
     """
+    col1, col2 = st.columns([1, 1])
+    # TEST EEEPEPEPEEPEPEPE
     st.title("Choosing your pc requirements")
-    option_comp = st.selectbox("What type of computer do you have?", ("PC (ew)", "Mac", "Linux"), index=None,
-                               placeholder="-", )
+    option_comp = st.selectbox("What type of computer do you have?", (
+        "Window (ew)", "Mac", "Linux"), index=None, placeholder="-", )
 
     # st.write("You selected:", option)
     st.session_state["results"] = [option_comp]
-    if option_comp == "PC (ew)":
-        pc_page()
+    if option_comp == "Window (ew)":
+        window_page()
     elif option_comp == "Mac":
         mac_page()
     elif option_comp == "Linux":
@@ -72,15 +103,14 @@ def pc_req_page():
         st.rerun()
 
 
-def pc_page():
+def window_page():
     """"""
-    option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10", "Windows 7"),
-                             # May have to replace this with a POSSIBLE OS list from data
-                             index=None, placeholder="-", )
+    st.write('To whoever who stole my Microsoft Office copy, I will find you..')
+    st.write('You have my Word.')
+    option_OS = st.selectbox("What Windows (ew) OS version do you use?", (
+        "Windows 11", "Windows 10", "Windows 7"), index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer "
-                              "have?", ("8GB", "16GB", "32GB", "32GB+"),
-                              # May have to replace this with a POSSIBLE RAM list from data
-                              index=None, placeholder="-", )
+                              "have?", ("8GB", "16GB", "32GB", "32GB+"), index=None, placeholder="-", )
 
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO
     if option_STORAGE.isdigit():
@@ -89,9 +119,9 @@ def pc_page():
             st.session_state[0] = True
             st.session_state['start'] = 2
 
-            st.session_state["results"].append(option_OS)
-            st.session_state["results"].append(option_RAM)
-            st.session_state["results"].append(option_STORAGE)
+            st.session_state["results"].append("OS: " + str(option_OS))
+            st.session_state["results"].append("RAM: " + str(option_RAM))
+            st.session_state["results"].append("STORAGE (GB): " + str(option_STORAGE))
 
             st.rerun()
 
@@ -101,13 +131,13 @@ def pc_page():
 
 def mac_page():
     """"""
+    st.write('Wwy should you never fart in an Apple store becuause they dnt have any windows BAHJJHHJSBFADJ')
     option_OS = st.selectbox("What Mac OS version do you use?", ("Big Sur", "Monterey", "Ventura", "Sonoma", "Sequoia"),
 
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
-    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "18GB", "32GB+"),
-                              # May have to replace this with a POSSIBLE RAM list from data
-                              index=None, placeholder="-", )
+    option_RAM = st.selectbox("How much RAM does your computer have?", (
+        "8GB", "16GB", "18GB", "32GB+"), index=None, placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")
     if option_STORAGE.isdigit():
 
@@ -115,9 +145,9 @@ def mac_page():
             st.session_state[0] = True
             st.session_state['start'] = 2
 
-            st.session_state["results"].append(option_OS)
-            st.session_state["results"].append(option_RAM)
-            st.session_state["results"].append(option_STORAGE)
+            st.session_state["results"].append("OS: " + str(option_OS))
+            st.session_state["results"].append("RAM: " + str(option_RAM))
+            st.session_state["results"].append("STORAGE (GB): " + str(option_STORAGE))
 
             st.rerun()
     elif option_STORAGE != "":
@@ -126,12 +156,12 @@ def mac_page():
 
 def linux_page():
     """"""
-    option_OS = st.selectbox("What Linux OS version do you use?", ("isert"),
-                             # May have to replace this with a POSSIBLE OS list from data
+    st.write('computers are like air conditioners—they stop working properly if you open windows')
+    option_OS = st.selectbox("What Linux OS version do you use?", (
+        "isert"),  # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
-    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "32GB", "32GB+"),
-                              # May have to replace this with a POSSIBLE RAM list from data
-                              index=None, placeholder="-", )
+    option_RAM = st.selectbox("How much RAM does your computer have?", (
+        "8GB", "16GB", "32GB", "32GB+"), index=None, placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO  #  #
     if option_STORAGE.isdigit():
 
@@ -139,9 +169,9 @@ def linux_page():
             st.session_state[0] = True
             st.session_state['start'] = 2
 
-            st.session_state["results"].append(option_OS)
-            st.session_state["results"].append(option_RAM)
-            st.session_state["results"].append(option_STORAGE)
+            st.session_state["results"].append("OS: " + str(option_OS))
+            st.session_state["results"].append("RAM: " + str(option_RAM))
+            st.session_state["results"].append("STORAGE (GB): " + str(option_STORAGE))
 
             st.rerun()
     elif option_STORAGE != "":
@@ -149,9 +179,10 @@ def linux_page():
 
 
 def get_data():
-    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv',
-                                                                                                            4)
+    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq(
+        'data.csv', 4)
     st.session_state['cat'] = cat
+    gen = [one for one in gen if one != 'mac' and one != 'windows' and one != 'linux']
     st.session_state['gen'] = gen
     st.session_state['lang'] = lang
     st.session_state[0], st.session_state[1] = False, True
@@ -168,8 +199,8 @@ def category_pick():
 
     st.write(' | '.join(st.session_state['chosen_cat']))
 
-    selected = st.selectbox("Choose categories okay", st.session_state['cat'], index=None,
-                            placeholder='I AM GOING CUCKOO')
+    selected = st.selectbox("Choose categories okay",
+                            st.session_state['cat'], index=None, placeholder='I AM GOING CUCKOO')
     if st.button("undo select"):
         st.session_state["undo_pressed"] = True
         if len(st.session_state['chosen_cat']) > 0:
@@ -233,10 +264,9 @@ def game_genre_page():
 
 def brokeness_level():
     st.title('bald')
-    selected = st.selectbox("lmk how broke u are", ("free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None,
-                            placeholder='im hungry')
+    selected = st.selectbox("how broke are u be fr", (
+        "free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
 
-    temp = "next"
     if st.button("next"):
         st.session_state[3] = False
         st.session_state[4] = True
@@ -283,10 +313,10 @@ def lnaugeg():
         st.rerun()
 
 
-def final_page():
+def first_pick():
     """
-    A page that shows the results the user chose, aka the options.
-    """
+       A page that shows the results the user chose, aka the options.
+       """
     st.write('zaza')
     st.write(str(st.session_state["results"]))
 
@@ -294,10 +324,11 @@ def final_page():
         hrml = f.read()
         # input first game rec cycle games here
 
-        games = [f"Game {i}" for i in range(30)]  # placeholder
+        gamers = [f"Game {i}" for i in range(30)]  # placeholder
 
-        games = [f'{game}<br>' for game in games]  # add image display later
-        htmlformatted = ''.join(games)
+        # games = [format_game(game) for game in gamers] doesnt work when placeholder doesnt work
+        games = gamers
+        htmlformatted = '<br>'.join(games)
         final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
         with open('scrolly.css') as fe:
             css = f"<style>{fe.read()}</style>"
@@ -305,27 +336,51 @@ def final_page():
         st.markdown(final_html, unsafe_allow_html=True)
     st.write(' ')
     st.write(' ')
-    if st.button('back', key='back from page 4'):
-        st.session_state[4] = True
-        st.session_state[5] = False
+    if st.button('back', key='back from page 69'):
+        st.session_state['start'] = 0
+        st.session_state[69] = False
         st.rerun()
 
 
+def final_page():
+    # function i can use later to split by the middle right side is the box left side filters!!
+    with col1:
+        st.write('o')
+    with col2:
+        st.write('i')
+
+
+def contains_cjk(text):
+    for char in text:
+        code = ord(char)
+        if (
+                0x4E00 <= code <= 0x9FFF or 0x3400 <= code <= 0x4DBF or 0x3040 <= code <= 0x309F or 0x30A0 <= code <=
+                0x30FF or 0xAC00 <= code <= 0xD7AF):
+            return True
+    return False
+
+
 def format_game(game):
-    spacesname, spacesprice = 70, 60
+    spacesname, spacesprice = 70, 20
 
     name = game[1].strip("'")
+
+    if len(name) > 55:
+        name = name[:55] + '...'
+    if contains_cjk(name):
+        spacesname = int(spacesname / 1.15)
     spacesname -= len(name)
     price = f"${float(game[2]):.2f}" if game[2] != 'unknown' else 'idk :('
     spacesprice -= len(price)
     genre = ', '.join(game[5]) if isinstance(game[5], list) else 'im lost too okay :('
     image = game[4]
-    paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the (bad) spacing
+    paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
+
     return (
-        f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>{name}"
-        f"{paddingname}"
-        f"{price}{paddingprice}{genre} <div><br>")
+        f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'><a "
+        f"href=\"https://google.com/search?q={name}\">{name}</a>"
+        f"{paddingname}{price}{paddingprice}{genre}<div>")
 
 
 def RANDOM_SELECT():
@@ -334,8 +389,8 @@ def RANDOM_SELECT():
     with open('scrolly.html', 'r') as f:
         hrml = f.read()
 
-        games = [format_game(game) for game in gamers]  # add image display later
-        htmlformatted = ''.join(games)
+        games = [format_game(game) for game in gamers]
+        htmlformatted = '<br>'.join(games)
         final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
         with open('scrolly.css') as fe:
             css = f"<style>{fe.read()}</style>"
@@ -354,6 +409,8 @@ def RANDOM_SELECT():
 
 if 'start' not in st.session_state or st.session_state['start'] == 0:
     start_page()
+elif st.session_state['prestart'] == True:
+    prestart()
 elif st.session_state['start'] == 1:
     pc_req_page()
 elif st.session_state[0]:
@@ -367,10 +424,15 @@ elif st.session_state[3]:
 elif st.session_state[4]:
     lnaugeg()
 elif st.session_state[5]:
+    first_pick()
+elif st.session_state[6]:
     final_page()
+
 elif st.session_state[69]:
-    RANDOM_SELECT()  # The code below creates tabs! We can use this to show the results later  #   # tab1,
-    # tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
+    RANDOM_SELECT()
+
+# The code below creates tabs! We can use this to show the results later  #   # tab1,
+# tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
 
 # g = Graph()
 # g.build_graph("data.csv", 1)

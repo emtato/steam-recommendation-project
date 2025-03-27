@@ -4,4 +4,13 @@
             border: 1px solid #888;
             border-radius: 10px;
             background-color: #111;
+            width: 1200px;
         }
+.meow {
+        yes: true;
+}
+.wrap-text {
+  max-width: 30ch;
+  white-space: normal;
+  overflow-wrap: break-word;
+}

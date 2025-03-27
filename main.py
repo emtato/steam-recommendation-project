@@ -197,6 +197,7 @@ class Graph:
 
     def testing_thing_hi(self):
         """
+        hii :3
         just testing stuff out
         """
         for game_id in self._vertices:
@@ -384,6 +385,7 @@ def build_dic(data_file: str) -> dict:
 
 
 def extract_freq(data_file: str, col: int):
+    '''this is where the yip yap goes'''
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
@@ -401,6 +403,7 @@ def extract_freq(data_file: str, col: int):
 
 # random button in main menu to select random games to look through
 def random_selection():
+    '''this is where the yip yap goes'''
     gamers = []
     with open('data.csv', 'r', encoding='utf8') as file:
         reader = csv.reader(file)
@@ -440,7 +443,6 @@ with open('data.csv', 'r', encoding='utf8') as file:
         dic = {'PC': pc, 'Mac': mac, 'Linux': linux}
         #print(dic)
 """
-# print(dic)
 
 if __name__ == "__main__":
     graph = load_graph('data.csv')
