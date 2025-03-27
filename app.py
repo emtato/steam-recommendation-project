@@ -1,8 +1,7 @@
-# Description:
-# Description: This python file contains the UI for the project. Here we are using streamlit. You'll need to download
-# the streamlit library and follow the directions in the guide to utilize this.
+# Description: This piethon file contains the UI for the project. Here we are using streamlit.
+# Run locally: install streamlit and run shell command
+# View finished product: https://emtato.streamlit.app
 # WARNING: for the app to function, please use streamlit version 1.43.2
-# Or if you'd like use: emtato.streamlit.app in your browser to utilize the app that way.
 # Created by Emilia on 2025-03-25
 
 import streamlit as st
@@ -29,7 +28,9 @@ def start_page():
     Cool right? 😎😜
 
     (insert some for stuff here / desc 📝💭🛠️)
-
+    
+    Made by Emilia 🐱, Amanda 🦆, Nicole ( ) & Grace ( )
+    
     Click the button below 🔘👇 to get started 🚀🎉🎯
     """)
     if st.button("Start"):
@@ -50,17 +51,17 @@ def start_page():
 
 def pc_req_page():
     """
-    A page that lets the user choose their type of PC.
+    A page that lets the user choose their type of computer.
     1 OPTION TEST
     """
     st.title("Choosing your pc requirements")
-    option_comp = st.selectbox("What type of computer do you have?", ("PC (ew)", "Mac", "Linux"), index=None,
+    option_comp = st.selectbox("What type of computer do you have?", ("Window (ew)", "Mac", "Linux"), index=None,
                                placeholder="-", )
 
     # st.write("You selected:", option)
     st.session_state["results"] = [option_comp]
-    if option_comp == "PC (ew)":
-        pc_page()
+    if option_comp == "Window (ew)":
+        window_page()
     elif option_comp == "Mac":
         mac_page()
     elif option_comp == "Linux":
@@ -72,8 +73,10 @@ def pc_req_page():
         st.rerun()
 
 
-def pc_page():
+def window_page():
     """"""
+    st.write('To whoever who stole my Microsoft Office copy, I will find you..')
+    st.write('You have my Word.')
     option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10", "Windows 7"),
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
@@ -101,6 +104,7 @@ def pc_page():
 
 def mac_page():
     """"""
+    st.write('Wwy should you never fart in an Apple store becuause they dnt have any windows BAHJJHHJSBFADJ')
     option_OS = st.selectbox("What Mac OS version do you use?", ("Big Sur", "Monterey", "Ventura", "Sonoma", "Sequoia"),
 
                              # May have to replace this with a POSSIBLE OS list from data
@@ -126,6 +130,7 @@ def mac_page():
 
 def linux_page():
     """"""
+    st.write('computers are like air conditioners—they stop working properly if you open windows')
     option_OS = st.selectbox("What Linux OS version do you use?", ("isert"),
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
@@ -294,10 +299,11 @@ def final_page():
         hrml = f.read()
         # input first game rec cycle games here
 
-        games = [f"Game {i}" for i in range(30)]  # placeholder
+        gamers = [f"Game {i}" for i in range(30)]  # placeholder
 
-        games = [f'{game}<br>' for game in games]  # add image display later
-        htmlformatted = ''.join(games)
+        # games = [format_game(game) for game in gamers] doesnt work when placeholder doesnt work
+        games = gamers
+        htmlformatted = '<br>'.join(games)
         final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
         with open('scrolly.css') as fe:
             css = f"<style>{fe.read()}</style>"
@@ -305,14 +311,14 @@ def final_page():
         st.markdown(final_html, unsafe_allow_html=True)
     st.write(' ')
     st.write(' ')
-    if st.button('back', key='back from page 4'):
-        st.session_state[4] = True
-        st.session_state[5] = False
+    if st.button('back', key='back from page 69'):
+        st.session_state['start'] = 0
+        st.session_state[69] = False
         st.rerun()
 
 
 def format_game(game):
-    spacesname, spacesprice = 70, 60
+    spacesname, spacesprice = 70, 20
 
     name = game[1].strip("'")
     spacesname -= len(name)
@@ -322,10 +328,9 @@ def format_game(game):
     image = game[4]
     paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the (bad) spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
-    return (
-        f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>{name}"
-        f"{paddingname}"
-        f"{price}{paddingprice}{genre} <div><br>")
+    return (f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>{name}"
+            f"{paddingname}"
+            f"{price}{paddingprice}{genre} <div>")
 
 
 def RANDOM_SELECT():
@@ -334,8 +339,8 @@ def RANDOM_SELECT():
     with open('scrolly.html', 'r') as f:
         hrml = f.read()
 
-        games = [format_game(game) for game in gamers]  # add image display later
-        htmlformatted = ''.join(games)
+        games = [format_game(game) for game in gamers]
+        htmlformatted = '<br>'.join(games)
         final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
         with open('scrolly.css') as fe:
             css = f"<style>{fe.read()}</style>"
@@ -369,8 +374,10 @@ elif st.session_state[4]:
 elif st.session_state[5]:
     final_page()
 elif st.session_state[69]:
-    RANDOM_SELECT()  # The code below creates tabs! We can use this to show the results later  #   # tab1,
-    # tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
+    RANDOM_SELECT()
+
+# The code below creates tabs! We can use this to show the results later  #   # tab1,
+# tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
 
 # g = Graph()
 # g.build_graph("data.csv", 1)
