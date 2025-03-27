@@ -8,9 +8,11 @@ import streamlit as st
 import main
 from main import random_selection
 
-
 # states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost, 4: language, 5: first game pick page
 # 6: probably full filter and next game picks menu
+col1, col2 = st.columns([1, 1])  # or adjust the ratio like [2, 1] if you want left side bigger
+
+
 def start_page():
     """
          This serves as the starting page for the application, it contains basic information of what the app does
@@ -36,19 +38,44 @@ def start_page():
     """)
     if st.button("Start"):
         st.balloons()
-        st.session_state["start"] = 1
+        st.session_state["prestart"] = True
+        st.session_state['start'] = 0.5
         st.rerun()
     if st.button("im feeling lucky (dont sue us)"):
         st.session_state['start'] = 2
+        st.session_state['prestart'] = False
         st.session_state[0] = False
         st.session_state[1] = False
         st.session_state[2] = False
         st.session_state[3] = False
         st.session_state[4] = False
         st.session_state[5] = False
+        st.session_state[6] = False
         st.session_state[69] = True
         st.rerun()
 
+
+def prestart():
+    with col1:
+        if st.button('no'):
+            for i in range(0, 30):
+                st.write("ḥ̸̨̧̗̮̖̽̂̓̀̍̋͋́̅̃͘͜͝ŏ̸̡̼̺̫̥̻͈̞̍͆̏̓́͜͝ͅẃ̸̝̝̰͋͒ "
+                         "d̶̡̲̗̼̮̤̤̳̲͖͓͍͔͓̓̎̽́̽̏̐͂̆͆͘͘͘ǎ̴̯̀͠r̵̡͕͈͚͍͍̼͕̍̀̈́̽̎̍͗̍́̏̚͜͠ë̸͓̮͉͈͇͍̖͎̩̞͈́́́̋̇̾͋̈́̾͆͑͘͘͜͠͝ "
+                         "y̶͔͗ŏ̸̡̼̺̫̥̻͈̞̍͆̏̓́͜͝ͅu̷̬̩̰̫͕̘͎̔́̃̄̍͋̓")
+                st.write(' ')
+                st.write(' ')
+            st.write('you will pay.')
+            st.stop()
+    with col2:
+        st.markdown(
+            "<div style='text-align: right;'>Psst, click the 3 dots, ---------------------------------------> "
+            "settings and activate <strong>W I D E</strong> "
+            "mode for a better viewing experience!</div>", unsafe_allow_html=True)
+        if st.button('oki'):
+            st.session_state['start'] = 1
+            st.session_state['prestart'] = False
+            st.rerun()
+        st.write("if youre on mobile, we hate you")
 
 def pc_req_page():
     """
@@ -81,8 +108,7 @@ def window_page():
     option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10", "Windows 7"),
                              index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer "
-                              "have?", ("8GB", "16GB", "32GB", "32GB+"),
-                              index=None, placeholder="-", )
+                              "have?", ("8GB", "16GB", "32GB", "32GB+"), index=None, placeholder="-", )
 
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO
     if option_STORAGE.isdigit():
@@ -108,8 +134,8 @@ def mac_page():
 
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
-    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "18GB", "32GB+"),
-                              index=None, placeholder="-", )
+    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "18GB", "32GB+"), index=None,
+                              placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")
     if option_STORAGE.isdigit():
 
@@ -132,8 +158,8 @@ def linux_page():
     option_OS = st.selectbox("What Linux OS version do you use?", ("isert"),
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
-    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "32GB", "32GB+"),
-                              index=None, placeholder="-", )
+    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "32GB", "32GB+"), index=None,
+                              placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO  #  #
     if option_STORAGE.isdigit():
 
@@ -284,10 +310,10 @@ def lnaugeg():
         st.rerun()
 
 
-def final_page():
+def first_pick():
     """
-    A page that shows the results the user chose, aka the options.
-    """
+       A page that shows the results the user chose, aka the options.
+       """
     st.write('zaza')
     st.write(str(st.session_state["results"]))
 
@@ -329,6 +355,14 @@ def format_game(game):
             f"{price}{paddingprice}{genre} <div>")
 
 
+def final_page():
+    # function i can use later to split by the middle right side is the box left side filters!!
+    with col1:
+        st.write('o')
+    with col2:
+        st.write('i')
+
+
 def RANDOM_SELECT():
     gamers = random_selection()
     st.write('pss scroll right these game titles are so long like why')
@@ -355,6 +389,8 @@ def RANDOM_SELECT():
 
 if 'start' not in st.session_state or st.session_state['start'] == 0:
     start_page()
+elif st.session_state['prestart'] == True:
+    prestart()
 elif st.session_state['start'] == 1:
     pc_req_page()
 elif st.session_state[0]:
@@ -368,7 +404,10 @@ elif st.session_state[3]:
 elif st.session_state[4]:
     lnaugeg()
 elif st.session_state[5]:
+    first_pick()
+elif st.session_state[6]:
     final_page()
+
 elif st.session_state[69]:
     RANDOM_SELECT()
 
