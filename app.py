@@ -342,15 +342,32 @@ def first_pick():
        """
     st.title('zaza')
     st.write(str(st.session_state["results"]))
+    gamers = [f"Game {i}" for i in range(30)]  # placeholder
+
+    if 'gamers_list' not in st.session_state or st.session_state['gamers_list'] is None:
+        st.session_state['gamers_list'] = gamers
+    gamers = st.session_state['gamers_list']
     col1, col2 = st.columns([1, 4])
+
     with col1:
+        selectbox_list = ['-'] + [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
+        chosen_index = st.selectbox("select game", selectbox_list, key='unique')
+        if chosen_index and chosen_index != '-':
+            chosen_index = chosen_index[:2]
+            if chosen_index[1] == '.':
+                chosen_index = chosen_index[:1]
+            chosen_index = int(chosen_index) - 1
+            game_id = gamers[chosen_index][0]
+            st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
+            st.session_state[6] = True
+            st.session_state[69] = False
+            st.session_state['start'] = 3
+            st.rerun()
 
     with col2:
         with open('scrolly.html', 'r') as f:
             hrml = f.read()
             # input first game rec cycle games here
-
-            gamers = [f"Game {i}" for i in range(30)]  # placeholder
 
             # games = [format_game(game) for game in gamers] doesnt work when placeholder doesnt work
             games = gamers
@@ -378,7 +395,11 @@ def final_page():
     # function i can use later to split by the middle right side is the box left side filters!!
     st.title('additional recommendations :3')
     st.write(" ")
+
     suggestions = []
+    chosen = st.session_state['chosen']
+    st.markdown(f'<h6><strong>Current game: {chosen[0]}, {chosen[1]}</strong></h6>',unsafe_allow_html=True)
+
     graph = main.load_graph('data.csv')
     coll1, coll2 = st.columns([1, 2])
     with coll1:
@@ -407,9 +428,8 @@ def final_page():
         if st.button("make  grpah !!"):
             # call make graph function
             graph.clear_edges()
-            st.write({type(price)}, price)
             graph.build_edges([price, languages, dev, platform, category, genre])
-            suggestions = graph.recommend_games(1262394, 50)
+            suggestions = graph.recommend_games(int(chosen[0]), 50)
 
             suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
                             s.description, s.image, s.genres] for s in suggestions]
@@ -438,8 +458,11 @@ def final_page():
     st.write(" ")
 
     if st.button('back', key='back from final page'):
-        st.session_state[5] = True
         st.session_state[6] = False
+        if st.session_state['start'] == 3:
+            st.session_state[69] = True
+        else:
+            st.session_state[5] = True
         st.rerun()
 
 
@@ -477,15 +500,30 @@ def format_game(game):
 
 
 def RANDOM_SELECT():
-    gamers = random_selection()
+    if 'gamers_list' not in st.session_state or st.session_state['gamers_list'] is None:
+        st.session_state['gamers_list'] = random_selection()
+    gamers = st.session_state['gamers_list']
     col1, col2 = st.columns([1, 4])
+
     with col1:
-        selectbox_list = [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
-        st.selectbox("select game", (selectbox_list), index=None, placeholder="-", )
+        selectbox_list = ['-'] + [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
+        chosen_index = st.selectbox("select game", selectbox_list, key='unique')
+        if chosen_index and chosen_index != '-':
+            chosen_index = chosen_index[:2]
+            if chosen_index[1] == '.':
+                chosen_index = chosen_index[:1]
+            chosen_index = int(chosen_index) - 1
+            game_id = gamers[chosen_index][0]
+            st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
+            st.session_state[6] = True
+            st.session_state[69] = False
+            st.session_state['start'] = 3
+            st.rerun()
+
     with col2:
         with open('scrolly.html', 'r') as f:
             hrml = f.read()
-            st.write('recommended games according to weights. click on image for link')
+            st.write('randomly recommended games. click on image for link')
             games = [format_game(game) for game in gamers]
             htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
             final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
@@ -496,12 +534,14 @@ def RANDOM_SELECT():
         st.write(' ')
         st.write(' ')
         if st.button('back', key='back from page 69'):
-            st.session_state['start'] = 0
+            st.session_state['start'] = False
             st.session_state[69] = False
+            st.session_state['gamers_list'] = None
             st.rerun()
 
-    # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
-    # maxing  # and  # restarting the app, making the user lose progress.
+
+# this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
+# maxing  # and  # restarting the app, making the user lose progress.
 
 
 if 'start' not in st.session_state or st.session_state['start'] == 0:
@@ -526,7 +566,6 @@ elif st.session_state[5]:
     first_pick()
 elif st.session_state[6]:
     final_page()
-
 elif st.session_state[69]:
     RANDOM_SELECT()
 
