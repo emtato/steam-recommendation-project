@@ -9,4 +9,8 @@ print(aaa)
 a = [2, 3, 4, 5, 6]
 print()
 
+c = 3
+
+if c:
+    print('s')
 

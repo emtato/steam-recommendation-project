@@ -11,7 +11,6 @@ from main import random_selection
 
 
 # states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost
-
 def start_page():
     """
          This serves as the starting page for the application, it contains basic information of what the app does
@@ -35,9 +34,12 @@ def start_page():
     """)
     if st.button("Start"):
         st.balloons()
-        st.session_state["start"] = True
+        st.session_state["start"] = 1
         st.rerun()
     if st.button("im feeling lucky (dont sue us)"):
+        st.session_state['start'] = 2
+        st.session_state[69] = True
+        st.rerun()
 
 
 def pc_req_page():
@@ -57,6 +59,11 @@ def pc_req_page():
         mac_page()
     elif option_comp == "Linux":
         linux_page()  # st.write("You chose: " + results.pop())  # game_genre_page()
+        st.write()
+        st.write()
+    if st.button('back', key="back from page 1"):
+        st.session_state['start'] = 0
+        st.rerun()
 
 
 def pc_page():
@@ -74,7 +81,7 @@ def pc_page():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
             st.session_state[0] = True
-            st.session_state['start'] = False
+            st.session_state['start'] = 2
 
             st.session_state["results"].append(option_OS)
             st.session_state["results"].append(option_RAM)
@@ -100,7 +107,7 @@ def mac_page():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
             st.session_state[0] = True
-            st.session_state['start'] = False
+            st.session_state['start'] = 2
 
             st.session_state["results"].append(option_OS)
             st.session_state["results"].append(option_RAM)
@@ -124,7 +131,7 @@ def linux_page():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
             st.session_state[0] = True
-            st.session_state['start'] = False
+            st.session_state['start'] = 2
 
             st.session_state["results"].append(option_OS)
             st.session_state["results"].append(option_RAM)
@@ -175,6 +182,13 @@ def category_pick():
 
         st.rerun()
 
+    st.write()
+    st.write()
+    if st.button('back', key='back from page 3'):
+        st.session_state['start'] = True
+        st.session_state[1] = False
+        st.rerun()
+
 
 def game_genre_page():
     st.title('hi')
@@ -203,8 +217,12 @@ def game_genre_page():
         st.session_state["results"].append("GENRES: " + str(st.session_state['chosen_genres']))
 
         st.rerun()
-
-    st.title("")
+    st.write()
+    st.write()
+    if st.button('back', key='back from page 4'):
+        st.session_state[1] = True
+        st.session_state[2] = False
+        st.rerun()
 
 
 def brokeness_level():
@@ -218,7 +236,13 @@ def brokeness_level():
         st.session_state[4] = True
 
         st.session_state["results"].append(selected)
+        st.rerun()
 
+    st.write()
+    st.write()
+    if st.button('back', key='back from page 5'):
+        st.session_state[2] = True
+        st.session_state[3] = False
         st.rerun()
 
 
@@ -244,7 +268,12 @@ def lnaugeg():
         st.session_state[5] = True
 
         st.session_state["results"].append("LANGUAGES: " + str(st.session_state['chosen_lang']))
-
+        st.rerun()
+    st.write()
+    st.write()
+    if st.button('back', key='back from page 6'):
+        st.session_state[3] = True
+        st.session_state[4] = False
         st.rerun()
 
 
@@ -255,32 +284,38 @@ def final_page():
     st.write('zaza')
     st.write(str(st.session_state["results"]))
 
-    with open('scrolly.html','r') as f:
+    with open('scrolly.html', 'r') as f:
         hrml = f.read()
-        #input first game rec cycle games here
+        # input first game rec cycle games here
 
-        games = [f"Game {i}" for i in range(30)] #placeholder
+        games = [f"Game {i}" for i in range(30)]  # placeholder
 
-        games = [f'{game}<br>' for game in games] #add image display later
+        games = [f'{game}<br>' for game in games]  # add image display later
         htmlformatted = ''.join(games)
         final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
         with open('scrolly.css') as fe:
-            css =f"<style>{fe.read()}</style>"
+            css = f"<style>{fe.read()}</style>"
             st.markdown(css, unsafe_allow_html=True)
-        st.markdown(final_html,unsafe_allow_html=True)
-
+        st.markdown(final_html, unsafe_allow_html=True)
+    st.write()
+    st.write()
+    if st.button('back', key='back from page 4'):
+        st.session_state[4] = True
+        st.session_state[5] = False
+        st.rerun()
 
 
 def RANDOM_SELECT():
     games = random_selection()
+    st.session_state[69] = False
+    st.session_state[
+        5] = True  # this section checks the session_state and loads the next page, this is to prevent the app's   #
+    # cache from maxing  # and  # restarting the app, making the user lose progress.
 
-    # this section checks the session_state and loads the next page, this is to prevent the app's cache from maxing
-    # and  # restarting the app, making the user lose progress.
 
-
-if "start" not in st.session_state:
+if 'start' not in st.session_state or st.session_state['start'] == 0:
     start_page()
-elif st.session_state['start']:
+elif st.session_state['start'] == 1:
     pc_req_page()
 elif st.session_state[0]:
     get_data()
@@ -295,8 +330,7 @@ elif st.session_state[4]:
 elif st.session_state[5]:
     final_page()
 elif st.session_state[69]:
-    RANDOM_SELECT()
-    # The code below creates tabs! We can use this to show the results later  #   # tab1,
+    RANDOM_SELECT()  # The code below creates tabs! We can use this to show the results later  #   # tab1,
     # tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
 
 # g = Graph()
