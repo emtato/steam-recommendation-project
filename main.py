@@ -6,6 +6,7 @@ import ast
 import csv
 from random import randint, random
 from typing import Any, Optional, Union
+from unittest import removeResult
 
 from attr import dataclass
 
@@ -96,6 +97,7 @@ class _Vertex:
 
         """
         # TODO: implement this
+        other.item.genres
         return 69
 
 
@@ -286,6 +288,19 @@ class Graph:
         game_list.append(new_vertex.item_id)
         return
 
+def list_games(data_file: str) -> list:
+    """
+    returns a list of all game objects (based on the given data file)
+    """
+    lst = []
+    with open(data_file, 'r', encoding='utf8') as file:
+        reader = csv.reader(file)
+        row = next(reader)
+        for row in reader:
+            game = _load_game_object(row)
+            lst.append(game)
+    return lst
+
 
 def load_graph(data_file: str) -> Graph:
     """ Loads a new graph with verticies given by a csv data_file
@@ -424,25 +439,77 @@ def random_selection():
     return gamers
 
 
-"""
-with open('data.csv', 'r', encoding='utf8') as file:
-    reader = csv.reader(file)
-    row = next(reader)
-    row = 'useless'
-    row = ':('
-    dic = {}
-    for x in reader:
-        x = x[6]
-        x = x[7:-1]
-        #print(x)
-        lst1 = x.split(", 'Mac': ")
-        pc = lst1[0][1:-1]
-        lst2 = lst1[1].split(", 'Linux': ")
-        mac = lst2[0][1:-1]
-        linux = lst2[1][1:-1]
-        dic = {'PC': pc, 'Mac': mac, 'Linux': linux}
-        #print(dic)
-"""
+def filtering_games(data_file: str, requirements: {}) -> list:
+    """
+    This function returns a list of games (in game objects) that are most similar to requirements.
+    """
+    games = list_games(data_file)
+    similiar = []
+
+    for g in games:
+        # gets a list of all AVAILABLE platforms for the game
+        TRUTH = []
+        req = requirements.keys()
+        total_sim, max_sim = 0, len(req)
+
+        for comp in g.platforms.keys():
+            if g.platforms[comp]:
+                TRUTH.append(comp)
+
+        # compares languages
+        has_lang = True
+        for lang in requirements["LANGUAGES"]:
+            if lang not in g.languages:
+                has_lang = False
+        if has_lang:
+            total_sim += 1
+
+        # compares os
+        if requirements["OS"] in TRUTH:
+            total_sim += 1
+
+        # compares genres
+        has_gen = True
+        for gen in requirements["GENRE"]:
+            if gen not in g.genres:
+                has_gen = False
+        if has_gen:
+            total_sim += 1
+
+        # compares categories
+        has_cat = True
+        for cat in requirements["CATEGORY"]:
+            if cat not in g.categories:
+                has_cat = False
+        if has_cat:
+            total_sim += 1
+
+        # UNFINISHED FOR PC/MAC/LINUX REQUIREMENTS LIKE GB AND STUFF
+        # if requirements[""]
+
+        # NEED TO ADD FOR PRICE
+
+        if total_sim == max_sim:
+            similiar.append(g)
+
+    return similiar
+
+res = {"OS": 'windows', "LANGUAGES": ['English'], "GENRE": ['Action'], "CATEGORY": ['Single-player']}
+lst = filtering_games('data.csv', res)
+
+for l in lst:
+    print(">>>>>>>>>>>>>" + str(l))
+
+print(len(lst))
+
+# with open('data.csv', 'r', encoding='utf8') as file:
+#     reader = csv.reader(file)
+#     row = next(reader)
+#     row = ''
+#     row = ''
+#     for i, row in enumerate(reader):
+#         if FUCK in row[i]
+
 
 if __name__ == "__main__":
     graph = load_graph('data.csv')
