@@ -14,4 +14,3 @@ c = 3
 if c:
     print('s')
 
-
