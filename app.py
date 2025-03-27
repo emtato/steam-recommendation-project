@@ -381,11 +381,17 @@ def final_page():
         col1, col2, col3 = st.columns([1, 1, 1])  # can add more columns
         # weights: price, language, dev, platform, category, genre
         with col1:
-            st.text_input('i')
+            st.text_input('price')
+            st.text_input('platform', key = 4)
+
         with col2:
-            st.text_input('iw', key = 2)
+            st.text_input('language', key = 2)
+            st.text_input('category', key = 5)
+
         with col3:
-            st.write('4SFSDNFKJSD FKJSFJKSNFKJSFKJSNFJKNAKJF')
+            st.text_input('dev', key = 3)
+            st.text_input('genre', key = 6)
+
     with coll2:
         st.write('recommended games according to weights. click on image for link')
         gamers = random_selection()
