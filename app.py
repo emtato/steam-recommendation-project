@@ -342,32 +342,36 @@ def first_pick():
        """
     st.title('zaza')
     st.write(str(st.session_state["results"]))
-    with open('scrolly.html', 'r') as f:
-        hrml = f.read()
-        # input first game rec cycle games here
+    col1, col2 = st.columns([1, 4])
+    with col1:
 
-        gamers = [f"Game {i}" for i in range(30)]  # placeholder
+    with col2:
+        with open('scrolly.html', 'r') as f:
+            hrml = f.read()
+            # input first game rec cycle games here
 
-        # games = [format_game(game) for game in gamers] doesnt work when placeholder doesnt work
-        games = gamers
-        htmlformatted = '<br>'.join(games)
-        final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-        with open('scrolly.css') as fe:
-            css = f"<style>{fe.read()}</style>"
-            st.markdown(css, unsafe_allow_html=True)
-        st.markdown(final_html, unsafe_allow_html=True)
+            gamers = [f"Game {i}" for i in range(30)]  # placeholder
 
-    if st.button("choose game (temp button to get to next page)"):
-        st.session_state[5] = False
-        st.session_state[6] = True
-        st.rerun()
-    st.write(' ')
-    st.write(' ')
+            # games = [format_game(game) for game in gamers] doesnt work when placeholder doesnt work
+            games = gamers
+            htmlformatted = '<br>'.join(games)
+            final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
+            with open('scrolly.css') as fe:
+                css = f"<style>{fe.read()}</style>"
+                st.markdown(css, unsafe_allow_html=True)
+            st.markdown(final_html, unsafe_allow_html=True)
 
-    if st.button('back', key='back from page 7'):
-        st.session_state[3] = True
-        st.session_state[4] = False
-        st.rerun()
+        if st.button("choose game (temp button to get to next page)"):
+            st.session_state[5] = False
+            st.session_state[6] = True
+            st.rerun()
+        st.write(' ')
+        st.write(' ')
+
+        if st.button('back', key='back from page 7'):
+            st.session_state[3] = True
+            st.session_state[4] = False
+            st.rerun()
 
 
 def final_page():
@@ -416,7 +420,7 @@ def final_page():
                 hrml = f.read()
 
                 games = [format_game(game) for game in suggestions]
-                htmlformatted = '<br>'.join(games)
+                htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
                 final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
                 with open('scrolly.css') as fe:
                     css = f"<style>{fe.read()}</style>"
@@ -466,31 +470,35 @@ def format_game(game):
     paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
 
-    return (
-        f"<a href=\"https://google.com/search?q={name} {game[0]}\"><img src={image}></a><div style='font-family: "
-        f"monospace; "
-        f"white-space: nowrap; font-size: 13px;'>{name}</a>"
-        f"{paddingname}{price}{paddingprice}{genre}<div>")
+    return (f"<a href=\"https://google.com/search?q={name} {game[0]}\"><img src={image}></a><div style='font-family: "
+            f"monospace; "
+            f"white-space: nowrap; font-size: 13px;'>{name}</a>"
+            f"{paddingname}{price}{paddingprice}{genre}<div>")
 
 
 def RANDOM_SELECT():
     gamers = random_selection()
-    with open('scrolly.html', 'r') as f:
-        hrml = f.read()
-        st.write('recommended games according to weights. click on image for link')
-        games = [format_game(game) for game in gamers]
-        htmlformatted = '<br>'.join(games)
-        final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-        with open('scrolly.css') as fe:
-            css = f"<style>{fe.read()}</style>"
-            st.markdown(css, unsafe_allow_html=True)
-        st.markdown(final_html, unsafe_allow_html=True)
-    st.write(' ')
-    st.write(' ')
-    if st.button('back', key='back from page 69'):
-        st.session_state['start'] = 0
-        st.session_state[69] = False
-        st.rerun()
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        selectbox_list = [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
+        st.selectbox("select game", (selectbox_list), index=None, placeholder="-", )
+    with col2:
+        with open('scrolly.html', 'r') as f:
+            hrml = f.read()
+            st.write('recommended games according to weights. click on image for link')
+            games = [format_game(game) for game in gamers]
+            htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
+            final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
+            with open('scrolly.css') as fe:
+                css = f"<style>{fe.read()}</style>"
+                st.markdown(css, unsafe_allow_html=True)
+            st.markdown(final_html, unsafe_allow_html=True)
+        st.write(' ')
+        st.write(' ')
+        if st.button('back', key='back from page 69'):
+            st.session_state['start'] = 0
+            st.session_state[69] = False
+            st.rerun()
 
     # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
     # maxing  # and  # restarting the app, making the user lose progress.
