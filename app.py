@@ -31,9 +31,9 @@ def start_page():
     Cool right? 😎😜
 
     (insert some for stuff here / desc 📝💭🛠️)
-    
+
     Made by Emilia 🐱, Amanda 🦆, Nicole 🐔 & Grace 🐸
-    
+
     Click the button below 🔘👇 to get started 🚀🎉🎯
     """)
 
@@ -202,8 +202,7 @@ def linux_page():
 
 
 def get_data():
-    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq(
-        'data.csv', 4)
+    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv', 4)
     st.session_state['cat'] = cat
     gen = [one for one in gen if one != 'mac' and one != 'windows' and one != 'linux']
     st.session_state['gen'] = gen
@@ -384,7 +383,7 @@ def final_page():
         with col1:
             st.text_input('i')
         with col2:
-            st.text_input('i')
+            st.text_input('iw', key = 2)
         with col3:
             st.write('4SFSDNFKJSD FKJSFJKSNFKJSFKJSNFJKNAKJF')
     with coll2:
@@ -412,8 +411,7 @@ def contains_cjk(text):
     for char in text:
         code = ord(char)
         if (
-                0x4E00 <= code <= 0x9FFF or 0x3400 <= code <= 0x4DBF or 0x3040 <= code <= 0x309F or 0x30A0 <= code <=
-                0x30FF or 0xAC00 <= code <= 0xD7AF):
+                0x4E00 <= code <= 0x9FFF or 0x3400 <= code <= 0x4DBF or 0x3040 <= code <= 0x309F or 0x30A0 <= code <= 0x30FF or 0xAC00 <= code <= 0xD7AF):
             return True
     return False
 
@@ -459,8 +457,7 @@ def RANDOM_SELECT():
         st.session_state[69] = False
         st.rerun()
 
-    # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
-    # maxing  # and  # restarting the app, making the user lose progress.
+    # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from  # maxing  # and  # restarting the app, making the user lose progress.
 
 
 if 'start' not in st.session_state or st.session_state['start'] == 0:
