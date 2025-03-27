@@ -368,20 +368,31 @@ def first_pick():
         st.rerun()
 
 
+
 def final_page():
     # function i can use later to split by the middle right side is the box left side filters!!
 
-    col1, col2, col3 = st.columns([1, 1, 2])
+    col1, col2 = st.columns([1, 3]) #can add more columns
     with col1:
         st.write('4SFSDNFKJSD FKJSFJKSNFKJSFKJSNFJKNAKJF')
     with col2:
-        st.write('5ASFNJKAAFNKJASNFKJADNFKJADNFKAJDFNJKADNFKJA')
-    with col3:
-        st.write('5JFNAKJNFAJKDFNKAJNFJKADNFJKANFKJANAJKN')
-    if st.button('back', key='back from final page'):
-        st.session_state[5] = True
-        st.session_state[6] = False
-        st.rerun()
+        gamers = random_selection()
+        with open('scrolly.html', 'r') as f:
+            hrml = f.read()
+
+            games = [format_game(game) for game in gamers]
+            htmlformatted = '<br>'.join(games)
+            final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
+            with open('scrolly.css') as fe:
+                css = f"<style>{fe.read()}</style>"
+                st.markdown(css, unsafe_allow_html=True)
+            st.markdown(final_html, unsafe_allow_html=True)
+        st.write(' ')
+        st.write(' ')
+        if st.button('back', key='back from final page'):
+            st.session_state[5] = True
+            st.session_state[6] = False
+            st.rerun()
 
 
 def contains_cjk(text):
