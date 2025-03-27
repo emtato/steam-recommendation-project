@@ -1,5 +1,5 @@
 import csv
-
+#dont touch or run!
 
 with open('../data.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
