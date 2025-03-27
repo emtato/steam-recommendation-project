@@ -8,8 +8,6 @@
 import streamlit as st
 import main
 
-results = []
-
 
 # states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost
 
@@ -50,7 +48,7 @@ def pc_req_page():
                                placeholder="-", )
 
     # st.write("You selected:", option)
-    results.append(option_comp)
+    st.session_state["results"] = [option_comp]
     if option_comp == "PC (ew)":
         pc_page()
     elif option_comp == "Mac":
@@ -75,6 +73,11 @@ def pc_page():
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
             st.session_state[0] = True
             st.session_state['start'] = False
+
+            st.session_state["results"].append(option_OS)
+            st.session_state["results"].append(option_RAM)
+            st.session_state["results"].append(option_STORAGE)
+
             st.rerun()
 
     elif option_STORAGE != "":
@@ -96,6 +99,11 @@ def mac_page():
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
             st.session_state[0] = True
             st.session_state['start'] = False
+
+            st.session_state["results"].append(option_OS)
+            st.session_state["results"].append(option_RAM)
+            st.session_state["results"].append(option_STORAGE)
+
             st.rerun()
     elif option_STORAGE != "":
         st.warning('the hell ya think yer doin mate that aint no **int**')
@@ -115,6 +123,11 @@ def linux_page():
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
             st.session_state[0] = True
             st.session_state['start'] = False
+
+            st.session_state["results"].append(option_OS)
+            st.session_state["results"].append(option_RAM)
+            st.session_state["results"].append(option_STORAGE)
+
             st.rerun()
     elif option_STORAGE != "":
         st.warning('the hell ya think yer doin mate that aint no **int**')
@@ -155,6 +168,9 @@ def category_pick():
     if st.button("submmit"):
         st.session_state[1] = False
         st.session_state[2] = True
+
+        st.session_state["results"].append("CATEGORIES:" + str(st.session_state['chosen_cat']))
+
         st.rerun()
 
 
@@ -181,6 +197,9 @@ def game_genre_page():
     if st.button("submmit"):
         st.session_state[2] = False
         st.session_state[3] = True
+
+        st.session_state["results"].append("GENRES: " + str(st.session_state['chosen_genres']))
+
         st.rerun()
 
     st.title("")
@@ -190,9 +209,14 @@ def brokeness_level():
     st.title('bald')
     selected = st.selectbox("lmk how broke u are", ("free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None,
                             placeholder='im hungry')
+
+    temp = "next"
     if st.button("next"):
         st.session_state[3] = False
         st.session_state[4] = True
+
+        st.session_state["results"].append(selected)
+
         st.rerun()
 
 
@@ -216,6 +240,9 @@ def lnaugeg():
     if st.button("submmit"):
         st.session_state[4] = False
         st.session_state[5] = True
+
+        st.session_state["results"].append("LANGUAGES: " + str(st.session_state['chosen_lang']))
+
         st.rerun()
 
 
@@ -224,7 +251,7 @@ def final_page():
     A page that shows the results the user chose, aka the options.
     """
     st.write('zaza')
-    st.write(str(results))
+    st.write(str(st.session_state["results"]))
 
     # this section checks the session_state and loads the next page, this is to prevent the app's cache from maxing
     # and  # restarting the app, making the user lose progress.
