@@ -243,7 +243,7 @@ print(extract_freq('data.csv'))
 g = Graph()
 g.build_graph('data.csv', 10)
 
-with open('new_data.csv', 'r', encoding='utf8') as file:
+with open('old_data.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
     row = next(reader)
     row = 'useless'
@@ -259,5 +259,18 @@ with open('new_data.csv', 'r', encoding='utf8') as file:
                 list.extend(a.split('<'))
         for x in list:
             dic[x] = dic.get(x, 0) + 1
+
+with open('data.csv', 'r', encoding='utf8') as file:
+    reader = csv.reader(file)
+    row = next(reader)
+    row = 'useless'
+    row = ':('
+    dic = {}
+
+    for x in reader:
+        x = x[4]
+        list = ast.literal_eval(x)
+        for i in list:
+            dic[i] = dic.get(i, 0) + 1
 
 print(dic)

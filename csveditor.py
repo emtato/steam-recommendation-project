@@ -1,7 +1,7 @@
 import csv
 
 
-with open('new_data.csv', 'r', encoding='utf8') as file:
+with open('data.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
     list = []
     list.append(next(reader))
@@ -16,10 +16,10 @@ with open('new_data.csv', 'r', encoding='utf8') as file:
             new_language = new_language.replace("<strong>", "")
             new_language = new_language.replace("</strong>", "")
             new_language = new_language.replace("<br>", "")
-            languages[i] = new_language
+            languages[i] = new_language.strip()
         x[4] = languages
         list.append(x)
 
-with open('new_data.csv', 'w', newline='') as csvfile:
+with open('data.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(list)
