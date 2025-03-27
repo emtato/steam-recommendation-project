@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import csv
+from random import randint
 from typing import Any, Optional, Union
 
 from attr import dataclass
@@ -154,12 +155,12 @@ class Graph:
                     print("NOOOO")
                 try:
                     (
-                        id, name, price_overview, description, supported_languages, capsule_image, requirements,
-                        developers,
-                        platforms, categories, genres, dlc) = row
+                    id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
+                    platforms, categories, genres, dlc) = row
                 except(Exception):
-                    raise ValueError("shit")  # this shold be fine i think cuz all the rows have , even if no value
-                    # so some  #  # should  # just be an empty string
+                    raise ValueError(
+                        "shit")  # this shold be fine i think cuz all the rows have , even if no value  # so some  #
+                    # should  # just be an empty string
 
                 if name in dic:
                     print(f"Duplicate game name found: {name}")
@@ -194,7 +195,7 @@ def load_graph(data_file: str) -> Graph:
         row = next(reader)
         for row in reader:
             if len(row) != 12:
-                print(i, row[0])
+                print(row[0])
             game = _load_game_object(row)
             graph.add_vertex(game)
     return graph
@@ -243,58 +244,39 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
                 platforms, categories, genres, dlc)
 
 
-def extract_freq(data_file: str):
+g = Graph()
+g.build_graph('data.csv', 10)
+
+
+def extract_freq(data_file: str, col: int):
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
         row = 'useless'
         row = ':('
-        dic_categories = {}
-        dic_genres = {}
+        dic = {}
         for i, row in enumerate(reader):
-            categories = ast.literal_eval(row[9])
-            genres = ast.literal_eval(row[10])
-            for x in categories:
-                dic_categories[x] = dic_categories.get(x, 0) + 1
-            for x in genres:
-                dic_genres[x] = dic_genres.get(x, 0) + 1
-            categories_items = sorted(dic_categories.items(), key=lambda x: (-x[1], x[0]))
-            genres_items = sorted(dic_genres.items(), key=lambda x: (-x[1], x[0]))
-        return [x[0] for x in categories_items], [x[0] for x in genres_items]
+            colle = ast.literal_eval(row[col])
+            for x in colle:
+                dic[x] = dic.get(x, 0) + 1
+
+            col_items = sorted(dic.items(), key=lambda x: (-x[1], x[0]))
+        return [x[0] for x in col_items]
 
 
-print(extract_freq('data.csv'))
-g = Graph()
-g.build_graph('data.csv', 10)
-
-with open('old_files/old_data.csv', 'r', encoding='utf8') as file:
-    reader = csv.reader(file)
-    row = next(reader)
-    row = 'useless'
-    row = ':('
-    dic = {}
-
-    for x in reader:
-        x = x[4]
-        list = x.split(',')
-        for i, a in enumerate(list):
-            if '<' in a:
-                list.pop(i)
-                list.extend(a.split('<'))
-        for x in list:
-            dic[x] = dic.get(x, 0) + 1
-
-with open('data.csv', 'r', encoding='utf8') as file:
-    reader = csv.reader(file)
-    row = next(reader)
-    row = 'useless'
-    row = ':('
-    dic = {}
-
-    for x in reader:
-        x = x[7]
-        dic[x] = dic.get(x, 0) + 1
-
+# random button in main menu to select random games to look through
+def random_selection():
+    gamers = []
+    with open('data.csv', 'r', encoding='utf8') as file:
+        reader = csv.reader(file)
+        row = next(reader)
+        row = 'useless'
+        row = ':('
+        l = [row[0] for row in reader]
+    while len(gamers) < 20:
+        num = randint(2, 2069)
+        gamers.append(l[num-2])
+    return gamers
 """
 with open('data.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
@@ -314,4 +296,4 @@ with open('data.csv', 'r', encoding='utf8') as file:
         dic = {'PC': pc, 'Mac': mac, 'Linux': linux}
         #print(dic)
 """
-print(dic)
+#print(dic)
