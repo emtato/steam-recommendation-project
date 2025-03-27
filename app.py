@@ -253,6 +253,20 @@ def final_page():
     st.write('zaza')
     st.write(str(st.session_state["results"]))
 
+    with open('scrolly.html','r') as f:
+        hrml = f.read()
+
+    names = [f"Game {i}" for i in range(1, 51)] #placeholder
+
+
+
+    list_html = "<ul>" + "".join(f"<li>{name}</li>" for name in names) + "</ul>"
+
+    html_content = f'<div class="scroll-box">{list_html}</div>'
+    st.markdown(html_content, unsafe_allow_html=True)
+
+
+
     # this section checks the session_state and loads the next page, this is to prevent the app's cache from maxing
     # and  # restarting the app, making the user lose progress.
 
