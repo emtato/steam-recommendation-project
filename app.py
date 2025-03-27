@@ -1,6 +1,6 @@
 # Description: This piethon file contains the UI for the project. Here we are using streamlit.
 # Run locally: install streamlit and run shell command
-# View finished product: https://emtato.streamlit.app
+# View finished product: https://emtato.streamlit.app (not as up to date if not completed)
 # WARNING: for the app to function, please use streamlit version 1.43.2
 # Created by Emilia on 2025-03-25
 
@@ -9,7 +9,8 @@ import main
 from main import random_selection
 
 
-# states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost
+# states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost, 4: language, 5: first game pick page
+# 6: probably full filter and next game picks menu
 def start_page():
     """
          This serves as the starting page for the application, it contains basic information of what the app does
@@ -78,11 +79,9 @@ def window_page():
     st.write('To whoever who stole my Microsoft Office copy, I will find you..')
     st.write('You have my Word.')
     option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10", "Windows 7"),
-                             # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer "
                               "have?", ("8GB", "16GB", "32GB", "32GB+"),
-                              # May have to replace this with a POSSIBLE RAM list from data
                               index=None, placeholder="-", )
 
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO
@@ -110,7 +109,6 @@ def mac_page():
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "18GB", "32GB+"),
-                              # May have to replace this with a POSSIBLE RAM list from data
                               index=None, placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")
     if option_STORAGE.isdigit():
@@ -135,7 +133,6 @@ def linux_page():
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "32GB", "32GB+"),
-                              # May have to replace this with a POSSIBLE RAM list from data
                               index=None, placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO  #  #
     if option_STORAGE.isdigit():
@@ -238,10 +235,9 @@ def game_genre_page():
 
 def brokeness_level():
     st.title('bald')
-    selected = st.selectbox("lmk how broke u are", ("free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None,
+    selected = st.selectbox("how broke are u be fr", ("free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None,
                             placeholder='im hungry')
 
-    temp = "next"
     if st.button("next"):
         st.session_state[3] = False
         st.session_state[4] = True
