@@ -46,8 +46,8 @@ def pc_req_page():
     1 OPTION TEST
     """
     st.title("Choosing your pc requirements")
-    option_comp = st.selectbox("What type of computer do you have?", (
-        "PC (ew)", "Mac", "Linux"), index=None, placeholder="-", )
+    option_comp = st.selectbox("What type of computer do you have?", ("PC (ew)", "Mac", "Linux"), index=None,
+                               placeholder="-", )
 
     # st.write("You selected:", option)
     results.append(option_comp)
@@ -61,12 +61,12 @@ def pc_req_page():
 
 def pc_page():
     """"""
-    option_OS = st.selectbox("What Windows (ew) OS version do you use?", (
-        "Windows 11", "Windows 10", "Windows 7"),  # May have to replace this with a POSSIBLE OS list from data
+    option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10", "Windows 7"),
+                             # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
     option_RAM = st.selectbox("How much RAM does your computer "
-                              "have?", ("8GB", "16GB", "32GB",
-                                        "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
+                              "have?", ("8GB", "16GB", "32GB", "32GB+"),
+                              # May have to replace this with a POSSIBLE RAM list from data
                               index=None, placeholder="-", )
 
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO
@@ -87,8 +87,8 @@ def mac_page():
 
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
-    option_RAM = st.selectbox("How much RAM does your computer have?", (
-        "8GB", "16GB", "18GB", "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
+    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "18GB", "32GB+"),
+                              # May have to replace this with a POSSIBLE RAM list from data
                               index=None, placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")
     if option_STORAGE.isdigit():
@@ -103,11 +103,11 @@ def mac_page():
 
 def linux_page():
     """"""
-    option_OS = st.selectbox("What Linux OS version do you use?", (
-        "isert"),  # May have to replace this with a POSSIBLE OS list from data
+    option_OS = st.selectbox("What Linux OS version do you use?", ("isert"),
+                             # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
-    option_RAM = st.selectbox("How much RAM does your computer have?", (
-        "8GB", "16GB", "32GB", "32GB+"),  # May have to replace this with a POSSIBLE RAM list from data
+    option_RAM = st.selectbox("How much RAM does your computer have?", ("8GB", "16GB", "32GB", "32GB+"),
+                              # May have to replace this with a POSSIBLE RAM list from data
                               index=None, placeholder="-", )
     option_STORAGE = st.text_input("How much storage do you have? (put in GB):")  # DONT FORGET TO RESTRICT TO  #  #
     if option_STORAGE.isdigit():
@@ -121,7 +121,8 @@ def linux_page():
 
 
 def get_data():
-    cat, gen = main.extract_freq('data.csv')
+    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv',
+                                                                                                            4)
     st.session_state['cat'] = cat
     st.session_state['gen'] = gen
     st.session_state[0], st.session_state[1] = False, True
@@ -138,8 +139,8 @@ def category_pick():
 
     st.write(' | '.join(st.session_state['chosen_cat']))
 
-    selected = st.selectbox("Choose categories okay",
-                            st.session_state['cat'], index=None, placeholder='I AM GOING CUCKOO')
+    selected = st.selectbox("Choose categories okay", st.session_state['cat'], index=None,
+                            placeholder='I AM GOING CUCKOO')
     if st.button("undo select"):
         st.session_state["undo_pressed"] = True
         if len(st.session_state['chosen_cat']) > 0:
@@ -186,8 +187,8 @@ def game_genre_page():
 
 def brokeness_level():
     st.title('bald')
-    selected = st.selectbox("lmk how broke u are", (
-    "free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
+    selected = st.selectbox("lmk how broke u are", ("free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None,
+                            placeholder='im hungry')
     if st.button("next"):
         st.session_state[3] = False
         st.session_state[4] = True
