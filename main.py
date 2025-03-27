@@ -257,7 +257,7 @@ class Graph:
         else:
             return self._vertices[item_id1].calculate_score(self._vertices[item_id2], preferences)
 
-    def recommend_games(self, target_id: int, limit: int) -> list[str]:
+    def recommend_games(self, target_id: int, limit: int) -> list[Game]:
         """ call this to return a list of game ids or names or something, closest to game with target_id, with
         limited number of recommendations
         """
@@ -265,7 +265,9 @@ class Graph:
         vertex = self._vertices[target_id]
         for game_vertex in vertex.neighbours:
             self._add_recommendation_in_order(vertex, game_vertex, games)
-        return games[0:limit]
+        game_ids = games[0:limit]
+        return [self._vertices[game_id].item for game_id in game_ids]
+
 
     def _add_recommendation_in_order(self, target_vertex: _Vertex, new_vertex: _Vertex, game_list: list[int]) -> None:
         """
@@ -294,14 +296,14 @@ class Graph:
         """
         graph_nx = nx.Graph()
         for v in self._vertices.values():
-            graph_nx.add_node(v.item.name)
+            graph_nx.add_node(v.item_id)
 
             for u in v.neighbours:
                 if graph_nx.number_of_nodes() < max_vertices:
-                    graph_nx.add_node(u.item.name)
+                    graph_nx.add_node(u.item_id)
 
-                if u.item.name in graph_nx.nodes:
-                    graph_nx.add_edge(v.item.name, u.item.name)
+                if u.item_id in graph_nx.nodes:
+                    graph_nx.add_edge(v.item_id, u.item_id)
 
             if graph_nx.number_of_nodes() >= max_vertices:
                 break
@@ -542,5 +544,5 @@ if __name__ == "__main__":
     print(graph.recommend_games(1291170, 10))
     print(graph._vertices[1291170].item.name)
 
-    from graph_visualization import visualize_weighted_graph
-    visualize_weighted_graph(graph)
+    #from graph_visualization import visualize_weighted_graph
+    #visualize_weighted_graph(graph)
