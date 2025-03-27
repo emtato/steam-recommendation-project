@@ -256,14 +256,13 @@ def final_page():
     with open('scrolly.html','r') as f:
         hrml = f.read()
 
-    names = [f"Game {i}" for i in range(1, 51)] #placeholder
+        games = [f"Game {i}" for i in range(10)] #placeholder
+        games = [f'{game}<br>' for game in games] #add image display later
+        htmlformatted = ''.join(games)
+        final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
+        st.markdown(final_html, unsafe_allow_html=True)
 
 
-
-    list_html = "<ul>" + "".join(f"<li>{name}</li>" for name in names) + "</ul>"
-
-    html_content = f'<div class="scroll-box">{list_html}</div>'
-    st.markdown(html_content, unsafe_allow_html=True)
 
 
 

@@ -246,24 +246,21 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
                 platforms, categories, genres, dlc)
 
 
-def extract_freq(data_file: str):
+def extract_freq(data_file: str, col: int):
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
         row = 'useless'
         row = ':('
-        dic_categories = {}
-        dic_genres = {}
+        dic = {}
         for i, row in enumerate(reader):
-            categories = ast.literal_eval(row[9])
-            genres = ast.literal_eval(row[10])
-            for x in categories:
-                dic_categories[x] = dic_categories.get(x, 0) + 1
-            for x in genres:
-                dic_genres[x] = dic_genres.get(x, 0) + 1
-            categories_items = sorted(dic_categories.items(), key=lambda x: (-x[1], x[0]))
-            genres_items = sorted(dic_genres.items(), key=lambda x: (-x[1], x[0]))
-        return [x[0] for x in categories_items], [x[0] for x in genres_items]
+            colle = ast.literal_eval(row[col])
+            for x in colle:
+                dic[x] = dic.get(x, 0) + 1
+
+            col_items = sorted(dic.items(), key=lambda x: (-x[1], x[0]))
+        return [x[0] for x in col_items]
+
 
 
 print(extract_freq('data.csv'))
