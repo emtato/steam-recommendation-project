@@ -171,6 +171,7 @@ class Graph:
         for game_id in self._vertices:
             g = self._vertices[game_id].item
             print(g.id)
+            print(g.name)
             print(g.price)
             print(g.description)
             print(g.languages)
@@ -297,3 +298,7 @@ with open('data.csv', 'r', encoding='utf8') as file:
         #print(dic)
 """
 #print(dic)
+
+if __name__ == "__main__":
+    g = load_graph('data.csv')
+    g.testing_thing_hi()
