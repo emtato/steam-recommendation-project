@@ -4,13 +4,9 @@ from __future__ import annotations
 
 import ast
 import csv
-#import networkx as nx
-
 from random import randint
 from typing import Optional, Union
-
 from attr import dataclass
-
 from typing import Any
 
 PRICE, LANGUAGE, DEV, PLATFORM, CATEGORY, GENRE = 0, 1, 2, 3, 4, 5
@@ -18,15 +14,33 @@ PRICE, LANGUAGE, DEV, PLATFORM, CATEGORY, GENRE = 0, 1, 2, 3, 4, 5
 
 @dataclass
 class Game:
-    '''yap herre'''
+    """
+    Game dataclass object containing information about a steam game.
+    Instance Attributes:
+        - id: The unique id of this game
+        - name: The name of this game
+        - price: A dictionary representing information about the price, or None if price is unknown
+        - description: A description of this game
+        - languages: A list of the languages this game supports
+        - image: A link to an image of this game
+        - requirements: A dictionary mapping operating systems to their requirements
+        - developers: A list of names of this game's developers, or None if unknown
+        - platforms: A dictionary mapping operating systems to a boolean representing whether this system is supported
+        - categories: A list of categories this game falls under
+        - genres: A list of genres this game falls under
+        - dlc: A boolean value representing whether this game is a dlc
+
+    Representation Invariants:
+        -
+    """
     id: int
     name: str
-    price: dict[str:Any]
+    price: Optional[dict[str:Any]]
     description: str
     languages: list[str]
     image: str
     requirements: dict[str: str]
-    developers: list[str]
+    developers: Optional[list[str]]
     platforms: dict[str: bool]
     categories: list[str]
     genres: list[str]
@@ -50,7 +64,7 @@ class _Vertex:
     neighbours: dict[_Vertex, Union[int, float]]
 
     def __init__(self, item: Game) -> None:
-        """Initialize a new vertex with the given item and neighbours."""
+        """Initialize a new vertex with the given game item and neighbours."""
         self.item_id = item.id
         self.item = item
         self.neighbours = {}
@@ -79,17 +93,9 @@ class _Vertex:
             neighbour.neighbours.pop(self)
         self.neighbours = {}
 
-    def clear_all_edges(self) -> None:
-        """ Remove all neighbours of this vertex and remove this vertex from the list of neighbours of each neighbour,
-        then clear all neighbours of each neighbour etc?
-        """
-        for neighbour in self.neighbours:
-            neighbour.neighbours.pop(self)
-            self.neighbours.pop(neighbour)
-            neighbour.clear_neighbours()
-
     def _calculate_sim(self, this_list: list[str], other_list: list[str]) -> float:
-        """Helper function for calculate score"""
+        """Helper function for calculate score that calculates the similarity between
+        two lists."""
         if this_list is None or other_list is None or len(this_list) == 0 or len(other_list) == 0:
             return 0.0
         else:
@@ -98,7 +104,10 @@ class _Vertex:
 
     def calculate_score(self, other: _Vertex, preferences: list[int]) -> float:
         """ Calculate the score between this vertex and another vertex based on a list of preference weights.
-
+        Preconditions:
+            - self.item_id != other.item_id
+            - len(preferences) == 6
+            - all({})
         """
         this_game = self.item
         other_game = other.item
@@ -263,31 +272,7 @@ class Graph:
                 return
         game_list.append(new_vertex.item_id)
         return
-"""
-    def to_networkx(self, max_vertices: int = 50) -> nx.Graph:
-        """Convert this graph into a networkx Graph.
 
-        max_vertices specifies the maximum number of vertices that can appear in the graph.
-        (This is necessary to limit the visualization output for large graphs.)
-
-        Note that this method is provided for you, and you shouldn't change it.
-        """
-        graph_nx = nx.Graph()
-        for v in self._vertices.values():
-            graph_nx.add_node(v.item_id)
-
-            for u in v.neighbours:
-                if graph_nx.number_of_nodes() < max_vertices:
-                    graph_nx.add_node(u.item_id)
-
-                if u.item_id in graph_nx.nodes:
-                    graph_nx.add_edge(v.item_id, u.item_id, weight=self.get_weight(v.item_id, u.item_id))
-
-            if graph_nx.number_of_nodes() >= max_vertices:
-                break
-
-        return graph_nx
-"""
 
 def list_games(data_file: str) -> list:
     """
@@ -320,11 +305,11 @@ def load_graph(data_file: str) -> Graph:
     return graph
 
 
-def _get_object_from_string(string: str, exclude: Optional[str] = "") -> Any:
+def _get_object_from_string(string: str, exclude: Optional[str] = None) -> Any:
     """ Helper for _load_game_object, use and return ast.literal_eval() on a given string, unless the string is equal to
     the exclude string, then return None
     """
-    if string == exclude:
+    if exclude is not None and string == exclude:
         return None
     else:
         try:
@@ -517,10 +502,10 @@ print(len(lst))
 
 
 if __name__ == "__main__":
-    #graph = load_graph('data.csv')
-    #graph.build_edges([100, 100, 100, 100, 100, 100])
+    graph = load_graph('data.csv')
+    graph.build_edges([100, 100, 100, 100, 100, 100])
     # graph.testing_thing_hi()
-    #print(graph.get_score(3076100, 1291170, [100, 100, 100, 100, 100, 100]))
+    # print(graph.get_score(3076100, 1291170, [100, 100, 100, 100, 100, 100]))
     # print(graph.get_weight(7, 1291170))
-    #print(graph.recommend_games(3076100, 20))
-    #print(graph._vertices[1291170].item.name)
+    print([game.name for game in graph.recommend_games(3076100, 20)])
+    # print(graph._vertices[1291170].item.name)
