@@ -386,26 +386,26 @@ def final_page():
         # weights: price, language, dev, platform, category, genre
         with col1:
             price = st.text_input('price', key='price', placeholder="0")
-            price = int(price) if price.isdigit() else 0
+            price = int(price) if price.isdigit() else 10
             platform = st.text_input('platform', key='platform', placeholder="0")
-            platform = int(platform) if platform.isdigit() else 0
+            platform = int(platform) if platform.isdigit() else 10
         with col2:
             languages = st.text_input('language', key='language', placeholder="0")
-            languages = int(languages) if languages.isdigit() else 0
+            languages = int(languages) if languages.isdigit() else 10
             category = st.text_input('category', key='category', placeholder="0")
-            category = int(category) if category.isdigit() else 0
+            category = int(category) if category.isdigit() else 10
         with col3:
             dev = st.text_input('dev', key='dev', placeholder="0")
-            dev = int(dev) if dev.isdigit() else 0
+            dev = int(dev) if dev.isdigit() else 10
             genre = st.text_input('genre', key='genre', placeholder="0")
-            genre = int(genre) if genre.isdigit() else 0
+            genre = int(genre) if genre.isdigit() else 10
 
         if st.button("make  grpah !!"):
             # call make graph function
             graph.clear_edges()
             st.write({type(price)}, price)
             graph.build_edges([price, languages, dev, platform, category, genre])
-            suggestions = graph.recommend_games(3075690, 30)
+            suggestions = graph.recommend_games(1262394, 50)
 
             suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
                             s.description, s.image, s.genres] for s in suggestions]
