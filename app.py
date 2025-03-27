@@ -319,10 +319,13 @@ def format_game(game):
     price = f"${float(game[2]):.2f}" if game[2] != 'unknown' else 'idk :('
     spacesprice -= len(price)
     genre = ', '.join(game[5]) if isinstance(game[5], list) else 'im lost too okay :('
-    paddingname = '&nbsp;' * max(1, spacesname) #force html to keep the (bad) spacing
+    image = game[4]
+    paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the (bad) spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
-    return (f"<div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>{name}{paddingname}"
-            f"{price}{paddingprice}{genre} <div><br>")
+    return (
+        f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>{name}"
+        f"{paddingname}"
+        f"{price}{paddingprice}{genre} <div><br>")
 
 
 def RANDOM_SELECT():
