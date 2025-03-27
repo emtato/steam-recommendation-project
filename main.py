@@ -10,7 +10,7 @@ from attr import dataclass
 from typing import Any
 
 PRICE, LANGUAGE, DEV, PLATFORM, CATEGORY, GENRE = 0, 1, 2, 3, 4, 5
-
+#NAME,PRICE_RANGES,DESCRIPTION,LANGUAGES, DEVELOPERS,PLATFORMS,CATEGORIES,GENRES, DLC =
 
 @dataclass
 class Game:
@@ -68,23 +68,6 @@ class _Vertex:
         self.item_id = item.id
         self.item = item
         self.neighbours = {}
-
-    def check_connected(self, target_item_id: int, visited: set[_Vertex]) -> bool:
-        """Return whether this vertex is connected to a vertex corresponding to the target_item_id,
-        WITHOUT using any of the vertices in visited.
-
-        Preconditions:
-            - self not in visited
-        """
-        if self.item_id == target_item_id:
-            return True
-        else:
-            visited.add(self)
-            for u in self.neighbours:
-                if u not in visited:
-                    if u.check_connected(target_item_id, visited):
-                        return True
-            return False
 
     def clear_neighbours(self) -> None:
         """ Remove all neighbours of this vertex and remove this vertex from the list of neighbours of each neighbour
