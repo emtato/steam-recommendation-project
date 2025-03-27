@@ -93,9 +93,9 @@ class _Vertex:
             neighbour.neighbours.pop(self)
         self.neighbours = {}
 
-    def _calculate_sim(self, this_list: list[str], other_list: list[str]) -> float:
+    def _calculate_sim(self, this_list: Optional[list[str]], other_list: Optional[list[str]]) -> float:
         """Helper function for calculate score that calculates the similarity between
-        two lists."""
+        two lists. Returns 0 if either list is None"""
         if this_list is None or other_list is None or len(this_list) == 0 or len(other_list) == 0:
             return 0.0
         else:
@@ -157,20 +157,15 @@ class Graph:
         self._vertices = {}
 
     def add_vertex(self, item: Game) -> None:
-        """Add a vertex with the given item to this graph.
-
+        """Add a vertex with the given game item to this graph.
         The new vertex is not adjacent to any other vertices.
-
-        Preconditions:
-            - item not in self._vertices
+        Add the game id of the item as the key and the _Vertex object as the value.
         """
         if item.id not in self._vertices:
             self._vertices[item.id] = _Vertex(item)
 
     def add_edge(self, item_id1: int, item_id2: int, weight: Union[int, float]) -> None:
-        """Add an edge between the two vertices with the given item_ids in this graph,
-        with the given weight.
-
+        """Add an edge between the two vertices with the given item_ids in this graph, with the given weight.
         Raise a ValueError if item_id1 or item_id2 do not appear as vertices in this graph.
 
         Preconditions:
@@ -188,12 +183,12 @@ class Graph:
             raise ValueError
 
     def get_weight(self, item_id1: int, item_id2: int) -> Union[int, float]:
-        """Return the weight of the edge between the given item_ids.
-
+        """Return the weight of the edge between the vertices with the given item_ids.
         Return 0 if item_id1 and item_id2 are not adjacent.
 
         Preconditions:
-            - item_id1 and item_id2 are vertices in this graph
+            - item_id1 in self._vertices
+            - item_id2 in self._vertices
         """
         v1 = self._vertices[item_id1]
         v2 = self._vertices[item_id2]
@@ -202,6 +197,9 @@ class Graph:
     def get_vertex(self, item_id: Any) -> _Vertex:
         """
         Returns the vertex given a corresponding item_id.
+
+        Preconditions:
+            - item_id in self._vertices
         """
         return self._vertices[item_id]
 
@@ -211,16 +209,12 @@ class Graph:
         for game_id in self._vertices:
             self._vertices[game_id].clear_neighbours()
 
-    def clear_edges_alt(self, target_id) -> None:
-        """ Starting from a target vertex with the target_id, clear all the edges of every vertex connected to this
-        target vertex. (this might be more efficient if we make the graph using only one starting game and keep
-        track of the id of that game)
-        """
-        self._vertices[target_id].clear_all_edges()
-
     def build_edges(self, preferences: list[int]) -> None:
         """ Given a list of preference weights, add edges in the graph.
-        make this recursive maybe
+
+        Preconditions:
+            - len(preferences) == 6
+            - all({num >= 0 and num <= 100 for num in preferences})
         """
         vertex_list = list(self._vertices.keys())
         for i in range(len(vertex_list)):
@@ -231,14 +225,14 @@ class Graph:
                 self.add_edge(vertex_id1, vertex_id2, score)
 
     def get_score(self, item_id1: int, item_id2: int, preferences: list[int]) -> float:
-        """Return the score between the two given games in this graph given their ids.
-
-        Preferences is a list of weights
+        """Return the score between the two given games in this graph given their ids and a list of weights
+        representing the user's preferences.
 
         Raise a ValueError if item_id1 or item_id2 do not appear as vertices in this graph.
 
         Preconditions:
-            -
+            - len(preferences) == 6
+            - all({num >= 0 and num <= 100 for num in preferences})
         """
         if item_id1 not in self._vertices or item_id2 not in self._vertices:
             raise ValueError
@@ -246,8 +240,11 @@ class Graph:
             return self._vertices[item_id1].calculate_score(self._vertices[item_id2], preferences)
 
     def recommend_games(self, target_id: int, limit: int) -> list[Game]:
-        """ call this to return a list of game ids or names or something, closest to game with target_id, with
-        limited number of recommendations
+        """ Recommend a list with length limit of Game objects with scores closest to the target_id.
+
+        Preconditions:
+            - limit >= 0
+            - target_id in self._vertices
         """
         games = []
         vertex = self._vertices[target_id]
@@ -258,9 +255,9 @@ class Graph:
 
     def _add_recommendation_in_order(self, target_vertex: _Vertex, new_vertex: _Vertex, game_list: list[int]) -> None:
         """
-        Helper function for recommend_games that adds a new_game to a list of game ids (game_list) in
-        descending order of similarity score with target_book, and in alphabetical order of game name in the case of
-        equal similarity scores.
+        Helper function for recommend_games that adds the game id of a new_vertex to a list of game ids (game_list) in
+        descending order of score with target_vertex, and in alphabetical order of game name in the case of
+        equal scores.
         """
         for i in range(len(game_list)):
             game_id = game_list[i]
@@ -291,12 +288,13 @@ def list_games(data_file: str) -> list:
 def load_graph(data_file: str) -> Graph:
     """ Loads a new graph with verticies given by a csv data_file
 
-    Preconditions
+    Preconditions:
+        - data_file is the path to a CSV file corresponding to data about steam games used for this project.
     """
     graph = Graph()
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
-        row = next(reader)
+        next(reader)
         for row in reader:
             if len(row) != 12:
                 print(row[0])
@@ -306,26 +304,24 @@ def load_graph(data_file: str) -> Graph:
 
 
 def _get_object_from_string(string: str, exclude: Optional[str] = None) -> Any:
-    """ Helper for _load_game_object, use and return ast.literal_eval() on a given string, unless the string is equal to
-    the exclude string, then return None
+    """ Helper for _load_game_object. Return a given stirng formatted as a list or dictionary as that data type,
+    unless the string is equal to the exclude string, then return None.
+
+    Preconditions:
+        - if string != exclude, then string is correctly formatted as a list or dictionary
     """
     if exclude is not None and string == exclude:
         return None
     else:
-        try:
-            return ast.literal_eval(string)
-        except:
-            print(string)
-            print('L')
+        return ast.literal_eval(string)
 
 
-def _load_game_object(game_data: list[str | bool]) -> Game:
-    """ Helper function for load_graph which creates a Game object using a list of game_data
-
+def _load_game_object(game_data: list[str]) -> Game:
+    """ Helper function for load_graph which creates a Game object using a list of game_data.
     """
-    (id, name, price_overview, description, supported_languages, capsule_image, requirements, developers, platforms,
+    (game_id, name, price_overview, description, supported_languages, capsule_image, requirements, developers, platforms,
      categories, genres, dlc) = game_data
-    id = int(id)
+    game_id = int(game_id)
     if name[0] == "'" and name[-1] == "'":
         name = name[1:-1]
     price_overview = _get_object_from_string(price_overview, 'unknown')
@@ -345,7 +341,7 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
 
     dlc = dlc == 'True'
 
-    return Game(id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
+    return Game(game_id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
                 platforms, categories, genres, dlc)
 
 
@@ -502,10 +498,11 @@ print(len(lst))
 
 
 if __name__ == "__main__":
-    graph = load_graph('data.csv')
-    graph.build_edges([100, 100, 100, 100, 100, 100])
+    test_graph = load_graph('data.csv')
+    test_graph.build_edges([100, 100, 100, 100, 100, 100])
     # graph.testing_thing_hi()
     # print(graph.get_score(3076100, 1291170, [100, 100, 100, 100, 100, 100]))
     # print(graph.get_weight(7, 1291170))
-    print([game.name for game in graph.recommend_games(3076100, 20)])
+    print([game.name for game in test_graph.recommend_games(3076100, 20)])
+    print(test_graph._vertices[1290210].item.dlc)
     # print(graph._vertices[1291170].item.name)
