@@ -45,6 +45,7 @@ def start_page():
     if st.button("im feeling lucky (dont sue us)"):
         st.session_state['start'] = 2
         st.session_state['prestart'] = False
+        st.session_state['skip'] = False
         st.session_state[0] = False
         st.session_state[1] = False
         st.session_state[2] = False
