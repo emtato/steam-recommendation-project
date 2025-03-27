@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import ast
 import csv
-from random import randint
-from typing import Optional, Union
+from random import randint, random
+from typing import Any, Optional, Union
 
 from attr import dataclass
 
 from typing import Any
+
+from pandas.core.computation.common import result_type_many
+from pandas.core.config_init import pc_max_info_rows_doc
 
 # weight of each category for determining matches
 # we can create a simple ranking system where the user ranks whats most important to them for personalization
@@ -343,8 +346,41 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
                 platforms, categories, genres, dlc)
 
 
-g = Graph()
-g.build_graph('data.csv', 10)
+def build_dic(data_file: str) -> dict:
+    # Here we are using the 'encoding=' to make sure everyone's computer will be able to use the csv file
+    with open(data_file, 'r', encoding='utf8') as file:
+        reader = csv.reader(file)
+        row = next(reader)
+        row = 'useless'
+        row = ':('
+
+        dic = {}
+        for i, row in enumerate(reader):
+            # print(row)
+            if len(row) != 12:
+                print(i, row[0])
+                print("NOOOO")
+            try:
+                (id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
+                 platforms, categories, genres, dlc) = row
+                d1 = {}
+                d1['name'] = name
+                d1['price_overview'] = price_overview
+                d1['description'] = description
+                d1['supported_languages'] = supported_languages
+                d1['capsule_image'] = capsule_image
+                d1['requirements'] = requirements
+                d1['developers'] = developers
+                d1['platforms'] = platforms
+                d1['categories'] = categories
+                d1['genres'] = genres
+                d1['dlc'] = dlc
+                dic[id] = d1
+            except(Exception):
+                raise ValueError(
+                    "shit")  # this shold be fine i think cuz all the rows have , even if no value  # so some  #  #
+                # should  # just be an empty string
+        return dic
 
 
 def extract_freq(data_file: str, col: int):
@@ -371,10 +407,17 @@ def random_selection():
         row = next(reader)
         row = 'useless'
         row = ':('
-        l = [row[0] for row in reader]
-    while len(gamers) < 20:
+
+        l = [[row[0], row[1], row[2], row[3], row[5], ast.literal_eval(row[10])] for row in reader]
+        for i,row in enumerate(l):
+            try:
+                dictified = ast.literal_eval(row[2])['final']
+                l[i][2] = dictified
+            except:
+                l[i][2] = 'unknown'
+    while len(gamers) < 25:
         num = randint(2, 2069)
-        gamers.append(l[num - 2])
+        gamers.append(l[num-2])
     return gamers
 
 

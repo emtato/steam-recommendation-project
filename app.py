@@ -38,6 +38,12 @@ def start_page():
         st.rerun()
     if st.button("im feeling lucky (dont sue us)"):
         st.session_state['start'] = 2
+        st.session_state[0] = False
+        st.session_state[1] = False
+        st.session_state[2] = False
+        st.session_state[3] = False
+        st.session_state[4] = False
+        st.session_state[5] = False
         st.session_state[69] = True
         st.rerun()
 
@@ -305,16 +311,30 @@ def final_page():
         st.rerun()
 
 
+def format_game(game):
+    spacesname, spacesprice = 70, 60
+
+    name = game[1].strip("'")
+    spacesname -= len(name)
+    price = f"${float(game[2]):.2f}" if game[2] != 'unknown' else 'idk :('
+    spacesprice -= len(price)
+    genre = ', '.join(game[5]) if isinstance(game[5], list) else 'im lost too okay :('
+    image = game[4]
+    paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the (bad) spacing
+    paddingprice = '&nbsp;' * max(1, spacesprice)
+    return (
+        f"<img src={image}><div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>{name}"
+        f"{paddingname}"
+        f"{price}{paddingprice}{genre} <div><br>")
+
+
 def RANDOM_SELECT():
     gamers = random_selection()
-    st.session_state[69] = False
-
+    st.write('pss scroll right these game titles are so long like why')
     with open('scrolly.html', 'r') as f:
         hrml = f.read()
 
-        games = [f"Game {i}" for i in range(30)]  # placeholder
-
-        games = [f'{game}<br>' for game in games]  # add image display later
+        games = [format_game(game) for game in gamers]  # add image display later
         htmlformatted = ''.join(games)
         final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
         with open('scrolly.css') as fe:
@@ -323,13 +343,13 @@ def RANDOM_SELECT():
         st.markdown(final_html, unsafe_allow_html=True)
     st.write(' ')
     st.write(' ')
-    if st.button('back', key='back from page 4'):
-        st.session_state[4] = True
-        st.session_state[5] = False
+    if st.button('back', key='back from page 69'):
+        st.session_state['start'] = 0
+        st.session_state[69] = False
         st.rerun()
 
-    # this section checks the session_state and loads the next page, this is to prevent the app's   #
-    # cache from maxing  # and  # restarting the app, making the user lose progress.
+    # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
+    # maxing  # and  # restarting the app, making the user lose progress.
 
 
 if 'start' not in st.session_state or st.session_state['start'] == 0:
