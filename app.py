@@ -197,8 +197,23 @@ def brokeness_level():
 
 
 def lnaugeg():
-    selected = st.selectbox("language", st.session_state['lang'], index=None, placeholder='im hungry')
-    if st.button("next"):
+    if 'chosen_lang' not in st.session_state:
+        st.session_state['chosen_lang'] = []  # list of sleected categories ^•ω•^
+
+    st.write(' | '.join(st.session_state['chosen_lang']))
+
+    selected = st.selectbox("blipblop bloop", st.session_state['lang'], index=None, placeholder='hai')
+    if st.button("undo select"):
+        st.session_state["undo_pressed"] = True
+        if len(st.session_state['chosen_lang']) > 0:
+            st.session_state['chosen_lang'].pop()
+            st.rerun()
+    if selected and selected not in st.session_state['chosen_lang'] and not st.session_state['undo_pressed']:
+        st.session_state['chosen_lang'].append(selected)
+        st.rerun()
+    st.session_state['undo_pressed'] = False
+
+    if st.button("submmit"):
         st.session_state[4] = False
         st.session_state[5] = True
         st.rerun()
