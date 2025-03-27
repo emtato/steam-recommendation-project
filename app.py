@@ -180,8 +180,9 @@ def linux_page():
 
 def get_data():
     cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv',
-                                                                                                            4)
+                                                                            4)
     st.session_state['cat'] = cat
+    gen = [one for one in gen if one != 'mac' and one != 'windows' and one != 'linux']
     st.session_state['gen'] = gen
     st.session_state['lang'] = lang
     st.session_state[0], st.session_state[1] = False, True
