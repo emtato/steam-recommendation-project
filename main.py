@@ -263,7 +263,7 @@ print(extract_freq('data.csv'))
 g = Graph()
 g.build_graph('data.csv', 10)
 
-with open('old_data.csv', 'r', encoding='utf8') as file:
+with open('old_files/old_data.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
     row = next(reader)
     row = 'useless'
