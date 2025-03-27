@@ -11,12 +11,7 @@ from attr import dataclass
 
 from typing import Any
 
-from pandas.core.computation.common import result_type_many
-from pandas.core.config_init import pc_max_info_rows_doc
-
-# weight of each category for determining matches
-# we can create a simple ranking system where the user ranks whats most important to them for personalization
-genre, languages, platforms = 0, 0, 0
+PRICE, LANGUAGE, DEV, PLATFORM, CATEGORY, GENRE = 0, 1, 2, 3, 4, 5
 
 
 @dataclass
@@ -91,12 +86,47 @@ class _Vertex:
             self.neighbours.pop(neighbour)
             neighbour.clear_neighbours()
 
-    def calculate_score(self, other: _Vertex, preferences) -> float:
-        """ Calculate the score between this vertex and another vertex based on a dictionary? of weighted preferences.
+    def _calculate_sim(self, this_list: list[str], other_list: list[str]) -> float:
+        """Helper function for calculate score"""
+        if this_list is None or other_list is None or len(this_list) == 0 or len(other_list) == 0:
+            return 0.0
+        else:
+            return (len(set(this_list).intersection(set(other_list))) /
+                    len(set(this_list).union(set(other_list))))
+
+    def calculate_score(self, other: _Vertex, preferences: list[int]) -> float:
+        """ Calculate the score between this vertex and another vertex based on a list of preference weights.
 
         """
-        # TODO: implement this
-        return 69
+        this_game = self.item
+        other_game = other.item
+
+        if this_game.price is None or other_game.price is None:
+            price_sim = 0
+        elif this_game.price['final'] == 0 and other_game.price['final'] == 0:
+            price_sim = 0
+        else:
+            price_sim = 1 - abs(this_game.price['final'] - other_game.price['final']) / (
+                        2 * (this_game.price['final'] + other_game.price['final']))
+
+        lang_sim = self._calculate_sim(this_game.languages, other_game.languages)
+        dev_sim = self._calculate_sim(this_game.developers, other_game.developers)
+        cat_sim = self._calculate_sim(this_game.categories, other_game.categories)
+        gen_sim = self._calculate_sim(this_game.genres, other_game.genres)
+
+        both_true_platforms = 0
+        one_true_platforms = 0
+        for plat in this_game.platforms:
+            both_true_platforms += int(this_game.platforms[plat] and other_game.platforms[plat])
+            both_true_platforms += int(this_game.platforms[plat] or other_game.platforms[plat])
+        if one_true_platforms == 0:
+            plat_sim = 0
+        else:
+            plat_sim = both_true_platforms / one_true_platforms
+
+        return (price_sim * preferences[PRICE] + lang_sim * preferences[LANGUAGE] + dev_sim * preferences[DEV] +
+                plat_sim * preferences[PLATFORM] + cat_sim * preferences[CATEGORY] + gen_sim * preferences[GENRE]) / (
+            600)
 
 
 class Graph:
@@ -164,37 +194,6 @@ class Graph:
         """
         return self._vertices[item_id]
 
-    def build_graph(self, data_file: str, amount: int) -> Graph:
-        # Here we are using the 'encoding=' to make sure everyone's computer will be able to use the csv file
-        with open(data_file, 'r', encoding='utf8') as file:
-            reader = csv.reader(file)
-            row = next(reader)
-            row = 'useless'
-            row = ':('
-
-            dic = {}
-            for i, row in enumerate(reader):
-                # print(row)
-                if i >= amount - 1:
-                    break
-                if len(row) != 12:
-                    print(i, row[0])
-                    print("NOOOO")
-                try:
-                    (
-                        id, name, price_overview, description, supported_languages, capsule_image, requirements,
-                        developers,
-                        platforms, categories, genres, dlc) = row
-                except(Exception):
-                    raise ValueError(
-                        "shit")  # this shold be fine i think cuz all the rows have , even if no value  # so some  #
-                    # should  # just be an empty string
-
-                if name in dic:
-                    print(f"Duplicate game name found: {name}")
-                else:
-                    dic[name] = True
-
     def testing_thing_hi(self):
         """
         hii :3
@@ -229,24 +228,22 @@ class Graph:
         """
         self._vertices[target_id].clear_all_edges()
 
-    def build_edges(self, filters, preferences, target_id: int) -> None:
-        """ Given a dictionary? or something of filters and preferences, add edges in the graph.
-        filters are mandatory (like os and stuff), which preferences are not (maybe weighted based on importance).
-        Create edges between the vertex with target_id and all other vertexes that satisfy the filters, and add weights
-        to each edge calculated using preferences and maybe other factors?
-
-        we should also build edges between other vertexes that arent the target one but idk how that would work
+    def build_edges(self, preferences: list[int]) -> None:
+        """ Given a list of preference weights, add edges in the graph.
+        make this recursive maybe
         """
-        for vertex_id in self._vertices:
-            # if satisfy_filters(target_id, vertex_id):
-            if vertex_id != target_id:
-                score = self.get_score(target_id, vertex_id, preferences)
-                self.add_edge(target_id, vertex_id, score)
+        vertex_list = list(self._vertices.keys())
+        for i in range(len(vertex_list)):
+            for j in range(i + 1, len(vertex_list)):
+                vertex_id1 = vertex_list[i]
+                vertex_id2 = vertex_list[j]
+                score = self.get_score(vertex_id1, vertex_id2, preferences)
+                self.add_edge(vertex_id1, vertex_id2, score)
 
-    def get_score(self, item_id1: int, item_id2: int, preferences) -> float:
+    def get_score(self, item_id1: int, item_id2: int, preferences: list[int]) -> float:
         """Return the score between the two given games in this graph given their ids.
 
-        Preferences is a collection of weighted preferences of the user used to calculate the score
+        Preferences is a list of weights
 
         Raise a ValueError if item_id1 or item_id2 do not appear as vertices in this graph.
 
@@ -264,7 +261,6 @@ class Graph:
         """
         games = []
         vertex = self._vertices[target_id]
-        visited = {vertex}
         for game_vertex in vertex.neighbours:
             self._add_recommendation_in_order(vertex, game_vertex, games)
         return games[0:limit]
@@ -412,7 +408,7 @@ def random_selection():
         row = ':('
 
         l = [[row[0], row[1], row[2], row[3], row[5], ast.literal_eval(row[10])] for row in reader]
-        for i,row in enumerate(l):
+        for i, row in enumerate(l):
             try:
                 dictified = ast.literal_eval(row[2])['final']
                 l[i][2] = dictified
@@ -420,7 +416,7 @@ def random_selection():
                 l[i][2] = 'unknown'
     while len(gamers) < 25:
         num = randint(2, 2069)
-        gamers.append(l[num-2])
+        gamers.append(l[num - 2])
     return gamers
 
 
@@ -446,7 +442,8 @@ with open('data.csv', 'r', encoding='utf8') as file:
 
 if __name__ == "__main__":
     graph = load_graph('data.csv')
-    graph.build_edges(1, 1, 1291240)
+    graph.build_edges([100, 100, 100, 100, 100, 100])
     graph.testing_thing_hi()
-    print(graph.get_score(1291240, 1291170, 1))
+    print(graph.get_score(1291240, 1291170, [100, 100, 100, 100, 100, 100]))
     print(graph.get_weight(1291240, 1291170))
+    print(graph.recommend_games(1291170, 10))
