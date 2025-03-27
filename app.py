@@ -32,7 +32,7 @@ def start_page():
 
     (insert some for stuff here / desc 📝💭🛠️)
     
-    Made by Emilia 🐱, Amanda 🦆, Nicole ( ) & Grace ( )
+    Made by Emilia 🐱, Amanda 🦆, Nicole 🐔 & Grace 🐸
     
     Click the button below 🔘👇 to get started 🚀🎉🎯
     """)
