@@ -107,7 +107,7 @@ class _Vertex:
         Preconditions:
             - self.item_id != other.item_id
             - len(preferences) == 6
-            - all({})
+            - all({num >= 0 and num <= 100 for num in preferences})
         """
         this_game = self.item
         other_game = other.item
