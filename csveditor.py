@@ -16,7 +16,6 @@ with open('new_data.csv', 'r', encoding='utf8') as file:
             new_language = new_language.replace("<strong>", "")
             new_language = new_language.replace("</strong>", "")
             new_language = new_language.replace("<br>", "")
-            if 'Spanish'
             languages[i] = new_language
         x[4] = languages
         list.append(x)
