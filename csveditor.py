@@ -1,7 +1,7 @@
 import csv
 
 
-with open('data.csv', 'r', encoding='utf8') as file:
+with open('nodata.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
     list = []
     list.append(next(reader))
@@ -20,6 +20,6 @@ with open('data.csv', 'r', encoding='utf8') as file:
         x[4] = languages
         list.append(x)
 
-with open('data.csv', 'w', newline='') as csvfile:
+with open('nodata.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(list)

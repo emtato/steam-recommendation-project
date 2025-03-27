@@ -22,7 +22,7 @@ class Game:
     name: str
     price: dict[str:Any]
     description: str
-    languages: str
+    languages: list[str]
     image: str
     requirements: dict[str: str]
     developers: list[str]
@@ -164,6 +164,22 @@ class Graph:
                     print(f"Duplicate game name found: {name}")
                 else:
                     dic[name] = True
+    def testing_thing_hi(self):
+        for game_id in self._vertices:
+            g = self._vertices[game_id].item
+            print(g.id)
+            print(g.price)
+            print(g.description)
+            print(g.languages)
+            print(g.image)
+            print(g.requirements)
+            print(g.developers)
+            print(g.platforms)
+            print(g.categories)
+            print(g.genres)
+            print(g.dlc)
+            break
+
 
 
 def load_graph(data_file: str) -> Graph:
@@ -194,6 +210,10 @@ def _load_game_object(game_data: list[str | bool]) -> Game:
         price_overview = None
     else:
         price_overview = ast.literal_eval(price_overview)
+    if supported_languages == '':
+        supported_languages = None
+    else:
+        supported_languages = ast.literal_eval(supported_languages)
     if requirements == '':
         requirements = None
     else:
