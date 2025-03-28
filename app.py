@@ -118,7 +118,7 @@ def pc_req_page():
 
     # st.write("You selected:", option)
     st.session_state["results"] = {"COMPUTER": option_comp}
-    if option_comp == "Window (ew)":
+    if option_comp == "Windows":
         window_page()
     elif option_comp == "Mac":
         mac_page()
@@ -256,7 +256,7 @@ def category_pick():
         st.session_state[1] = False
         st.session_state[2] = True
 
-        st.session_state["results"]["CATEGORIES"] = str(st.session_state['chosen_cat'])
+        st.session_state["results"]["CATEGORIES"] = st.session_state['chosen_cat']
 
         st.rerun()
 
@@ -292,7 +292,7 @@ def game_genre_page():
         st.session_state[2] = False
         st.session_state[3] = True
 
-        st.session_state["results"]["GENRES"] = str(st.session_state['chosen_genres'])
+        st.session_state["results"]["GENRES"] = st.session_state['chosen_genres']
 
         st.rerun()
     st.write(' ')
@@ -317,7 +317,7 @@ def brokeness_level():
             st.session_state[3] = False
             st.session_state[4] = True
 
-            st.session_state["results"]["PRICE"] = selected
+            st.session_state["results"]["PRICE"] = float(selected)
             st.rerun()
 
         st.write(' ')
@@ -351,7 +351,7 @@ def lnaugeg():
         st.session_state[4] = False
         st.session_state[5] = True
 
-        st.session_state["results"]["LANGUAGES"] = str(st.session_state['chosen_lang'])
+        st.session_state["results"]["LANGUAGES"] = st.session_state['chosen_lang']
         st.rerun()
     st.write(' ')
     st.write(' ')
@@ -365,8 +365,9 @@ def first_pick():
     """
        A page that shows the results the user chose, aka the options.
        """
-    st.title('zaza')
+    st.title('Here are the possible options for games that exactly match your requirements!')
     st.write(str(st.session_state["results"]))
+    st.write(main.filtering_games('data.csv', st.session_state["results"]))
     gamers = [f"Game {i}" for i in range(30)]  # placeholder
 
     if 'gamers_list' not in st.session_state or st.session_state['gamers_list'] is None:

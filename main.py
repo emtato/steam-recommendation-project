@@ -431,15 +431,25 @@ def filtering_games(data_file: str, requirements: {}) -> list:
             total_sim += 1
 
         # compares os + os specfifics
-        if requirements["COMPUTER"] in TRUTH:
+        if requirements["COMPUTER"].lower() in TRUTH:
             total_sim += 1
             os_list, ram_list, storage_list = minimum_requirements(g, requirements["COMPUTER"])
-            if os_list[0] == requirements[]
-
+            print(ram_list)
+            # checks if the wanted os is in the list of possible os for game g.
+            if requirements["OS"] in os_list:
+                total_sim += 1
+            else: total_sim += 1
+            # checks if the ram requirements are over (inclusive) the minimum for game g.
+            if (float(requirements["RAM"][0]) >= ram_list[0]) and (requirements["RAM"][1] == ram_list[1]):
+                total_sim += 1
+            # checks if the users available storage is above the minimum requirements for game g.
+            if ((float(requirements["STORAGE"][0]) >= storage_list[0]) and
+                    (requirements["STORAGE"][1] == storage_list[1])):
+                total_sim += 1
 
         # compares genres
         has_gen = True
-        for gen in requirements["GENRE"]:
+        for gen in requirements["GENRES"]:
             if gen not in g.genres:
                 has_gen = False
         if has_gen:
@@ -447,17 +457,18 @@ def filtering_games(data_file: str, requirements: {}) -> list:
 
         # compares categories
         has_cat = True
-        for cat in requirements["CATEGORY"]:
+        for cat in requirements["CATEGORIES"]:
             if cat not in g.categories:
                 has_cat = False
         if has_cat:
             total_sim += 1
 
         # compares prices
-        if g.price['final'] <= requirements["PRICE"]:
-            total_sim += 1
+        if g.price is not None:
+            if float(g.price['final']) <= float(requirements["PRICE"]):
+                total_sim += 1
 
-        if total_sim == max_sim:
+        if total_sim >= max_sim:
             similiar.append(g)
 
     return similiar
@@ -495,16 +506,23 @@ def minimum_requirements(g: Game, key: str) -> tuple:
             ram_list.append(-1)
         ram_list.append(ram[2])
 
+    # extracts the possible os types
+    # TO FINISH
+
+    if not os_list:
+        os_list = ['empty']
+    if not ram_list:
+        ram_list = [-1, 'empty']
+    if not storage_list:
+        storage_list = [-1, 'empty']
+
+
     return (os_list, ram_list, storage_list)
 
 gamesNogames = list_games('data.csv')
-for g in gamesNogames:
-    for k in g.requirements.keys():
-        g_os = g.requirements[k].split("OS:")
-        if len(g_os) == 2:
-            os = g_os[1].split("Processor:")
-            print(k)
-            print(os)
+lst = {'COMPUTER': 'Windows', 'OS': 'Windows 11', 'RAM': ['1234567890', 'GB'], 'STORAGE': ['1000', 'GB'],
+       'CATEGORIES': ['Single-player'], 'GENRES': ['Indie'], 'PRICE': 0, 'LANGUAGES': ['English']}
+print(filtering_games('data.csv', lst))
 
 
 
