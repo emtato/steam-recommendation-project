@@ -114,7 +114,7 @@ def pc_req_page():
     """
     st.title("Choosing your pc requirements")
     option_comp = st.selectbox("What type of computer do you have?", (
-        "Window (ew)", "Mac", "Linux"), index=None, placeholder="-", )
+        "Windows", "Mac", "Linux"), index=None, placeholder="-", )
 
     # st.write("You selected:", option)
     st.session_state["results"] = {"COMPUTER": option_comp}
@@ -152,8 +152,8 @@ def window_page():
 
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
-            res["RAM"] = str(option_RAM) + ' ' + option_RAM_TYPE
-            res["STORAGE"] = str(option_STORAGE) + ' ' + option_STORAGE_TYPE
+            res["RAM"] = [option_RAM, option_RAM_TYPE]
+            res["STORAGE"] = [option_STORAGE, option_STORAGE_TYPE]
 
             st.rerun()
 
@@ -183,8 +183,8 @@ def mac_page():
 
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
-            res["RAM"] = str(option_RAM) + ' ' + option_RAM_TYPE
-            res["STORAGE"] = str(option_STORAGE) + ' ' + option_STORAGE_TYPE
+            res["RAM"] = [option_RAM, option_RAM_TYPE]
+            res["STORAGE"] = [option_STORAGE, option_STORAGE_TYPE]
 
             st.rerun()
     elif option_STORAGE != "":
@@ -211,8 +211,8 @@ def linux_page():
 
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
-            res["RAM"] = str(option_RAM) + ' ' + option_RAM_TYPE
-            res["STORAGE"] = str(option_STORAGE) + ' ' + option_STORAGE_TYPE
+            res["RAM"] = [option_RAM, option_RAM_TYPE]
+            res["STORAGE"] = [option_STORAGE, option_STORAGE_TYPE]
 
             st.rerun()
     elif option_STORAGE != "":

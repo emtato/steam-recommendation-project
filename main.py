@@ -430,9 +430,12 @@ def filtering_games(data_file: str, requirements: {}) -> list:
         if has_lang:
             total_sim += 1
 
-        # compares os
+        # compares os + os specfifics
         if requirements["COMPUTER"] in TRUTH:
             total_sim += 1
+            os_list, ram_list, storage_list = minimum_requirements(g, requirements["COMPUTER"])
+            if os_list[0] == requirements[]
+
 
         # compares genres
         has_gen = True
@@ -454,13 +457,6 @@ def filtering_games(data_file: str, requirements: {}) -> list:
         if g.price['final'] <= requirements["PRICE"]:
             total_sim += 1
 
-        # comparing OS specifics:
-
-        # UNFINISHED FOR PC/MAC/LINUX REQUIREMENTS LIKE GB AND STUFF
-        # if requirements[""]
-
-        # NEED TO ADD FOR OS TYPE
-
         if total_sim == max_sim:
             similiar.append(g)
 
@@ -475,6 +471,9 @@ def minimum_requirements(g: Game, key: str) -> tuple:
     - List 3: Storage (float), Storage (type, MB or GB)
     """
     os_list, ram_list, storage_list = [], [], []
+
+    if key == "Windows":
+        key = "PC"
 
     # extracts the amount of storage AND the type (MB or GB)
     g_storage = g.requirements[key].split('Storage:')
@@ -501,14 +500,11 @@ def minimum_requirements(g: Game, key: str) -> tuple:
 gamesNogames = list_games('data.csv')
 for g in gamesNogames:
     for k in g.requirements.keys():
-        g_ram = g.requirements[k].split("Memory:")
-        if len(g_ram) == 2:
-            ram = g_ram[1].split("RAM")[0].split(' ')
-            if ram[1].isdigit():
-                print(float(ram[1]))
-            else:
-                print(-1)
-            print(ram[2])
+        g_os = g.requirements[k].split("OS:")
+        if len(g_os) == 2:
+            os = g_os[1].split("Processor:")
+            print(k)
+            print(os)
 
 
 
