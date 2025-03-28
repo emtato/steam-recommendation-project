@@ -11,6 +11,7 @@
 
 import streamlit as st
 import main
+from google.protobuf.internal.wire_format import INT64_MAX
 from main import random_selection
 
 # states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost, 4: language, 5: first game pick page
@@ -138,10 +139,10 @@ def window_page():
     option_OS = st.selectbox("What Windows (ew) OS version do you use?", (
         "Windows 11", "Windows 10", "Windows 7"), index=None, placeholder="-", )
 
-    option_RAM = st.text_input("How much Memory (RAM) do you have?:")
+    option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
     # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
-    option_STORAGE = st.text_input("How much storage do you have? (in GB): ")  # DONT FORGET TO RESTRICT TO
+    option_STORAGE = st.text_input("How much storage do you have?: ")  # DONT FORGET TO RESTRICT TO
     option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     if option_STORAGE.isdigit():
@@ -320,7 +321,10 @@ def brokeness_level():
             st.session_state[3] = False
             st.session_state[4] = True
 
-            st.session_state["results"]["PRICE"] = float(selected)
+            if selected.isdigit():
+                st.session_state["results"]["PRICE"] = float(selected)
+            else:
+                st.session_state["results"]["PRICE"] = INT64_MAX
             st.rerun()
 
         st.write(' ')
