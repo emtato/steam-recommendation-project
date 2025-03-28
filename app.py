@@ -143,7 +143,6 @@ def window_page():
     # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     option_STORAGE = st.text_input("How much storage do you have?: ")  # DONT FORGET TO RESTRICT TO
-    option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     if option_STORAGE.isdigit():
 
@@ -155,7 +154,7 @@ def window_page():
             res["OS"] = str(option_OS)
             # res["RAM"] = [option_RAM, option_RAM_TYPE]
             res["RAM"] = [option_RAM]
-            res["STORAGE"] = [option_STORAGE, option_STORAGE_TYPE]
+            res["STORAGE"] = [option_STORAGE, 'GB']
 
             st.rerun()
 
@@ -175,7 +174,6 @@ def mac_page():
     # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     option_STORAGE = st.text_input("How much storage do you have?:")
-    option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     if option_STORAGE.isdigit():
 
@@ -187,7 +185,7 @@ def mac_page():
             res["OS"] = str(option_OS)
             # res["RAM"] = [option_RAM, option_RAM_TYPE]
             res["RAM"] = [option_RAM]
-            res["STORAGE"] = [option_STORAGE, option_STORAGE_TYPE]
+            res["STORAGE"] = [option_STORAGE, 'GB']
 
             st.rerun()
     elif option_STORAGE != "":
@@ -204,7 +202,6 @@ def linux_page():
     # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     option_STORAGE = st.text_input("How much storage do you have?:")
-    option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     if option_STORAGE.isdigit():
 
@@ -216,7 +213,7 @@ def linux_page():
             res["OS"] = str(option_OS)
             # res["RAM"] = [option_RAM, option_RAM_TYPE]
             res["RAM"] = [option_RAM]
-            res["STORAGE"] = [option_STORAGE, option_STORAGE_TYPE]
+            res["STORAGE"] = [option_STORAGE, 'GB']
 
             st.rerun()
     elif option_STORAGE != "":
@@ -375,8 +372,8 @@ def first_pick():
     st.title('Here are the possible options for games that exactly match your requirements!')
     st.write(str(st.session_state["results"]))
     st.write(main.filtering_games('data.csv', st.session_state["results"]))
-    gamers = [f"Game {i}" for i in range(30)]  # placeholder
-
+    gamers = main.filtering_games('data.csv', st.session_state["results"])
+    gamers = [[g.id, g.name, g.price['final'] if g.price and g.price['final'] else 'unknown', g.image, g.genre] for g in gamers]
     if 'gamers_list' not in st.session_state or st.session_state['gamers_list'] is None:
         st.session_state['gamers_list'] = gamers
     gamers = st.session_state['gamers_list']
