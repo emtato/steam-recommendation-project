@@ -4,14 +4,13 @@
 # WARNING: for the app to function, please use streamlit version 1.43.2
 # Created by Emilia on 2025-03-25
 
-#update 03-27 5PM
-#random game -> similar games via graph pipeline fully works
-#start -> skip and enter id to quickly test id's and find similar games fully works
-#missing function: filter method from start -> selecting first game
+# update 03-27 5PM
+# random game -> similar games via graph pipeline fully works
+# start -> skip and enter id to quickly test id's and find similar games fully works
+# missing function: filter method from start -> selecting first game
 
 import streamlit as st
 import main
-from google.protobuf.internal.wire_format import INT64_MAX
 from main import random_selection
 
 # states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost, 4: language, 5: first game pick page
@@ -61,6 +60,7 @@ def start_page():
         st.session_state[6] = False
         st.session_state[69] = True
         st.rerun()
+
 
 def password():
     """test function to skip setup and reach the end"""
@@ -114,8 +114,8 @@ def pc_req_page():
     1 OPTION TEST
     """
     st.title("Choosing your pc requirements")
-    option_comp = st.selectbox("What type of computer do you have?", (
-        "Windows", "Mac", "Linux"), index=None, placeholder="-", )
+    option_comp = st.selectbox("What type of computer do you have?", ("Windows", "Mac", "Linux"), index=None,
+                               placeholder="-", )
 
     # st.write("You selected:", option)
     st.session_state["results"] = {"COMPUTER": option_comp}
@@ -136,8 +136,8 @@ def window_page():
     """"""
     st.write('To whoever who stole my Microsoft Office copy, I will find you..')
     st.write('You have my Word.')
-    option_OS = st.selectbox("What Windows (ew) OS version do you use?", (
-        "Windows 11", "Windows 10", "Windows 7"), index=None, placeholder="-", )
+    option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10", "Windows 7"),
+                             index=None, placeholder="-", )
 
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
     # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
@@ -195,8 +195,8 @@ def mac_page():
 def linux_page():
     """"""
     st.write('computers are like air conditioners—they stop working properly if you open windows')
-    option_OS = st.selectbox("What Linux OS version do you use?", (
-        "isert"),  # May have to replace this with a POSSIBLE OS list from data
+    option_OS = st.selectbox("What Linux OS version do you use?", ("isert"),
+                             # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
     # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
@@ -221,8 +221,8 @@ def linux_page():
 
 
 def get_data():
-    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq(
-        'data.csv', 4)
+    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv',
+        4)
     st.session_state['cat'] = cat
     gen = [one for one in gen if one != 'mac' and one != 'windows' and one != 'linux']
     st.session_state['gen'] = gen
@@ -241,8 +241,8 @@ def category_pick():
 
     st.write(' | '.join(st.session_state['chosen_cat']))
 
-    selected = st.selectbox("Choose categories okay",
-                            st.session_state['cat'], index=None, placeholder='I AM GOING CUCKOO')
+    selected = st.selectbox("Choose categories okay", st.session_state['cat'], index=None,
+                            placeholder='I AM GOING CUCKOO')
     if st.button("undo select"):
         st.session_state["undo_pressed"] = True
         if len(st.session_state['chosen_cat']) > 0:
@@ -309,8 +309,8 @@ def brokeness_level():
     This sections asks the user for a MAXIMUM (inclusive) price in USD
     """
     st.title('Price? (please write your MAX (inclusive) price in USD)')
-    #selected = st.selectbox("how broke are u be fr", (
-        #"free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
+    # selected = st.selectbox("how broke are u be fr", (
+    # "free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
     selected = st.text_input("How much are you willing to pay? (input 0 for Free)")
 
     if selected.isdigit() or selected == '':
@@ -321,7 +321,7 @@ def brokeness_level():
             if selected.isdigit():
                 st.session_state["results"]["PRICE"] = float(selected)
             else:
-                st.session_state["results"]["PRICE"] = INT64_MAX
+                st.session_state["results"]["PRICE"] = 1e9
             st.rerun()
 
         st.write(' ')
@@ -373,7 +373,9 @@ def first_pick():
     st.write(str(st.session_state["results"]))
     st.write(main.filtering_games('data.csv', st.session_state["results"]))
     gamers = main.filtering_games('data.csv', st.session_state["results"])
-    gamers = [[g.id, g.name, g.price['final'] if g.price and g.price['final'] else 'unknown', g.image, g.genre] for g in gamers]
+    gamers = [[g.id, g.name, g.price['final'] if g.price and g.price['final'] else 'unknown',g.description, g.image, g.genres] for g
+              in gamers]
+
     if 'gamers_list' not in st.session_state or st.session_state['gamers_list'] is None:
         st.session_state['gamers_list'] = gamers
     gamers = st.session_state['gamers_list']
@@ -399,8 +401,7 @@ def first_pick():
             hrml = f.read()
             # input first game rec cycle games here
 
-            # games = [format_game(game) for game in gamers] doesnt work when placeholder doesnt work
-            games = gamers
+            games = [format_game(game) for game in gamers]
             htmlformatted = '<br>'.join(games)
             final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
             with open('scrolly.css') as fe:

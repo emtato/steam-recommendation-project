@@ -1,5 +1,6 @@
 # Description:
 # Created by Emilia on 2025-02-27
+from traceback import print_tb
 
 aaa = ((1, 10), (1, 3), (1, 3), (3, 4), (2, 4))
 
@@ -16,3 +17,4 @@ if c:
 dict= {1:3, 3:5}
 for i, item in enumerate(dict):
     print(i, item)
+
