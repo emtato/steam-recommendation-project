@@ -139,9 +139,9 @@ def window_page():
         "Windows 11", "Windows 10", "Windows 7"), index=None, placeholder="-", )
 
     option_RAM = st.text_input("How much Memory (RAM) do you have?:")
-    option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
+    # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
-    option_STORAGE = st.text_input("How much storage do you have?:")  # DONT FORGET TO RESTRICT TO
+    option_STORAGE = st.text_input("How much storage do you have? (in GB): ")  # DONT FORGET TO RESTRICT TO
     option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     if option_STORAGE.isdigit():
@@ -152,7 +152,8 @@ def window_page():
 
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
-            res["RAM"] = [option_RAM, option_RAM_TYPE]
+            # res["RAM"] = [option_RAM, option_RAM_TYPE]
+            res["RAM"] = [option_RAM]
             res["STORAGE"] = [option_STORAGE, option_STORAGE_TYPE]
 
             st.rerun()
@@ -169,8 +170,8 @@ def mac_page():
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
 
-    option_RAM = st.text_input("How much Memory (RAM) do you have?:")
-    option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
+    option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
+    # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     option_STORAGE = st.text_input("How much storage do you have?:")
     option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
@@ -183,7 +184,8 @@ def mac_page():
 
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
-            res["RAM"] = [option_RAM, option_RAM_TYPE]
+            # res["RAM"] = [option_RAM, option_RAM_TYPE]
+            res["RAM"] = [option_RAM]
             res["STORAGE"] = [option_STORAGE, option_STORAGE_TYPE]
 
             st.rerun()
@@ -197,8 +199,8 @@ def linux_page():
     option_OS = st.selectbox("What Linux OS version do you use?", (
         "isert"),  # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
-    option_RAM = st.text_input("How much Memory (RAM) do you have?:")
-    option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
+    option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
+    # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
 
     option_STORAGE = st.text_input("How much storage do you have?:")
     option_STORAGE_TYPE = st.selectbox("Is your storage in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
@@ -211,7 +213,8 @@ def linux_page():
 
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
-            res["RAM"] = [option_RAM, option_RAM_TYPE]
+            # res["RAM"] = [option_RAM, option_RAM_TYPE]
+            res["RAM"] = [option_RAM]
             res["STORAGE"] = [option_STORAGE, option_STORAGE_TYPE]
 
             st.rerun()
