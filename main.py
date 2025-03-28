@@ -471,22 +471,45 @@ def minimum_requirements(g: Game, key: str) -> tuple:
     """
     Returns 3 lists composing of the games' minimum requirements
     - List 1: OS
-    - List 2: RAM (memory)
-    - List 3: Storage (in GB)
+    - List 2: RAM (memory), RAM (type, MB or GB)
+    - List 3: Storage (float), Storage (type, MB or GB)
     """
     os_list, ram_list, storage_list = [], [], []
 
-    # for key in g.requirements.keys()
+    # extracts the amount of storage AND the type (MB or GB)
+    g_storage = g.requirements[key].split('Storage:')
+    if (g_storage[0] != '') and len(g_storage) == 2:
+        a = g_storage[1].split('available space')[0].split(' ')
+        if not a[1].isdigit():
+            storage_list.append(-1)
+        else:
+            storage_list.append(float(a[1]))
+        storage_list.append(a[2])
+
+    # extracts the amount of ram AND the type (MB or GB)
+    g_ram = g.requirements[key].split("Memory:")
+    if len(g_ram) == 2:
+        ram = g_ram[1].split("RAM")[0].split(' ')
+        if ram[1].isdigit():
+            ram_list.append(float(ram[1]))
+        else:
+            ram_list.append(-1)
+        ram_list.append(ram[2])
+
+    return (os_list, ram_list, storage_list)
 
 gamesNogames = list_games('data.csv')
 for g in gamesNogames:
     for k in g.requirements.keys():
-        g_storage = g.requirements[k].split('Storage:')
-        if (g_storage[0] != '') and len(g_storage) == 2:
-            a = g_storage[1].split('available space')[0]
-            print(k)
-            #a = [int(s) for s in g_storage[1].split() if s.isdigit()]
-            print(a)
+        g_ram = g.requirements[k].split("Memory:")
+        if len(g_ram) == 2:
+            ram = g_ram[1].split("RAM")[0].split(' ')
+            if ram[1].isdigit():
+                print(float(ram[1]))
+            else:
+                print(-1)
+            print(ram[2])
+
 
 
 """
