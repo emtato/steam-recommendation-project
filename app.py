@@ -373,53 +373,54 @@ def first_pick():
     st.write(str(st.session_state["results"]))
     st.write(main.filtering_games('data.csv', st.session_state["results"]))
     gamers = main.filtering_games('data.csv', st.session_state["results"])
-    gamers = [[g.id, g.name, g.price['final'] if g.price and g.price['final'] else 'unknown',g.description, g.image, g.genres] for g
-              in gamers]
+    gamers = [[g.id, g.name, g.price['final'] if g.price and 'final' in g.price else 'unknown', g.description, g.image, g.genres] for g in gamers]
 
     if 'gamers_list' not in st.session_state or st.session_state['gamers_list'] is None:
         st.session_state['gamers_list'] = gamers
-    gamers = st.session_state['gamers_list']
     col1, col2 = st.columns([1, 4])
 
     with col1:
         selectbox_list = ['-'] + [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
-        chosen_index = st.selectbox("select game", selectbox_list, key='unique')
+        chosen_index = st.selectbox("select game", selectbox_list, key='unique2')
         if chosen_index and chosen_index != '-':
-            chosen_index = chosen_index[:2]
-            if chosen_index[1] == '.':
-                chosen_index = chosen_index[:1]
-            chosen_index = int(chosen_index) - 1
-            game_id = gamers[chosen_index][0]
-            st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
-            st.session_state[6] = True
-            st.session_state[69] = False
-            st.session_state['start'] = 3
-            st.rerun()
+            chosen_index = chosen_index.split('.')[0]
+            if chosen_index.isdigit():
+                chosen_index = int(chosen_index) - 1
+                if 0 <= chosen_index < len(gamers):
+                    game_id = gamers[chosen_index][0]
+                    st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
+
+                    st.session_state[6] = True
+                    st.session_state[5] = False
+                    st.session_state['start'] = 3
+                    st.rerun()
 
     with col2:
         with open('scrolly.html', 'r') as f:
             hrml = f.read()
-            # input first game rec cycle games here
-
             games = [format_game(game) for game in gamers]
-            htmlformatted = '<br>'.join(games)
+            htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
             final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
             with open('scrolly.css') as fe:
                 css = f"<style>{fe.read()}</style>"
                 st.markdown(css, unsafe_allow_html=True)
             st.markdown(final_html, unsafe_allow_html=True)
 
-        if st.button("choose game (temp button to get to next page)"):
-            st.session_state[5] = False
-            st.session_state[6] = True
-            st.rerun()
-        st.write(' ')
-        st.write(' ')
+        # if st.button("choose game (temp button to get to next page)"):
+        #     st.session_state[5] = False
+        #     st.session_state[6] = True
+        #     st.rerun()
+        # st.write(' ')
+        # st.write(' ')
 
         if st.button('back', key='back from page 7'):
             st.session_state[3] = True
             st.session_state[4] = False
+            st.session_state['gamers_list'] = None
             st.rerun()
+
+
+
 
 
 def final_page():
@@ -510,7 +511,7 @@ def format_game(game):
     spacesname, spacesprice = 70, 20
 
     name = game[1].strip("'")
-
+    nocrop = name
     if len(name) > 55:
         name = name[:55] + '...'
     if contains_cjk(name):
@@ -523,10 +524,12 @@ def format_game(game):
     paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
 
-    return (f"<a href=\"https://google.com/search?q={name}+steam {game[0]}\"><img src={image}></a><div style='font-family: "
-            f"monospace; "
-            f"white-space: nowrap; font-size: 13px;'>{name}</a>"
-            f"{paddingname}{price}{paddingprice}{genre}<div>")
+    return (f"<a href=\"https://google.com/search?q={nocrop}+steam+{game[0]}\">"
+            f"<img src=\"{image}\" alt=\"{name}\" />"
+            f"</a>"
+            f"<div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>"
+            f"{name}{paddingname}{price}{paddingprice}{genre}"
+            f"</div>")
 
 
 def RANDOM_SELECT():
