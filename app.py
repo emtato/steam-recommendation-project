@@ -306,9 +306,9 @@ def game_genre_page():
 
 def brokeness_level():
     """
-    This sections asks the user for a MAXIMUM (inclusive) price in USD
+    This sections asks the user for a MAXIMUM (inclusive) price in CAD
     """
-    st.title('Price? (please write your MAX (inclusive) price in USD)')
+    st.title('Price? (please write your MAX (inclusive) price in CAD)')
     # selected = st.selectbox("how broke are u be fr", (
     # "free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
     selected = st.text_input("How much are you willing to pay? (input 0 for Free)")
@@ -523,7 +523,7 @@ def format_game(game):
     paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
 
-    return (f"<a href=\"https://google.com/search?q={name} {game[0]}\"><img src={image}></a><div style='font-family: "
+    return (f"<a href=\"https://google.com/search?q={name}+steam {game[0]}\"><img src={image}></a><div style='font-family: "
             f"monospace; "
             f"white-space: nowrap; font-size: 13px;'>{name}</a>"
             f"{paddingname}{price}{paddingprice}{genre}<div>")
