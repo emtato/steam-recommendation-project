@@ -459,7 +459,7 @@ def final_page():
             genre = int(genre) if genre.isdigit() else 10
 
         if st.button("make  grpah !!"):
-            # call make graph function
+            st.write('working on it— may take up to 30s if you\'re on x86 (or this code is running on cloud) (no unified memory L </3)')
             graph.clear_edges()
             graph.build_edges([price, languages, dev, platform, category, genre])
             suggestions = graph.recommend_games(chosen, 50)
