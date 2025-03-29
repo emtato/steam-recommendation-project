@@ -460,8 +460,6 @@ def filtering_games(data_file: str, requirements: {}) -> list:
                     # checks if the wanted os is in the list of possible os for game g.
                     if requirements["OS"] in os_list:
                         total_sim += 1
-                    else:
-                        total_sim += 1
                     # checks if the ram requirements are over (inclusive) the minimum for game g.
                     if float(requirements["RAM"][0]) >= ram_list[0]:
                         total_sim += 1
@@ -540,27 +538,28 @@ def minimum_requirements(g: Game, key: str) -> tuple:
 
     # extracts the possible os types
     # CASE FOR PC/WINDOWS:
-    if k == "PC":
+    if key == "PC":
         g1 = g.requirements[key].split("Processor")
         if len(g1) == 2:
             g2 = g1[0].split("Windows")
             if len(g2) == 2:
                 g3 = g2[1]
                 if ("XP" or "xp") in g3:
-                    os_list.append("Windows XP")
-                if ("Vista" or "vista") in g3:
-                    os_list.append("Windows Vista")
-                if "7" in g3:
-                    os_list.append("Windows 7")
-                if "8" in g3:
-                    os_list.append("Windows 8")
-                if "10" in g3:
-                    os_list.append("Windows 10")
-                if "11" in g3:
+                    os_list.extend(["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10",
+                                    "Windows 11"])
+                elif ("Vista" or "vista") in g3:
+                    os_list.extend(["Windows Vista", "Windows 7", "Windows 8", "Windows 10", "Windows 11"])
+                elif "7" in g3:
+                    os_listextend(["Windows 7", "Windows 8", "Windows 10", "Windows 11"])
+                elif "8" in g3:
+                    os_list.extend(["Windows 8", "Windows 10", "Windows 11"])
+                elif "10" in g3:
+                    os_list.extend(["Windows 10", "Windows 11"])
+                elif "11" in g3:
                     os_list.append("Windows 11")
 
     # CASE FOR MACOS VERSIONS:
-    if k == "Mac":
+    elif key == "Mac":
         g1 = g.requirements[key].split("Minimum:")
         if ([''] != g1) and (['', ''] != g1):
             g2 = g1[1].split("Processor:")[0]
@@ -570,25 +569,54 @@ def minimum_requirements(g: Game, key: str) -> tuple:
                     os_list.extend(["10", "Catalina", "Sierra", "12", "11", "14"])
                 # Any OSX
                 elif ("X" in g2) or ("10" in g2):
-                    os_list.append("10")
+                    os_list.extend(["10", "12", "11", "14"])
                 # Checking for Catalina
                 elif ("Catalina" in g2) and ("(" not in g2):
-                    os_list.append("Catalina")
+                    os_list.extend(["10", "Catalina", "12", "11", "14"])
                 # checking for Sierre
                 elif "Sierra" in g2:
-                    os_list.append("Sierra")
+                    os_list.extend(["10", "Catalina", "Sierra", "12", "11", "14"])
                 # Macos 12
                 elif "12" in g2:
-                    os_list.append("12")
+                    os_list.extend(["12", "14"])
                 # Macos 11
                 elif "11" in g2:
-                    os_list.append("11")
+                    os_list.extend(["12", "11", "14"])
                 # Macos 14
                 elif "14" in g2:
                     os_list.append("14")
                 # Otherwise dont add anything
 
     # CASE FOR LINUX VERSIONS:
+    elif key == "Linux":
+        g1 = g.requirements[key].split("Minimum:")
+        if ([''] != g1) and (['', ''] != g1) and (len(g1) == 2):
+            g2 = g1[1].split("OS:")
+            if len(g2) == 2:
+                g3 = g2[1].split("Processor:")[0]
+                if "Any" in g3:
+                    os_list.extend(["Ubuntu 12", "Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22",
+                                    "SteamOS"])
+                elif ("Ubuntu" in g3):
+                    if "12" in g3:
+                        os_list.extend(
+                            ["Ubuntu 12", "Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22"])
+                    elif "14" in g3:
+                        os_list.extend(
+                            ["Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22"])
+                    elif "16" in g3:
+                        os_list.extend(
+                            ["Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22"])
+                    elif "18" in g3:
+                        os_list.extend(
+                            ["Ubuntu 18", "Ubuntu 20", "Ubuntu 22"])
+                    elif "20" in g3:
+                        os_list.extend(
+                            ["Ubuntu 20", "Ubuntu 22"])
+                    elif "22" in g3:
+                        os_list.append("Ubuntu 22")
+                elif "SteamOS" in g3:
+                    os_list.append("SteamOS")
 
     if not os_list:
         os_list = ['empty']
@@ -599,26 +627,6 @@ def minimum_requirements(g: Game, key: str) -> tuple:
 
     return (os_list, ram_list, storage_list)
 
-
-gamesNogames = list_games('data.csv')
-for g in gamesNogames:
-    for k in g.requirements.keys():
-        if k == "Linux":
-            g1 = g.requirements[k].split("Minimum:")
-            if ([''] != g1) and (['', ''] != g1) and (len(g1) == 2):
-                g2 = g1[1].split("OS:")
-                if len(g2) == 2:
-                    print(g2[1].split("Processor:")[0])
-
-"""
-res = {"OS": 'windows', "LANGUAGES": ['English'], "GENRE": ['Action'], "CATEGORY": ['Single-player']}
-lst = filtering_games('data.csv', res)
-
-for l in lst:
-    print(">>>>>>>>>>>>>" + str(l))
-
-print(len(lst))
-"""
 
 if __name__ == "__main__":
     test_graph = load_graph('data.csv')
