@@ -167,7 +167,7 @@ def window_page():
 def mac_page():
     """"""
     st.write('Wwy should you never fart in an Apple store becuause they dnt have any windows BAHJJHHJSBFADJ')
-    option_OS = st.selectbox("What Mac OS version do you use?", ("Big Sur", "Monterey", "Ventura", "Sonoma", "Sequoia"),
+    option_OS = st.selectbox("What Mac OS version do you use?", ("10", "Catalina", "Sierra", "12", "11", "14"),
 
                              # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )

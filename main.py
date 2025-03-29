@@ -560,8 +560,35 @@ def minimum_requirements(g: Game, key: str) -> tuple:
                     os_list.append("Windows 11")
 
     # CASE FOR MACOS VERSIONS:
+    if k == "Mac":
+        g1 = g.requirements[key].split("Minimum:")
+        if ([''] != g1) and (['', ''] != g1):
+            g2 = g1[1].split("Processor:")[0]
+            if "OS:" in g2:
+                # Any MacOs, add them all
+                if ("Any" in g2) and (not "Graphics:" in g2):
+                    os_list.extend(["10", "Catalina", "Sierra", "12", "11", "14"])
+                # Any OSX
+                elif ("X" in g2) or ("10" in g2):
+                    os_list.append("10")
+                # Checking for Catalina
+                elif ("Catalina" in g2) and ("(" not in g2):
+                    os_list.append("Catalina")
+                # checking for Sierre
+                elif "Sierra" in g2:
+                    os_list.append("Sierra")
+                # Macos 12
+                elif "12" in g2:
+                    os_list.append("12")
+                # Macos 11
+                elif "11" in g2:
+                    os_list.append("11")
+                # Macos 14
+                elif "14" in g2:
+                    os_list.append("14")
+                # Otherwise dont add anything
 
-    # TO FINISH
+    # CASE FOR LINUX VERSIONS:
 
     if not os_list:
         os_list = ['empty']
@@ -576,13 +603,12 @@ def minimum_requirements(g: Game, key: str) -> tuple:
 gamesNogames = list_games('data.csv')
 for g in gamesNogames:
     for k in g.requirements.keys():
-        if k == "Mac":
+        if k == "Linux":
             g1 = g.requirements[k].split("Minimum:")
-            if ([''] != g1) and (['', ''] != g1):
-                g2 = g1[1].split("Processor:")[0]
-                if "OS:" in g2:
-                    if ("Any" in g2) and (not "Graphics:" in g2):
-                        print(g2)
+            if ([''] != g1) and (['', ''] != g1) and (len(g1) == 2):
+                g2 = g1[1].split("OS:")
+                if len(g2) == 2:
+                    print(g2[1].split("Processor:")[0])
 
 """
 res = {"OS": 'windows', "LANGUAGES": ['English'], "GENRE": ['Action'], "CATEGORY": ['Single-player']}
