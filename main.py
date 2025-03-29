@@ -549,7 +549,7 @@ def minimum_requirements(g: Game, key: str) -> tuple:
                 elif "10" in g3:
                     os_list.extend(["Windows 11", "Windows 10"])
                 elif "7" in g3:
-                    os_listextend(["Windows 10", "Windows 11", "Windows 7", "Windows 8"])
+                    os_list.extend(["Windows 10", "Windows 11", "Windows 7", "Windows 8"])
                 elif "8" in g3:
                     os_list.extend(["Windows 8", "Windows 10", "Windows 11"])
                 elif ("Vista" or "vista") in g3:
