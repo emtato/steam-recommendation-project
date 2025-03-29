@@ -415,11 +415,11 @@ def first_pick():
             st.rerun()
 
 
-def list_choser(suggestions, key):
+def list_choser(suggestions):
     selectbox_list = ['-'] + [f'{i + 1}. {suggestions[i][1]}' for i in range(len(suggestions))]
     if 'select_index' in st.session_state:
 
-        chosen_index = st.selectbox("add game to your list?", selectbox_list, key=key, help="adding game to "
+        chosen_index = st.selectbox("add game to your list?", selectbox_list, key='aasa', help="adding game to "
                                                                                             "your list will be "
                                                                                             "able to better "
                                                                                             "personalize your "
@@ -433,7 +433,7 @@ def list_choser(suggestions, key):
                                     index=0)
         del st.session_state['select_index']
     else:
-        chosen_index = st.selectbox("add game to your list?", selectbox_list, key=key, help="adding game to "
+        chosen_index = st.selectbox("add game to your list?", selectbox_list, key='asaa', help="adding game to "
                                                                                             "your list will be "
                                                                                             "able to better "
                                                                                             "personalize your "
@@ -446,13 +446,13 @@ def list_choser(suggestions, key):
                                                                                             "whenever you want")
         if chosen_index and chosen_index != '-':
             chosen_index = chosen_index[:2]
-        if chosen_index[1] == '.':
-            chosen_index = chosen_index[:1]
-        chosen_index = int(chosen_index) - 1
-        if 'list' not in st.session_state:
-            st.session_state['list'] = [suggestions[chosen_index]]
-        elif suggestions[chosen_index] not in st.session_state['list']:
-            st.session_state['list'].append(suggestions[chosen_index])
+            if chosen_index[1] == '.':
+                chosen_index = chosen_index[:1]
+            chosen_index = int(chosen_index) - 1
+            if 'list' not in st.session_state:
+                st.session_state['list'] = [suggestions[chosen_index]]
+            elif suggestions[chosen_index] not in st.session_state['list']:
+                st.session_state['list'].append(suggestions[chosen_index])
 
 
 def final_page():
@@ -512,7 +512,7 @@ def final_page():
             st.write(" ")
 
         if 'suggestions' in st.session_state:
-            list_choser(suggestions, 'aasa')
+            list_choser(suggestions)
 
         st.write(" ")
         st.write(" ")
