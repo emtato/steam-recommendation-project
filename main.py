@@ -10,7 +10,9 @@ from attr import dataclass
 from typing import Any
 
 PRICE, LANGUAGE, DEV, PLATFORM, CATEGORY, GENRE = 0, 1, 2, 3, 4, 5
-#NAME,PRICE_RANGES,DESCRIPTION,LANGUAGES, DEVELOPERS,PLATFORMS,CATEGORIES,GENRES, DLC =
+
+
+# NAME,PRICE_RANGES,DESCRIPTION,LANGUAGES, DEVELOPERS,PLATFORMS,CATEGORIES,GENRES, DLC =
 
 @dataclass
 class Game:
@@ -165,7 +167,7 @@ class Graph:
             # We didn't find an existing vertex for both items.
             raise ValueError
 
-    def get_weight(self, item_id1: int, item_id2: int) -> Union[int, float]:
+    def _get_weight(self, item_id1: int, item_id2: int) -> Union[int, float]:
         """Return the weight of the edge between the vertices with the given item_ids.
         Return 0 if item_id1 and item_id2 are not adjacent.
 
@@ -176,6 +178,20 @@ class Graph:
         v1 = self._vertices[item_id1]
         v2 = self._vertices[item_id2]
         return v1.neighbours.get(v2, 0)
+
+    def get_avg_weight(self, item_ids: list[int], target_id: int) -> Union[int, float]:
+        """ Return the average weight between the edges of a list of vertices with the given
+        item_ids, and the vertex with the target_id.
+
+        Preconditions:
+            - all({item_id in self._vertices for item_id in item_ids})
+            - target_id in self._vertices
+            - len(item_ids) >= 1
+        """
+        total_weights = 0
+        for item_id in item_ids:
+            total_weights += self._get_weight(item_id, target_id)
+        return total_weights / len(item_ids)
 
     def get_vertex(self, item_id: Any) -> _Vertex:
         """
@@ -222,35 +238,37 @@ class Graph:
         else:
             return self._vertices[item_id1].calculate_score(self._vertices[item_id2], preferences)
 
-    def recommend_games(self, target_id: int, limit: int) -> list[Game]:
-        """ Recommend a list with length limit of Game objects with scores closest to the target_id.
+    def recommend_games(self, target_ids: list[int], limit: int) -> list[Game]:
+        """ Recommend a list with length limit of Game objects with scores closest to the games with the target_id(s).
 
         Preconditions:
             - limit >= 0
-            - target_id in self._vertices
+            - all({target_id in self._vertices for target_id in target_ids})
+            - len(target_ids) >= 1
         """
         games = []
-        vertex = self._vertices[target_id]
-        for game_vertex in vertex.neighbours:
-            self._add_recommendation_in_order(vertex, game_vertex, games)
+        for game_id in self._vertices:
+            if game_id not in target_ids:
+                self._add_recommendation_in_order(target_ids, game_id, games)
         game_ids = games[0:limit]
         return [self._vertices[game_id].item for game_id in game_ids]
 
-    def _add_recommendation_in_order(self, target_vertex: _Vertex, new_vertex: _Vertex, game_list: list[int]) -> None:
+    def _add_recommendation_in_order(self, target_ids: list[int], new_id: int, game_list: list[int]) -> None:
         """
-        Helper function for recommend_games that adds the game id of a new_vertex to a list of game ids (game_list) in
-        descending order of score with target_vertex, and in alphabetical order of game name in the case of
+        Helper function for recommend_games that adds a new_id to a list of game ids (game_list) in
+        descending order of score with the list of target_ids, and in alphabetical order of game name in the case of
         equal scores.
         """
         for i in range(len(game_list)):
-            game_id = game_list[i]
-            sim_score = self.get_weight(target_vertex.item_id, game_id)
-            new_sim_score = self.get_weight(target_vertex.item_id, new_vertex.item_id)
-            if sim_score < new_sim_score or (sim_score == new_sim_score and self._vertices[game_id].item.name <
-                                             new_vertex.item.name):
-                game_list.insert(i, new_vertex.item_id)
+            curr_id = game_list[i]
+            curr_sim_score = self.get_avg_weight(target_ids, curr_id)
+            new_sim_score = self.get_avg_weight(target_ids, new_id)
+            if curr_sim_score < new_sim_score or (
+                    curr_sim_score == new_sim_score and self._vertices[curr_id].item.name <
+                    self._vertices[new_id].item.name):
+                game_list.insert(i, new_id)
                 return
-        game_list.append(new_vertex.item_id)
+        game_list.append(new_id)
         return
 
 
@@ -302,10 +320,11 @@ def _get_object_from_string(string: str, exclude: Optional[str] = None) -> Any:
 def _load_game_object(game_data: list[str]) -> Game:
     """ Helper function for load_graph which creates a Game object using a list of game_data.
     """
-    (game_id, name, price_overview, description, supported_languages, capsule_image, requirements, developers, platforms,
-     categories, genres, dlc) = game_data
+    (
+        game_id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
+        platforms, categories, genres, dlc) = game_data
     game_id = int(game_id)
-    if name[0] == "'" and name[-1] == "'":
+    if (name[0] == "'" and name[-1] == "'") or (name[0] == '"' and name[-1] == '"'):
         name = name[1:-1]
     price_overview = _get_object_from_string(price_overview, 'unknown')
     supported_languages = _get_object_from_string(supported_languages)
@@ -324,7 +343,8 @@ def _load_game_object(game_data: list[str]) -> Game:
 
     dlc = dlc == 'True'
 
-    return Game(game_id, name, price_overview, description, supported_languages, capsule_image, requirements, developers,
+    return Game(game_id, name, price_overview, description, supported_languages, capsule_image, requirements,
+                developers,
                 platforms, categories, genres, dlc)
 
 
@@ -440,7 +460,8 @@ def filtering_games(data_file: str, requirements: {}) -> list:
                     # checks if the wanted os is in the list of possible os for game g.
                     if requirements["OS"] in os_list:
                         total_sim += 1
-                    else: total_sim += 1
+                    else:
+                        total_sim += 1
                     # checks if the ram requirements are over (inclusive) the minimum for game g.
                     if float(requirements["RAM"][0]) >= ram_list[0]:
                         total_sim += 1
@@ -549,8 +570,8 @@ def minimum_requirements(g: Game, key: str) -> tuple:
     if not storage_list:
         storage_list = [-1, 'empty']
 
-
     return (os_list, ram_list, storage_list)
+
 
 gamesNogames = list_games('data.csv')
 for g in gamesNogames:
@@ -563,12 +584,6 @@ for g in gamesNogames:
                     if ("Any" in g2) and (not "Graphics:" in g2):
                         print(g2)
 
-
-
-
-
-
-
 """
 res = {"OS": 'windows', "LANGUAGES": ['English'], "GENRE": ['Action'], "CATEGORY": ['Single-player']}
 lst = filtering_games('data.csv', res)
@@ -579,13 +594,12 @@ for l in lst:
 print(len(lst))
 """
 
-
 if __name__ == "__main__":
     test_graph = load_graph('data.csv')
-    test_graph.build_edges([100, 100, 100, 100, 100, 100])
+    test_graph.build_edges([100, 0, 0, 0, 0, 0])
     # graph.testing_thing_hi()
     # print(graph.get_score(3076100, 1291170, [100, 100, 100, 100, 100, 100]))
     # print(graph.get_weight(7, 1291170))
-    print([game.name for game in test_graph.recommend_games(3076100, 20)])
-    print(test_graph._vertices[1290210].item.dlc)
+    print([game.name for game in test_graph.recommend_games([3076100, 1291170], 20)])
+    #print(test_graph._vertices[1290210].item.dlc)
     # print(graph._vertices[1291170].item.name)
