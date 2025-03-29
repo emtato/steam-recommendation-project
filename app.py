@@ -114,8 +114,8 @@ def pc_req_page():
     1 OPTION TEST
     """
     st.title("Choosing your pc requirements")
-    option_comp = st.selectbox("What type of computer do you have?", ("Windows", "Mac", "Linux"), index=None,
-                               placeholder="-", )
+    option_comp = st.selectbox("What type of computer do you have?", (
+        "Windows", "Mac", "Linux"), index=None, placeholder="-", )
 
     # st.write("You selected:", option)
     st.session_state["results"] = {"COMPUTER": option_comp}
@@ -136,10 +136,9 @@ def window_page():
     """"""
     st.write('To whoever who stole my Microsoft Office copy, I will find you..')
     st.write('You have my Word.')
-    option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10",
-                                                                          "Windows 8", "Windows 7", "Windows Vista",
-                                                                          "Windows XP"),
-                             index=None, placeholder="-", )
+    option_OS = st.selectbox("What Windows (ew) OS version do you use?", (
+        "Windows 11", "Windows 10", "Windows 8", "Windows 7", "Windows Vista",
+        "Windows XP"), index=None, placeholder="-", )
 
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
     # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
@@ -197,8 +196,8 @@ def mac_page():
 def linux_page():
     """"""
     st.write('computers are like air conditioners—they stop working properly if you open windows')
-    option_OS = st.selectbox("What Linux OS version do you use?", ("isert"),
-                             # May have to replace this with a POSSIBLE OS list from data
+    option_OS = st.selectbox("What Linux OS version do you use?", (
+        "isert"),  # May have to replace this with a POSSIBLE OS list from data
                              index=None, placeholder="-", )
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
     # option_RAM_TYPE = st.selectbox("Is your Memory (RAM) in GB or MB?", ("MB", "GB"), index=None, placeholder='-', )
@@ -223,8 +222,8 @@ def linux_page():
 
 
 def get_data():
-    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv',
-        4)
+    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq(
+        'data.csv', 4)
     st.session_state['cat'] = cat
     gen = [one for one in gen if one != 'mac' and one != 'windows' and one != 'linux']
     st.session_state['gen'] = gen
@@ -243,8 +242,8 @@ def category_pick():
 
     st.write(' | '.join(st.session_state['chosen_cat']))
 
-    selected = st.selectbox("Choose categories okay", st.session_state['cat'], index=None,
-                            placeholder='I AM GOING CUCKOO')
+    selected = st.selectbox("Choose categories okay",
+                            st.session_state['cat'], index=None, placeholder='I AM GOING CUCKOO')
     if st.button("undo select"):
         st.session_state["undo_pressed"] = True
         if len(st.session_state['chosen_cat']) > 0:
@@ -372,10 +371,11 @@ def first_pick():
        A page that shows the results the user chose, aka the options.
        """
     st.title('Here are the possible options for games that exactly match your requirements!')
-    st.write(str(st.session_state["results"]))
-    st.write(main.filtering_games('data.csv', st.session_state["results"]))
+    # st.write(str(st.session_state["results"]))
+    # st.write(main.filtering_games('data.csv', st.session_state["results"]))
     gamers = main.filtering_games('data.csv', st.session_state["results"])
-    gamers = [[g.id, g.name, g.price['final'] if g.price and 'final' in g.price else 'unknown', g.description, g.image, g.genres] for g in gamers]
+    gamers = [[g.id, g.name, g.price['final'] if g.price and 'final' in g.price else 'unknown', g.description, g.image,
+               g.genres] for g in gamers]
 
     if 'gamers_list' not in st.session_state or st.session_state['gamers_list'] is None:
         st.session_state['gamers_list'] = gamers
@@ -408,13 +408,6 @@ def first_pick():
                 st.markdown(css, unsafe_allow_html=True)
             st.markdown(final_html, unsafe_allow_html=True)
 
-        # if st.button("choose game (temp button to get to next page)"):
-        #     st.session_state[5] = False
-        #     st.session_state[6] = True
-        #     st.rerun()
-        # st.write(' ')
-        # st.write(' ')
-
         if st.button('back', key='back from page 7'):
             st.session_state[3] = True
             st.session_state[4] = False
@@ -422,20 +415,45 @@ def first_pick():
             st.rerun()
 
 
-
+def list_choser(suggestions, key):
+    selectbox_list = ['-'] + [f'{i + 1}. {suggestions[i][1]}' for i in range(len(suggestions))]
+    chosen_index = st.selectbox("add game to your list?", selectbox_list, key=key, help="adding game to "
+                                                                                        "your list will be "
+                                                                                        "able to better "
+                                                                                        "personalize your "
+                                                                                        "future "
+                                                                                        "recommendations ("
+                                                                                        "MAYBE) and you "
+                                                                                        "will be able to "
+                                                                                        "view your list of "
+                                                                                        "games chosen "
+                                                                                        "whenever you want")
+    if chosen_index and chosen_index != '-':
+        chosen_index = chosen_index[:2]
+        if chosen_index[1] == '.':
+            chosen_index = chosen_index[:1]
+        chosen_index = int(chosen_index) - 1
+        if 'list' not in st.session_state:
+            st.session_state['list'] = [suggestions[chosen_index]]
+        else:
+            st.session_state['list'].append(suggestions[chosen_index])
 
 
 def final_page():
     # function i can use later to split by the middle right side is the box left side filters!!
     st.title('additional recommendations :3')
     st.write(" ")
-
     suggestions = []
-    chosen = st.session_state['chosen']
-    st.markdown(f'<h6><strong>Current game: {chosen[0]}, {chosen[1]}</strong></h6>', unsafe_allow_html=True)
-    chosen = int(chosen[0]) if type(chosen) == tuple else int(chosen)
+
+    if 'suggestions' in st.session_state:
+        suggestions = st.session_state['suggestions']
 
     graph = main.load_graph('data.csv')
+
+    chosen = st.session_state['chosen']
+    st.markdown(f'<h6><strong>Current game: {chosen[0]}, {chosen[1]}</strong></h6>', unsafe_allow_html=True)
+    chosen = int(chosen[0]) if type(chosen) == tuple else int(chosen)  # only for testing (with skip button)
+
     coll1, coll2 = st.columns([1, 2])
     with coll1:
         st.markdown("Assign weights to what you think is most important when comparing game similarities. "
@@ -445,7 +463,11 @@ def final_page():
         col1, col2, col3 = st.columns([1, 1, 1])  # can add more columns
         # weights: price, language, dev, platform, category, genre
         with col1:
-            price = st.text_input('price', key='price', placeholder="0")
+            price = st.text_input('price', help="For example, if you chose a free game and set the price weight to "
+                                                "100, the system will strongly favor other free games. Higher weights "
+                                                "mean more importance is given to how similar that feature is to your "
+                                                "chosen game—like language, platform, category, etc. Lower weights "
+                                                "reduce that impact.", key='price', placeholder="0")
             price = int(price) if price.isdigit() else 10
             platform = st.text_input('platform', key='platform', placeholder="0")
             platform = int(platform) if platform.isdigit() else 10
@@ -461,13 +483,33 @@ def final_page():
             genre = int(genre) if genre.isdigit() else 10
 
         if st.button("make  grpah !!"):
-            st.write('working on it— may take up to 30s if you\'re on x86 (or this code is running on cloud) (no unified memory L </3)')
-            graph.clear_edges()
+            st.write('working on it— may take up to 30s if you\'re on x86 (or this code is running on cloud) (no '
+                     'unified memory L </3)')
+            graph.clear_edges()  # modify this to account for multiple games if want
             graph.build_edges([price, languages, dev, platform, category, genre])
             suggestions = graph.recommend_games(chosen, 50)
 
             suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
                             s.description, s.image, s.genres] for s in suggestions]
+            st.session_state['suggestions'] = suggestions
+            st.write(" ")
+            st.write(" ")
+
+            list_choser(suggestions, 'asaa')
+        elif 'suggestions' in st.session_state:
+            list_choser(suggestions, 'aasa')
+
+        st.write(" ")
+        st.write(" ")
+        if st.button('back', key='back from final page'):
+            st.session_state[6] = False
+            if 'suggestions' in st.session_state:
+                del st.session_state['suggestions']
+            if st.session_state['start'] == 3:
+                st.session_state[69] = True
+            else:
+                st.session_state[5] = True
+            st.rerun()
     with coll2:
         st.write('recommended games according to weights. click on image for link')
         if suggestions != []:
@@ -486,17 +528,20 @@ def final_page():
         else:
             st.markdown(""" <span style = "color:red"> No data</span>""", unsafe_allow_html=True)
 
-    st.write(" ")
-    st.write(" ")
-    st.write(" ")
+    if 'list' in st.session_state:
+        with open('scrolly.html', 'r') as f:
+            hrml = f.read()
+            st.write('your currnt list!!')
 
-    if st.button('back', key='back from final page'):
-        st.session_state[6] = False
-        if st.session_state['start'] == 3:
-            st.session_state[69] = True
-        else:
-            st.session_state[5] = True
-        st.rerun()
+            games = [format_game(game) for game in st.session_state['list']]
+            htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
+            final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
+            with open('scrolly.css') as fe:
+                css = f"<style>{fe.read()}</style>"
+                st.markdown(css, unsafe_allow_html=True)
+            st.markdown(final_html, unsafe_allow_html=True)
+        if st.button('remove last item') and len(st.session_state['list']) > 0:
+            st.session_state['list'].pop()
 
 
 def contains_cjk(text):
