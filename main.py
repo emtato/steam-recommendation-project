@@ -98,7 +98,7 @@ class _Vertex:
         if this_game.price is None or other_game.price is None:
             price_sim = 0
         elif this_game.price['final'] == 0 and other_game.price['final'] == 0:
-            price_sim = 0
+            price_sim = 1
         else:
             price_sim = 1 - abs(this_game.price['final'] - other_game.price['final']) / (
                     2 * (this_game.price['final'] + other_game.price['final']))
