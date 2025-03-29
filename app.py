@@ -380,7 +380,6 @@ def first_pick():
     if 'gamers_list' not in st.session_state or st.session_state['gamers_list'] is None:
         st.session_state['gamers_list'] = gamers
     col1, col2 = st.columns([1, 4])
-
     with col1:
         selectbox_list = ['-'] + [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
         chosen_index = st.selectbox("select game", selectbox_list, key='unique2')
@@ -395,6 +394,10 @@ def first_pick():
                     st.session_state[6] = True
                     st.session_state[5] = False
                     st.session_state['start'] = 3
+                    if 'list' not in st.session_state or not st.session_state['list']:
+                        st.session_state['list'] = [gamers[chosen_index]]
+                    elif gamers[chosen_index] not in st.session_state['list']:
+                        st.session_state['list'].append(gamers[chosen_index])
                     st.rerun()
 
     with col2:
@@ -471,11 +474,6 @@ def final_page():
     graph = main.load_graph('data.csv')
 
     chosen = st.session_state['chosen']
-    if 'list' not in st.session_state or not st.session_state['list']:
-        st.markdown(f'<h6><strong>Current game: {chosen[0]}, {chosen[1]}</strong></h6>', unsafe_allow_html=True)
-    else:
-        st.markdown(f'<h6><strong>Suggestions based on your list:</strong></h6>', unsafe_allow_html=True)
-
     chosen = int(chosen[0]) if type(chosen) == tuple else int(chosen)  # only for testing (with skip button)
 
     coll1, coll2 = st.columns([1, 2])
@@ -511,11 +509,8 @@ def final_page():
                      'unified memory L </3)')
             graph.clear_edges()  # modify this to account for multiple games if want
             graph.build_edges([price, languages, dev, platform, category, genre])
-            suggestions= 0
-            if 'list' not in st.session_state or not st.session_state['list']:
-                suggestions = graph.recommend_games([chosen], 50)
-            else:
-                suggestions = graph.recommend_games([game[0] for game in st.session_state['list']], 50)
+            suggestions = graph.recommend_games([int(game[0]) for game in st.session_state['list']], 50)
+
             suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
                             s.description, s.image, s.genres] for s in suggestions]
             st.session_state['suggestions'] = suggestions
@@ -626,6 +621,10 @@ def RANDOM_SELECT():
             st.session_state[6] = True
             st.session_state[69] = False
             st.session_state['start'] = 3
+            if 'list' not in st.session_state or not st.session_state['list']:
+                st.session_state['list'] = [gamers[chosen_index]]
+            elif gamers[chosen_index] not in st.session_state['list']:
+                st.session_state['list'].append(gamers[chosen_index])
             st.rerun()
 
     with col2:
@@ -646,7 +645,6 @@ def RANDOM_SELECT():
             st.session_state[69] = False
             st.session_state['gamers_list'] = None
             st.rerun()
-
 
 # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
 # maxing  # and  # restarting the app, making the user lose progress.
