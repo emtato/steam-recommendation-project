@@ -1,10 +1,10 @@
-.scroll-box {
-            height: 600px;
+.small-scroll-box {
+            height: 300px;
             overflow-y: auto;
             border: 1px solid #888;
             border-radius: 10px;
             background-color: #111;
-            width: 1100px;
+            width: 1200px;
         }
 .meow {
         yes: true;

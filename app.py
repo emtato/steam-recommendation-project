@@ -417,42 +417,43 @@ def first_pick():
 
 def list_choser(suggestions):
     selectbox_list = ['-'] + [f'{i + 1}. {suggestions[i][1]}' for i in range(len(suggestions))]
+    chosen_index = 0
     if 'select_index' in st.session_state:
 
         chosen_index = st.selectbox("add game to your list?", selectbox_list, key='aasa', help="adding game to "
-                                                                                            "your list will be "
-                                                                                            "able to better "
-                                                                                            "personalize your "
-                                                                                            "future "
-                                                                                            "recommendations ("
-                                                                                            "MAYBE) and you "
-                                                                                            "will be able to "
-                                                                                            "view your list of "
-                                                                                            "games chosen "
-                                                                                            "whenever you want",
+                                                                                               "your list will be "
+                                                                                               "able to better "
+                                                                                               "personalize your "
+                                                                                               "future "
+                                                                                               "recommendations ("
+                                                                                               "MAYBE) and you "
+                                                                                               "will be able to "
+                                                                                               "view your list of "
+                                                                                               "games chosen "
+                                                                                               "whenever you want",
                                     index=0)
         del st.session_state['select_index']
     else:
         chosen_index = st.selectbox("add game to your list?", selectbox_list, key='asaa', help="adding game to "
-                                                                                            "your list will be "
-                                                                                            "able to better "
-                                                                                            "personalize your "
-                                                                                            "future "
-                                                                                            "recommendations ("
-                                                                                            "MAYBE) and you "
-                                                                                            "will be able to "
-                                                                                            "view your list of "
-                                                                                            "games chosen "
-                                                                                            "whenever you want")
-        if chosen_index and chosen_index != '-':
-            chosen_index = chosen_index[:2]
-            if chosen_index[1] == '.':
-                chosen_index = chosen_index[:1]
-            chosen_index = int(chosen_index) - 1
-            if 'list' not in st.session_state:
-                st.session_state['list'] = [suggestions[chosen_index]]
-            elif suggestions[chosen_index] not in st.session_state['list']:
-                st.session_state['list'].append(suggestions[chosen_index])
+                                                                                               "your list will be "
+                                                                                               "able to better "
+                                                                                               "personalize your "
+                                                                                               "future "
+                                                                                               "recommendations ("
+                                                                                               "MAYBE) and you "
+                                                                                               "will be able to "
+                                                                                               "view your list of "
+                                                                                               "games chosen "
+                                                                                               "whenever you want")
+    if chosen_index and chosen_index != '-':
+        chosen_index = chosen_index[:2]
+        if chosen_index[1] == '.':
+            chosen_index = chosen_index[:1]
+        chosen_index = int(chosen_index) - 1
+        if 'list' not in st.session_state:
+            st.session_state['list'] = [suggestions[chosen_index]]
+        elif suggestions[chosen_index] not in st.session_state['list']:
+            st.session_state['list'].append(suggestions[chosen_index])
 
 
 def final_page():
@@ -544,14 +545,14 @@ def final_page():
             st.markdown(""" <span style = "color:red"> No data</span>""", unsafe_allow_html=True)
 
     if 'list' in st.session_state:
-        with open('scrolly.html', 'r') as f:
+        with open('scrolly2.html', 'r') as f:
             hrml = f.read()
             st.write('your currnt list!!')
 
             games = [format_game(game) for game in st.session_state['list']]
             htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
             final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-            with open('scrolly.css') as fe:
+            with open('scrolly2.css') as fe:
                 css = f"<style>{fe.read()}</style>"
                 st.markdown(css, unsafe_allow_html=True)
             st.markdown(final_html, unsafe_allow_html=True)
