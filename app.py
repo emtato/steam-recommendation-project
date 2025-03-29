@@ -403,7 +403,7 @@ def first_pick():
     with col2:
         with open('scrolly.html', 'r') as f:
             hrml = f.read()
-            games = [format_game(game) for game in gamers]
+            games = [format_game(game, 'img') for game in gamers]
             htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
             final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
             with open('scrolly.css') as fe:
@@ -459,7 +459,6 @@ def list_choser(suggestions):
         elif suggestions[chosen_index] not in st.session_state['list']:
             st.session_state['list'].append(suggestions[chosen_index])
             st.rerun()
-
 
 
 def final_page():
@@ -537,7 +536,7 @@ def final_page():
             with open('scrolly.html', 'r') as f:
                 hrml = f.read()
 
-                games = [format_game(game) for game in suggestions]
+                games = [format_game(game, 'img') for game in suggestions]
                 htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
                 final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
                 with open('scrolly.css') as fe:
@@ -554,7 +553,7 @@ def final_page():
             hrml = f.read()
             st.write('your currnt list!!')
 
-            games = [format_game(game) for game in st.session_state['list']]
+            games = [format_game(game, 'img-small') for game in st.session_state['list']]
             htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
             final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
             with open('scrolly2.css') as fe:
@@ -577,7 +576,7 @@ def contains_cjk(text):
     return False
 
 
-def format_game(game):
+def format_game(game: list, img: str):
     spacesname, spacesprice = 70, 20
 
     name = game[1].strip("'")
@@ -595,7 +594,7 @@ def format_game(game):
     paddingprice = '&nbsp;' * max(1, spacesprice)
 
     return (f"<a href=\"https://google.com/search?q={nocrop}+steam+{game[0]}\">"
-            f"<img src=\"{image}\" alt=\"{name}\" />"
+            f"<img src=\"{image}\" alt=\"{name}\" class=\"{img}\"/>"
             f"</a>"
             f"<div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>"
             f"{name}{paddingname}{price}{paddingprice}{genre}"
@@ -631,7 +630,7 @@ def RANDOM_SELECT():
         with open('scrolly.html', 'r') as f:
             hrml = f.read()
             st.write('randomly recommended games. click on image for link')
-            games = [format_game(game) for game in gamers]
+            games = [format_game(game, 'img') for game in gamers]
             htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
             final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
             with open('scrolly.css') as fe:
@@ -645,6 +644,7 @@ def RANDOM_SELECT():
             st.session_state[69] = False
             st.session_state['gamers_list'] = None
             st.rerun()
+
 
 # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
 # maxing  # and  # restarting the app, making the user lose progress.
