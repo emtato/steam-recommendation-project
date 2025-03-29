@@ -518,6 +518,30 @@ def minimum_requirements(g: Game, key: str) -> tuple:
             ram_list[1] = "GB"
 
     # extracts the possible os types
+    # CASE FOR PC/WINDOWS:
+    if k == "PC":
+        g1 = g.requirements[key].split("Processor")
+        if len(g1) == 2:
+            g2 = g1[0].split("Windows")
+            if len(g2) == 2:
+                g3 = g2[1]
+                if ("XP" or "xp") in g3:
+                    os_list.append("Windows XP")
+                if ("Vista" or "vista") in g3:
+                    os_list.append("Windows Vista")
+                if "7" in g3:
+                    os_list.append("Windows 7")
+                if "8" in g3:
+                    os_list.append("Windows 8")
+                if "9" in g3:
+                    os_list.append("Windows 9")
+                if "10" in g3:
+                    os_list.append("Windows 10")
+                if "11" in g3:
+                    os_list.append("Windows 11")
+
+    # CASE FOR MACOS VERSIONS:
+
     # TO FINISH
 
     if not os_list:
@@ -530,13 +554,22 @@ def minimum_requirements(g: Game, key: str) -> tuple:
 
     return (os_list, ram_list, storage_list)
 
-# gamesNogames = list_games('data.csv')
-# for g in gamesNogames:
-#     for k in g.requirements.keys():
-#
-#         print(g.requirements[k])
-#
-#
+gamesNogames = list_games('data.csv')
+for g in gamesNogames:
+    for k in g.requirements.keys():
+        if k == "Mac":
+            g1 = g.requirements[k].split("Minimum:")
+            if ([''] != g1) and (['', ''] != g1):
+                g2 = g1[1].split("Processor:")[0]
+                if "OS:" in g2:
+                    if ("Any" in g2) and (not "Graphics:" in g2):
+                        print(g2)
+
+
+
+
+
+
 
 """
 res = {"OS": 'windows', "LANGUAGES": ['English'], "GENRE": ['Action'], "CATEGORY": ['Single-player']}
