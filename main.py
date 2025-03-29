@@ -544,19 +544,19 @@ def minimum_requirements(g: Game, key: str) -> tuple:
             g2 = g1[0].split("Windows")
             if len(g2) == 2:
                 g3 = g2[1]
-                if ("XP" or "xp") in g3:
-                    os_list.extend(["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10",
-                                    "Windows 11"])
-                elif ("Vista" or "vista") in g3:
-                    os_list.extend(["Windows Vista", "Windows 7", "Windows 8", "Windows 10", "Windows 11"])
+                if "11" in g3:
+                    os_list.append("Windows 11")
+                elif "10" in g3:
+                    os_list.extend(["Windows 11", "Windows 10"])
                 elif "7" in g3:
-                    os_listextend(["Windows 7", "Windows 8", "Windows 10", "Windows 11"])
+                    os_listextend(["Windows 10", "Windows 11", "Windows 7", "Windows 8"])
                 elif "8" in g3:
                     os_list.extend(["Windows 8", "Windows 10", "Windows 11"])
-                elif "10" in g3:
-                    os_list.extend(["Windows 10", "Windows 11"])
-                elif "11" in g3:
-                    os_list.append("Windows 11")
+                elif ("Vista" or "vista") in g3:
+                    os_list.extend(["Windows Vista", "Windows 7", "Windows 8", "Windows 10", "Windows 11"])
+                elif ("XP" or "xp") in g3:
+                    os_list.extend(["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10",
+                                    "Windows 11"])
 
     # CASE FOR MACOS VERSIONS:
     elif key == "Mac":
@@ -569,10 +569,10 @@ def minimum_requirements(g: Game, key: str) -> tuple:
                     os_list.extend(["10", "Catalina", "Sierra", "12", "11", "14"])
                 # Any OSX
                 elif ("X" in g2) or ("10" in g2):
-                    os_list.extend(["10", "12", "11", "14"])
+                    os_list.extend(["10", "11", "12", "14"])
                 # Checking for Catalina
                 elif ("Catalina" in g2) and ("(" not in g2):
-                    os_list.extend(["10", "Catalina", "12", "11", "14"])
+                    os_list.extend(["10", "Catalina" "12", "11", "14"])
                 # checking for Sierre
                 elif "Sierra" in g2:
                     os_list.extend(["10", "Catalina", "Sierra", "12", "11", "14"])
@@ -581,7 +581,7 @@ def minimum_requirements(g: Game, key: str) -> tuple:
                     os_list.extend(["12", "14"])
                 # Macos 11
                 elif "11" in g2:
-                    os_list.extend(["12", "11", "14"])
+                    os_list.extend(["11", "12", "14"])
                 # Macos 14
                 elif "14" in g2:
                     os_list.append("14")
@@ -597,7 +597,7 @@ def minimum_requirements(g: Game, key: str) -> tuple:
                 if "Any" in g3:
                     os_list.extend(["Ubuntu 12", "Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22",
                                     "SteamOS"])
-                elif ("Ubuntu" in g3):
+                elif "Ubuntu" in g3:
                     if "12" in g3:
                         os_list.extend(
                             ["Ubuntu 12", "Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22"])
@@ -617,6 +617,7 @@ def minimum_requirements(g: Game, key: str) -> tuple:
                         os_list.append("Ubuntu 22")
                 elif "SteamOS" in g3:
                     os_list.append("SteamOS")
+                # Otherwise add nothing
 
     if not os_list:
         os_list = ['empty']
