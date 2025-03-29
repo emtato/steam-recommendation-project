@@ -450,10 +450,13 @@ def list_choser(suggestions):
         if chosen_index[1] == '.':
             chosen_index = chosen_index[:1]
         chosen_index = int(chosen_index) - 1
-        if 'list' not in st.session_state:
+        if 'list' not in st.session_state or not st.session_state['list']:
             st.session_state['list'] = [suggestions[chosen_index]]
+            st.rerun()
         elif suggestions[chosen_index] not in st.session_state['list']:
             st.session_state['list'].append(suggestions[chosen_index])
+            st.rerun()
+
 
 
 def final_page():
@@ -504,7 +507,7 @@ def final_page():
                      'unified memory L </3)')
             graph.clear_edges()  # modify this to account for multiple games if want
             graph.build_edges([price, languages, dev, platform, category, genre])
-            suggestions = graph.recommend_games(chosen, 50)
+            suggestions = graph.recommend_games([chosen], 50)
 
             suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
                             s.description, s.image, s.genres] for s in suggestions]
@@ -559,6 +562,7 @@ def final_page():
         if st.button('remove last item') and len(st.session_state['list']) > 0:
             st.session_state['select_index'] = 0
             st.session_state['list'].pop()
+            st.rerun()
 
 
 def contains_cjk(text):
