@@ -533,8 +533,6 @@ def minimum_requirements(g: Game, key: str) -> tuple:
                     os_list.append("Windows 7")
                 if "8" in g3:
                     os_list.append("Windows 8")
-                if "9" in g3:
-                    os_list.append("Windows 9")
                 if "10" in g3:
                     os_list.append("Windows 10")
                 if "11" in g3:
