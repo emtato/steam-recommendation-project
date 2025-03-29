@@ -136,7 +136,9 @@ def window_page():
     """"""
     st.write('To whoever who stole my Microsoft Office copy, I will find you..')
     st.write('You have my Word.')
-    option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10", "Windows 7"),
+    option_OS = st.selectbox("What Windows (ew) OS version do you use?", ("Windows 11", "Windows 10", "Windows 9",
+                                                                          "Windows 8", "Windows 7", "Windows Vista",
+                                                                          "Windows XP"),
                              index=None, placeholder="-", )
 
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
