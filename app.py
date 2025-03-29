@@ -58,6 +58,7 @@ def start_page():
         st.session_state[4] = False
         st.session_state[5] = False
         st.session_state[6] = False
+        st.session_state[7] = False
         st.session_state[69] = True
         st.rerun()
 
@@ -560,10 +561,36 @@ def final_page():
                 css = f"<style>{fe.read()}</style>"
                 st.markdown(css, unsafe_allow_html=True)
             st.markdown(final_html, unsafe_allow_html=True)
-        if st.button('remove last item') and len(st.session_state['list']) > 0:
-            st.session_state['select_index'] = 0
-            st.session_state['list'].pop()
-            st.rerun()
+        col1, col2,c3 = st.columns([1, 1, 2])
+        with col1:
+            if st.button('remove last item') and len(st.session_state['list']) > 0:
+                st.session_state['select_index'] = 0
+                st.session_state['list'].pop()
+                st.rerun()
+        with col2:
+            selectbox_list = ['-'] + [f'{i + 1}. {st.session_state['list'][i][1]}' for i in range(len(st.session_state['list']))]
+
+            chosen_index = st.selectbox("more info about game?", selectbox_list, key='sssa')
+
+            if chosen_index and chosen_index != '-':
+                chosen_index = chosen_index[:2]
+                if chosen_index[1] == '.':
+                    chosen_index = chosen_index[:1]
+                chosen_index = int(chosen_index) - 1
+                st.session_state[6] = False
+                st.session_state[7] = True
+                st.session_state['more'] = st.session_state['list'][chosen_index]
+                st.rerun()
+
+
+
+def more_info():
+    st.title('lol')
+    st.write(st.session_state['more'])
+    if st.button('back', key='back from info page'):
+        st.session_state[7] = False
+        st.session_state[6] = True
+        st.rerun()
 
 
 def contains_cjk(text):
@@ -672,6 +699,8 @@ elif st.session_state[5]:
     first_pick()
 elif st.session_state[6]:
     final_page()
+elif st.session_state[7]:
+    more_info()
 elif st.session_state[69]:
     RANDOM_SELECT()
 

@@ -9,6 +9,10 @@
 .meow {
         yes: true;
 }
+.img{
+    width: 231px;
+    height: 87px;
+}
 .wrap-text {
   max-width: 30ch;
   white-space: normal;
