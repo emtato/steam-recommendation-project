@@ -471,7 +471,11 @@ def final_page():
     graph = main.load_graph('data.csv')
 
     chosen = st.session_state['chosen']
-    st.markdown(f'<h6><strong>Current game: {chosen[0]}, {chosen[1]}</strong></h6>', unsafe_allow_html=True)
+    if 'list' not in st.session_state or not st.session_state['list']:
+        st.markdown(f'<h6><strong>Current game: {chosen[0]}, {chosen[1]}</strong></h6>', unsafe_allow_html=True)
+    else:
+        st.markdown(f'<h6><strong>Suggestions based on your list:</strong></h6>', unsafe_allow_html=True)
+
     chosen = int(chosen[0]) if type(chosen) == tuple else int(chosen)  # only for testing (with skip button)
 
     coll1, coll2 = st.columns([1, 2])
@@ -507,8 +511,11 @@ def final_page():
                      'unified memory L </3)')
             graph.clear_edges()  # modify this to account for multiple games if want
             graph.build_edges([price, languages, dev, platform, category, genre])
-            suggestions = graph.recommend_games([chosen], 50)
-
+            suggestions= 0
+            if 'list' not in st.session_state or not st.session_state['list']:
+                suggestions = graph.recommend_games([chosen], 50)
+            else:
+                suggestions = graph.recommend_games([game[0] for game in st.session_state['list']], 50)
             suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
                             s.description, s.image, s.genres] for s in suggestions]
             st.session_state['suggestions'] = suggestions
