@@ -161,7 +161,6 @@ def window_page():
     elif option_STORAGE != "":
         st.warning('the hell ya think yer doin mate that aint no **int**')
 
-
 def mac_page():
     """"""
     st.write('Wwy should you never fart in an Apple store becuause they dnt have any windows BAHJJHHJSBFADJ')
