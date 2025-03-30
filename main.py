@@ -317,7 +317,7 @@ def _get_object_from_string(string: str, exclude: Optional[str] = None) -> Any:
         return ast.literal_eval(string)
 
 
-def _load_game_object(game_data: list[str | int]) -> Game:
+def _load_game_object(game_data: list[str]) -> Game:
     """ Helper function for load_graph which creates a Game object using a list of game_data.
     """
     (
