@@ -165,7 +165,7 @@ def window_page():
 def mac_page():
     """"""
     st.write('Wwy should you never fart in an Apple store becuause they dnt have any windows BAHJJHHJSBFADJ')
-    option_OS = st.selectbox("What Mac OS version do you use?", ("10", "Catalina", "Sierra", "12", "11", "14"),
+    option_OS = st.selectbox("What Mac OS version do you use?", ("11 and below", "12", "13", "14", "15"),
                              index=None, placeholder="-", )
 
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
