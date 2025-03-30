@@ -347,6 +347,9 @@ def _load_game_object(game_data: list[str]) -> Game:
 
 
 def build_dic(data_file: str) -> dict:
+    """
+    This function build a dictionary with the given data_file.
+    """
     # Here we are using the 'encoding=' to make sure everyone's computer will be able to use the csv file
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
@@ -384,7 +387,7 @@ def build_dic(data_file: str) -> dict:
 
 
 def extract_freq(data_file: str, col: int):
-    '''this is where the yip yap goes'''
+    '''this function extracts the frequency'''
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
@@ -402,7 +405,7 @@ def extract_freq(data_file: str, col: int):
 
 # random button in main menu to select random games to look through
 def random_selection():
-    '''this is where the yip yap goes'''
+    '''this function randomly selects games'''
     gamers = []
     with open('data.csv', 'r', encoding='utf8') as file:
         reader = csv.reader(file)
