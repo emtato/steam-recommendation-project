@@ -144,7 +144,6 @@ def window_page():
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
 
     option_STORAGE = st.text_input("How much storage do you have available?: ")
-    option_STORAGE_SIZE = st.selectbox("Is your storage in MB or GB?", ("GB", "MB"), index=None, placeholder="-",)
     if option_STORAGE.isdigit():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
@@ -155,7 +154,7 @@ def window_page():
             res["OS"] = str(option_OS)
             # res["RAM"] = [option_RAM, option_RAM_TYPE]
             res["RAM"] = [option_RAM]
-            res["STORAGE"] = [option_STORAGE, option_STORAGE_SIZE]
+            res["STORAGE"] = [option_STORAGE, 'GB']
 
             st.rerun()
 
@@ -171,8 +170,7 @@ def mac_page():
 
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
 
-    option_STORAGE = st.text_input("How much storage do you have available?:")
-    option_STORAGE_SIZE = st.selectbox("Is your storage in MB or GB?", ("GB", "MB"), index=None, placeholder="-",)
+    option_STORAGE = st.text_input("How much storage do you have available? (in GB):")
     if option_STORAGE.isdigit():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
@@ -182,7 +180,7 @@ def mac_page():
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
             res["RAM"] = [option_RAM]
-            res["STORAGE"] = [option_STORAGE, option_STORAGE_SIZE]
+            res["STORAGE"] = [option_STORAGE, 'GB']
 
             st.rerun()
     elif option_STORAGE != "":
@@ -198,8 +196,7 @@ def linux_page():
                              index=None, placeholder="-", )
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
 
-    option_STORAGE = st.text_input("How much storage do you have available?:")
-    option_STORAGE_SIZE = st.selectbox("Is your storage in MB or GB?", ("GB", "MB"), index=None, placeholder="-",)
+    option_STORAGE = st.text_input("How much storage do you have available? (in GB):")
 
     if option_STORAGE.isdigit():
 
@@ -210,7 +207,7 @@ def linux_page():
             res = st.session_state["results"]
             res["OS"] = str(option_OS)
             res["RAM"] = [option_RAM]
-            res["STORAGE"] = [option_STORAGE, option_STORAGE_SIZE]
+            res["STORAGE"] = [option_STORAGE, 'GB']
 
             st.rerun()
     elif option_STORAGE != "":
