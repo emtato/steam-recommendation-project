@@ -567,25 +567,21 @@ def minimum_requirements(g: Game, key: str) -> tuple:
                 # Any MacOs, add them all
                 if ("Any" in g2) and (not "Graphics:" in g2):
                     os_list.extend(["11 and below", "12", "13", "14", "15"])
-                # Any OSX
-                elif ("X" in g2) or ("10" in g2):
-                    os_list.extend(["11 and below", "12", "13", "14", "15"])
                 # Macos 12
-                elif "12" in g2:
+                elif ("12" or "Monterey" or "monterey") in g2:
                     os_list.extend(["12", "13", "14", "15"])
-                # Macos 11
-                elif "11" in g2:
-                    os_list.extend(["11", "12", "13", "14", "15"])
                 # Macos 13:
-                elif "13" in g2:
+                elif ("13" or "Ventura" or "ventura") in g2:
                     os_list.extend(["13", "14", "15"])
                 # macos 14
-                elif "14" in g2:
+                elif ("14" or "Sonoma" or "sonoma") in g2:
                     os_list.extend(["14", "15"])
                 # Macos 15
-                elif "15" in g2:
+                elif ("15" or "Sequoia" or "sequoia") in g2:
                     os_list.append("15")
-                # Otherwise dont add anything
+                # Otherwise anything 11 and below
+                else:
+                    os_list.extend(["11 and below", "12", "13", "14", "15"])
 
     # CASE FOR LINUX VERSIONS:
     elif key == "Linux":
