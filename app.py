@@ -357,6 +357,18 @@ def lnaugeg():
         st.rerun()
 
 
+def selection_box(text: str, gamers: list) -> int:
+    selectbox_list = ['-'] + [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
+    chosen_index = st.selectbox(text, selectbox_list, key='unique2')
+    if chosen_index and chosen_index != '-':
+        chosen_index = chosen_index.split('.')[0]
+        if chosen_index.isdigit():
+            chosen_index = int(chosen_index) - 1
+            if 0 <= chosen_index < len(gamers):
+                game_id = gamers[chosen_index][0]
+                st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
+        return chosen_index
+
 def first_pick():
     """
        A page that shows the results the user chose, aka the options.
@@ -373,24 +385,16 @@ def first_pick():
     if len(gamers) > 0:
         col1, col2 = st.columns([1, 4])
         with col1:
-            selectbox_list = ['-'] + [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
-            chosen_index = st.selectbox("select game", selectbox_list, key='unique2')
-            if chosen_index and chosen_index != '-':
-                chosen_index = chosen_index.split('.')[0]
-                if chosen_index.isdigit():
-                    chosen_index = int(chosen_index) - 1
-                    if 0 <= chosen_index < len(gamers):
-                        game_id = gamers[chosen_index][0]
-                        st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
-
-                        st.session_state[6] = True
-                        st.session_state[5] = False
-                        #st.session_state['start'] = 3
-                        if 'list' not in st.session_state or not st.session_state['list']:
-                            st.session_state['list'] = [gamers[chosen_index]]
-                        elif gamers[chosen_index] not in st.session_state['list']:
-                            st.session_state['list'].append(gamers[chosen_index])
-                        st.rerun()
+            chosen_index = selection_box("select game", gamers)
+            if chosen_index is not None:
+                st.session_state[6] = True
+                st.session_state[5] = False
+                # st.session_state['start'] = 3
+                if 'list' not in st.session_state or not st.session_state['list']:
+                    st.session_state['list'] = [gamers[chosen_index]]
+                elif gamers[chosen_index] not in st.session_state['list']:
+                    st.session_state['list'].append(gamers[chosen_index])
+                st.rerun()
 
         with col2:
 
@@ -415,34 +419,14 @@ def first_pick():
 
 def list_choser(suggestions):
     selectbox_list = ['-'] + [f'{i + 1}. {suggestions[i][1]}' for i in range(len(suggestions))]
-    chosen_index = 0
+    help = ('Adding a game to your list will help better personalize your future recommendations (maybe), and you’ll '
+            'be able to view your list of chosen games whenever you want.')
     if 'select_index' in st.session_state:
 
-        chosen_index = st.selectbox("add game to your list?", selectbox_list, key='aasa', help="adding game to "
-                                                                                               "your list will be "
-                                                                                               "able to better "
-                                                                                               "personalize your "
-                                                                                               "future "
-                                                                                               "recommendations ("
-                                                                                               "MAYBE) and you "
-                                                                                               "will be able to "
-                                                                                               "view your list of "
-                                                                                               "games chosen "
-                                                                                               "whenever you want",
-                                    index=0)
+        chosen_index = st.selectbox("add game to your list?", selectbox_list, key='aasa', help=help, index=0)
         del st.session_state['select_index']
     else:
-        chosen_index = st.selectbox("add game to your list?", selectbox_list, key='asaa', help="adding game to "
-                                                                                               "your list will be "
-                                                                                               "able to better "
-                                                                                               "personalize your "
-                                                                                               "future "
-                                                                                               "recommendations ("
-                                                                                               "MAYBE) and you "
-                                                                                               "will be able to "
-                                                                                               "view your list of "
-                                                                                               "games chosen "
-                                                                                               "whenever you want")
+        chosen_index = st.selectbox("add game to your list?", selectbox_list, key='asaa', help=help)
     if chosen_index and chosen_index != '-':
         chosen_index = chosen_index[:2]
         if chosen_index[1] == '.':
@@ -563,16 +547,8 @@ def final_page():
                 st.session_state['list'].pop()
                 st.rerun()
         with col2:
-            selectbox_list = ['-'] + [f'{i + 1}. {st.session_state['list'][i][1]}' for i in
-                                      range(len(st.session_state['list']))]
-
-            chosen_index = st.selectbox("more info about game?", selectbox_list, key='sssa')
-
-            if chosen_index and chosen_index != '-':
-                chosen_index = chosen_index[:2]
-                if chosen_index[1] == '.':
-                    chosen_index = chosen_index[:1]
-                chosen_index = int(chosen_index) - 1
+            chosen_index = selection_box('more info about game?', st.session_state['list'])
+            if chosen_index is not None:
                 st.session_state[6] = False
                 st.session_state[7] = True
                 st.session_state['more'] = st.session_state['list'][chosen_index]
@@ -629,15 +605,8 @@ def RANDOM_SELECT():
     col1, col2 = st.columns([1, 4])
 
     with col1:
-        selectbox_list = ['-'] + [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
-        chosen_index = st.selectbox("select game", selectbox_list, key='unique')
-        if chosen_index and chosen_index != '-':
-            chosen_index = chosen_index[:2]
-            if chosen_index[1] == '.':
-                chosen_index = chosen_index[:1]
-            chosen_index = int(chosen_index) - 1
-            game_id = gamers[chosen_index][0]
-            st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
+        chosen_index = selection_box("select game", gamers)
+        if chosen_index is not None:
             st.session_state[6] = True
             st.session_state[69] = False
             st.session_state['start'] = 3
