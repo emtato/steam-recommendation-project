@@ -12,8 +12,6 @@ from typing import Any
 PRICE, LANGUAGE, DEV, PLATFORM, CATEGORY, GENRE = 0, 1, 2, 3, 4, 5
 
 
-# NAME,PRICE_RANGES,DESCRIPTION,LANGUAGES, DEVELOPERS,PLATFORMS,CATEGORIES,GENRES, DLC =
-
 @dataclass
 class Game:
     """
@@ -632,5 +630,5 @@ if __name__ == "__main__":
     # print(graph.get_score(3076100, 1291170, [100, 100, 100, 100, 100, 100]))
     # print(graph.get_weight(7, 1291170))
     print([game.name for game in test_graph.recommend_games([3076100, 1291170], 20)])
-    #print(test_graph._vertices[1290210].item.dlc)
+    # print(test_graph._vertices[1290210].item.dlc)
     # print(graph._vertices[1291170].item.name)
