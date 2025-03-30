@@ -106,7 +106,7 @@ def prestart():
             st.session_state['skip'] = False
             st.session_state['prestart'] = False
             st.rerun()
-        st.write("if youre on mobile, we hate you")
+        # st.write("if youre on mobile, we hate you")
 
 
 def pc_req_page():
@@ -135,9 +135,9 @@ def pc_req_page():
 
 def window_page():
     """"""
-    st.write('To whoever who stole my Microsoft Office copy, I will find you..')
+    st.write('To whomever stole my Microsoft Office copy, I will find you..')
     st.write('You have my Word.')
-    option_OS = st.selectbox("What Windows (ew) OS version do you use?", (
+    option_OS = st.selectbox("What Windows OS version do you use?", (
         "Windows 11", "Windows 10", "Windows 8", "Windows 7", "Windows Vista",
         "Windows XP"), index=None, placeholder="-", )
 
@@ -159,11 +159,11 @@ def window_page():
             st.rerun()
 
     elif option_STORAGE != "":
-        st.warning('the hell ya think yer doin mate that aint no **int**')
+        st.warning('HEY! That aint no **int**')
 
 def mac_page():
     """"""
-    st.write('Wwy should you never fart in an Apple store becuause they dnt have any windows BAHJJHHJSBFADJ')
+    st.write('Why should you never fart in an Apple store? Because they don\'t have any windows BAHJJHHJSBFADJ')
     option_OS = st.selectbox("What Mac OS version do you use?", (
         "11 and below", "12", "13", "14", "15"), index=None, placeholder="-", )
 
@@ -172,7 +172,7 @@ def mac_page():
     option_STORAGE = st.text_input("How much storage do you have available? (in GB):")
     if option_STORAGE.isdigit():
 
-        if option_OS and option_RAM and option_STORAGE and st.button('hi'):
+        if option_OS and option_RAM and option_STORAGE and st.button('next'):
             st.session_state[0] = True
             st.session_state['start'] = 2
 
@@ -183,12 +183,12 @@ def mac_page():
 
             st.rerun()
     elif option_STORAGE != "":
-        st.warning('the hell ya think yer doin mate that aint no **int**')
+        st.warning('HEY! That aint no **int**')
 
 
 def linux_page():
     """"""
-    st.write('computers are like air conditioners—they stop working properly if you open windows')
+    st.write('Computers are like air conditioners—they stop working properly if you open windows')
     option_OS = st.selectbox("What Linux OS version do you use?", (
         "Ubuntu 12", "Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22",
         "SteamOS"), index=None, placeholder="-", )
@@ -209,7 +209,7 @@ def linux_page():
 
             st.rerun()
     elif option_STORAGE != "":
-        st.warning('the hell ya think yer doin mate that aint no **int**')
+        st.warning('HEY! That aint no **int**')
 
 
 def get_data():
@@ -225,8 +225,8 @@ def get_data():
 
 
 def category_pick():
-    st.title('hi')
-    st.write('pick gaming stuff :DD | currently chosen categories:')
+    st.title('Category pick: (remember you don\'t have to chose anything, and can leave this blank)')
+    st.write('What categories are you interested in? | currently chosen categories:')
 
     if 'chosen_cat' not in st.session_state:
         st.session_state['chosen_cat'] = []  # list of sleected categories ^•ω•^
@@ -262,8 +262,8 @@ def category_pick():
 
 
 def game_genre_page():
-    st.title('hi')
-    st.write('pick gaming stuff :DD | currently chosen game genres:')
+    st.title('Genre pick: (remember you don\'t have to chose anything, and can leave this blank)')
+    st.write('What type of genres are you into? | currently chosen game genres:')
 
     if 'chosen_genres' not in st.session_state:
         st.session_state['chosen_genres'] = []  # list of sleected genres ^•ω•^
@@ -281,7 +281,7 @@ def game_genre_page():
         st.rerun()
     st.session_state['undo_pressed'] = False
 
-    if st.button("submmit"):
+    if st.button("submit"):
         st.session_state[2] = False
         st.session_state[3] = True
 
@@ -328,7 +328,7 @@ def lnaugeg():
     if 'chosen_lang' not in st.session_state:
         st.session_state['chosen_lang'] = []  # list of sleected lanusggage ^•ω•^
 
-    st.title("hola or ni hao")
+    st.title("Language?")
     st.write(' | '.join(st.session_state['chosen_lang']))
 
     selected = st.selectbox("blipblop bloop", st.session_state['lang'], index=None, placeholder='hai')
@@ -342,7 +342,7 @@ def lnaugeg():
         st.rerun()
     st.session_state['undo_pressed'] = False
 
-    if st.button("submmit"):
+    if st.button("submit"):
         st.session_state[4] = False
         st.session_state[5] = True
 
@@ -555,7 +555,7 @@ def final_page():
 
 
 def more_info():
-    st.title('lol')
+    st.title('More Info:')
     st.write(st.session_state['more'])
     if st.button('back', key='back from info page'):
         st.session_state[7] = False
@@ -665,13 +665,3 @@ elif st.session_state[7]:
     more_info()
 elif st.session_state[69]:
     RANDOM_SELECT()
-
-# The code below creates tabs! We can use this to show the results later  #   # tab1,
-# tab2 = st.tabs(["Tab 1", "Tab2"])  # tab1.write("this is tab 1")  # tab2.write("this is tab 2")
-
-# g = Graph()
-# g.build_graph("data.csv", 1)
-
-# st.write("Graph built successfully!")
-
-# run streamlit run app.py in terminal
