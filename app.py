@@ -143,7 +143,7 @@ def window_page():
 
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
 
-    option_STORAGE = st.text_input("How much storage do you have available?: ")
+    option_STORAGE = st.text_input("How much storage do you have available? (in GB): ")
     if option_STORAGE.isdigit():
 
         if option_OS and option_RAM and option_STORAGE and st.button('hi'):
@@ -165,8 +165,8 @@ def window_page():
 def mac_page():
     """"""
     st.write('Wwy should you never fart in an Apple store becuause they dnt have any windows BAHJJHHJSBFADJ')
-    option_OS = st.selectbox("What Mac OS version do you use?", ("11 and below", "12", "13", "14", "15"),
-                             index=None, placeholder="-", )
+    option_OS = st.selectbox("What Mac OS version do you use?", (
+        "11 and below", "12", "13", "14", "15"), index=None, placeholder="-", )
 
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
 
@@ -192,8 +192,7 @@ def linux_page():
     st.write('computers are like air conditioners—they stop working properly if you open windows')
     option_OS = st.selectbox("What Linux OS version do you use?", (
         "Ubuntu 12", "Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22",
-                                    "SteamOS"),
-                             index=None, placeholder="-", )
+        "SteamOS"), index=None, placeholder="-", )
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
 
     option_STORAGE = st.text_input("How much storage do you have available? (in GB):")
@@ -303,8 +302,6 @@ def brokeness_level():
     This sections asks the user for a MAXIMUM (inclusive) price in CAD
     """
     st.title('Price? (please write your MAX (inclusive) price in CAD)')
-    # selected = st.selectbox("how broke are u be fr", (
-    # "free plz", "≤10$", "≤25$", "my dad works at roblox"), index=None, placeholder='im hungry')
     selected = st.text_input("How much are you willing to pay? (input 0 for Free)")
 
     if selected.isdigit() or selected == '':
@@ -332,6 +329,7 @@ def lnaugeg():
     if 'chosen_lang' not in st.session_state:
         st.session_state['chosen_lang'] = []  # list of sleected lanusggage ^•ω•^
 
+    st.title("hola or ni hao")
     st.write(' | '.join(st.session_state['chosen_lang']))
 
     selected = st.selectbox("blipblop bloop", st.session_state['lang'], index=None, placeholder='hai')
@@ -372,43 +370,47 @@ def first_pick():
 
     if 'gamers_list' not in st.session_state or st.session_state['gamers_list'] is None:
         st.session_state['gamers_list'] = gamers
-    col1, col2 = st.columns([1, 4])
-    with col1:
-        selectbox_list = ['-'] + [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
-        chosen_index = st.selectbox("select game", selectbox_list, key='unique2')
-        if chosen_index and chosen_index != '-':
-            chosen_index = chosen_index.split('.')[0]
-            if chosen_index.isdigit():
-                chosen_index = int(chosen_index) - 1
-                if 0 <= chosen_index < len(gamers):
-                    game_id = gamers[chosen_index][0]
-                    st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
+    if len(gamers) > 0:
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            selectbox_list = ['-'] + [f'{i + 1}. {gamers[i][1]}' for i in range(len(gamers))]
+            chosen_index = st.selectbox("select game", selectbox_list, key='unique2')
+            if chosen_index and chosen_index != '-':
+                chosen_index = chosen_index.split('.')[0]
+                if chosen_index.isdigit():
+                    chosen_index = int(chosen_index) - 1
+                    if 0 <= chosen_index < len(gamers):
+                        game_id = gamers[chosen_index][0]
+                        st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
 
-                    st.session_state[6] = True
-                    st.session_state[5] = False
-                    st.session_state['start'] = 3
-                    if 'list' not in st.session_state or not st.session_state['list']:
-                        st.session_state['list'] = [gamers[chosen_index]]
-                    elif gamers[chosen_index] not in st.session_state['list']:
-                        st.session_state['list'].append(gamers[chosen_index])
-                    st.rerun()
+                        st.session_state[6] = True
+                        st.session_state[5] = False
+                        #st.session_state['start'] = 3
+                        if 'list' not in st.session_state or not st.session_state['list']:
+                            st.session_state['list'] = [gamers[chosen_index]]
+                        elif gamers[chosen_index] not in st.session_state['list']:
+                            st.session_state['list'].append(gamers[chosen_index])
+                        st.rerun()
 
-    with col2:
-        with open('scrolly.html', 'r') as f:
-            hrml = f.read()
-            games = [format_game(game, 'img') for game in gamers]
-            htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
-            final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-            with open('scrolly.css') as fe:
-                css = f"<style>{fe.read()}</style>"
-                st.markdown(css, unsafe_allow_html=True)
-            st.markdown(final_html, unsafe_allow_html=True)
+        with col2:
 
-        if st.button('back', key='back from page 7'):
-            st.session_state[3] = True
-            st.session_state[4] = False
-            st.session_state['gamers_list'] = None
-            st.rerun()
+            with open('scrolly.html', 'r') as f:
+                hrml = f.read()
+                games = [format_game(game, 'img') for game in gamers]
+                htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
+                final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
+                with open('scrolly.css') as fe:
+                    css = f"<style>{fe.read()}</style>"
+                    st.markdown(css, unsafe_allow_html=True)
+                st.markdown(final_html, unsafe_allow_html=True)
+    else:
+        st.write("we cuwuldnt find any games :<< sowwy!")
+
+    if st.button('back', key='back from page 7'):
+        st.session_state[4] = True
+        st.session_state[5] = False
+        st.session_state['gamers_list'] = None
+        st.rerun()
 
 
 def list_choser(suggestions):
@@ -519,6 +521,7 @@ def final_page():
             if 'suggestions' in st.session_state:
                 del st.session_state['suggestions']
             if st.session_state['start'] == 3:
+                st.session_state[7] = False
                 st.session_state[69] = True
             else:
                 st.session_state[5] = True
@@ -553,14 +556,15 @@ def final_page():
                 css = f"<style>{fe.read()}</style>"
                 st.markdown(css, unsafe_allow_html=True)
             st.markdown(final_html, unsafe_allow_html=True)
-        col1, col2,c3 = st.columns([1, 1, 2])
+        col1, col2, c3 = st.columns([1, 1, 2])
         with col1:
             if st.button('remove last item') and len(st.session_state['list']) > 0:
                 st.session_state['select_index'] = 0
                 st.session_state['list'].pop()
                 st.rerun()
         with col2:
-            selectbox_list = ['-'] + [f'{i + 1}. {st.session_state['list'][i][1]}' for i in range(len(st.session_state['list']))]
+            selectbox_list = ['-'] + [f'{i + 1}. {st.session_state['list'][i][1]}' for i in
+                                      range(len(st.session_state['list']))]
 
             chosen_index = st.selectbox("more info about game?", selectbox_list, key='sssa')
 
@@ -573,7 +577,6 @@ def final_page():
                 st.session_state[7] = True
                 st.session_state['more'] = st.session_state['list'][chosen_index]
                 st.rerun()
-
 
 
 def more_info():
@@ -597,7 +600,6 @@ def contains_cjk(text):
 
 def format_game(game: list, img: str):
     spacesname, spacesprice = 70, 20
-
     name = game[1].strip("'")
     nocrop = name
     if len(name) > 55:
