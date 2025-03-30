@@ -1,5 +1,7 @@
-# Description:
-# Created by Emilia on 2025-03-23
+# Description: This python file contains the code for the Game class, the graph/vertex classes (with their creation
+# functions). This also contains the functions for game filtering, and the graph similarity/weighing code for finding
+# similar games to the chosen one.
+# Created by Emilia, Amanda, Nicole, Grace on 2025-03-23
 from __future__ import annotations
 
 import ast
@@ -505,6 +507,10 @@ def minimum_requirements(g: Game, key: str) -> tuple:
     - List 1: OS
     - List 2: RAM (memory), RAM (type, MB or GB)
     - List 3: Storage (float), Storage (type, MB or GB)
+
+    Preconditions:
+            - key in g.keys()
+            - isinstance(g.requirements, str)
     """
     os_list, ram_list, storage_list = [], [], []
 

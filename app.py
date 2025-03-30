@@ -2,19 +2,12 @@
 # Run locally: install streamlit and run shell command
 # View finished product: https://emtato.streamlit.app (not as up to date if not completed)
 # WARNING: for the app to function, please use streamlit version 1.43.2
-# Created by Emilia on 2025-03-25
-
-# update 03-27 5PM
-# random game -> similar games via graph pipeline fully works
-# start -> skip and enter id to quickly test id's and find similar games fully works
-# missing function: filter method from start -> selecting first game
+# Created by Emilia, Amanda, Nicole, Grace on 2025-03-25
 
 import streamlit as st
 import main
 from main import random_selection
 
-# states 0: get data occurence frequency, 1: categories, 2: genres, 3: cost, 4: language, 5: first game pick page
-# 6: probably full filter and next game picks menu
 col1, col2 = st.columns([1, 1])  # or adjust the ratio like [2, 1] if you want left side bigger
 
 
@@ -112,7 +105,6 @@ def prestart():
 def pc_req_page():
     """
     A page that lets the user choose their type of computer.
-    1 OPTION TEST
     """
     st.title("Choosing your pc requirements")
     option_comp = st.selectbox("What type of computer do you have?", (
@@ -134,7 +126,9 @@ def pc_req_page():
 
 
 def window_page():
-    """"""
+    """
+    This page lets the user specify their windows computer's attributes,
+    """
     st.write('To whomever stole my Microsoft Office copy, I will find you..')
     st.write('You have my Word.')
     option_OS = st.selectbox("What Windows OS version do you use?", (
@@ -162,7 +156,9 @@ def window_page():
         st.warning('HEY! That aint no **int**')
 
 def mac_page():
-    """"""
+    """
+    This page lets the user specify their mac computer's attributes,
+    """
     st.write('Why should you never fart in an Apple store? Because they don\'t have any windows BAHJJHHJSBFADJ')
     option_OS = st.selectbox("What Mac OS version do you use?", (
         "11 and below", "12", "13", "14", "15"), index=None, placeholder="-", )
@@ -187,7 +183,9 @@ def mac_page():
 
 
 def linux_page():
-    """"""
+    """
+    This page lets the user specify their linux computer's attributes,
+    """
     st.write('Computers are like air conditioners—they stop working properly if you open windows')
     option_OS = st.selectbox("What Linux OS version do you use?", (
         "Ubuntu 12", "Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22",
@@ -213,6 +211,9 @@ def linux_page():
 
 
 def get_data():
+    """
+    gets the data from the data.csv file
+    """
     cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq(
         'data.csv', 4)
     st.session_state['cat'] = cat
@@ -225,6 +226,9 @@ def get_data():
 
 
 def category_pick():
+    """
+    This page lets the user pick their desired categories
+    """
     st.title('Category pick: (remember you don\'t have to chose anything, and can leave this blank)')
     st.write('What categories are you interested in? | currently chosen categories:')
 
@@ -262,6 +266,9 @@ def category_pick():
 
 
 def game_genre_page():
+    """
+    This page lets the user pick the genres they want for their game recommendation
+    """
     st.title('Genre pick: (remember you don\'t have to chose anything, and can leave this blank)')
     st.write('What type of genres are you into? | currently chosen game genres:')
 
@@ -325,6 +332,9 @@ def brokeness_level():
 
 
 def lnaugeg():
+    """
+    Allows the user to specify what language(s) they want the game to be in.
+    """
     if 'chosen_lang' not in st.session_state:
         st.session_state['chosen_lang'] = []  # list of sleected lanusggage ^•ω•^
 
