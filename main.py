@@ -116,7 +116,7 @@ class _Vertex:
             both_true_platforms += int(this_game.platforms[plat] and other_game.platforms[plat])
             one_true_platforms += int(this_game.platforms[plat] or other_game.platforms[plat])
         if one_true_platforms == 0:
-            plat_sim = 0
+            plat_sim = 0.0
         else:
             plat_sim = both_true_platforms / one_true_platforms
 
@@ -188,7 +188,7 @@ class Graph:
             - target_id in self._vertices
             - len(item_ids) >= 1
         """
-        total_weights = 0
+        total_weights = 0.0
         for item_id in item_ids:
             total_weights += self._get_weight(item_id, target_id)
         return total_weights / len(item_ids)
@@ -317,7 +317,7 @@ def _get_object_from_string(string: str, exclude: Optional[str] = None) -> Any:
         return ast.literal_eval(string)
 
 
-def _load_game_object(game_data: list[str]) -> Game:
+def _load_game_object(game_data: list[str | int]) -> Game:
     """ Helper function for load_graph which creates a Game object using a list of game_data.
     """
     (
@@ -641,3 +641,13 @@ if __name__ == "__main__":
     print([game.name for game in test_graph.recommend_games([3076100, 1291170], 20)])
     # print(test_graph._vertices[1290210].item.dlc)
     # print(graph._vertices[1291170].item.name)
+
+    import doctest
+    doctest.testmod()
+
+    import python_ta
+    python_ta.check_all(config={
+        'extra-imports': [],  # the names (strs) of imported modules
+        'allowed-io': [],  # the names (strs) of functions that call print/open/input
+        'max-line-length': 120
+    })
