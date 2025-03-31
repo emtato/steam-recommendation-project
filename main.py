@@ -256,18 +256,22 @@ class Graph:
     def _add_recommendation_in_order(self, target_ids: list[int], new_id: int, game_list: list[int]) -> None:
         """
         Helper function for recommend_games that adds a new_id to a list of game ids (game_list) in
-        descending order of score with the list of target_ids, and in alphabetical order of game name in the case of
-        equal scores.
+        descending order of score with the list of target_ids.
         """
         for i in range(len(game_list)):
             curr_id = game_list[i]
             curr_sim_score = self.get_avg_weight(target_ids, curr_id)
             new_sim_score = self.get_avg_weight(target_ids, new_id)
-            if curr_sim_score < new_sim_score or (
-                    curr_sim_score == new_sim_score and self._vertices[curr_id].item.name <
-                    self._vertices[new_id].item.name):
+            if curr_sim_score < new_sim_score:
                 game_list.insert(i, new_id)
                 return
+            elif curr_sim_score == new_sim_score and self._vertices[curr_id].item.name < self._vertices[
+                new_id].item.name :
+                random_num = randint(1,2)
+                if random_num == 1:
+                    game_list.insert(i, new_id)
+                    return
+            return
         game_list.append(new_id)
         return
 
