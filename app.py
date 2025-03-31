@@ -566,17 +566,29 @@ def final_page():
                 st.session_state[6] = False
                 st.session_state[7] = True
                 st.session_state['more'] = st.session_state['list'][chosen_index]
+                st.session_state['graph']= graph
                 st.rerun()
 
 
 def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int):
     appinfo = 'https://store.steampowered.com/api/appdetails?appids=' + str(id)
     response = requests.get(appinfo)
+    images = []
+    try:
+        data = response.json()
+        app_data = data.get(str(id), {}).get('data', {})
+        screenshots = app_data.get('screenshots', [])
+        images = [s.get('path_full', '').replace('\\/', '/') for s in screenshots if 'path_full' in s]
+    except Exception:
+        st.write('no photos ;<')
+    return images
 
 def more_info():
     st.title('More Info:')
-    st.write(st.session_state['more'])
     id = st.session_state['more'][0]
+    graph = st.session_state['graph']
+    gameobj = graph.get_vertex(int(id))
+    st.write(gameobj.item)
     get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id)
     tab1, tab2 = st.tabs(["Overview", "Details"])
 
@@ -585,11 +597,11 @@ def more_info():
         with col1:
             st.write('a')
         with col2:
-            st.image(image, width=300)
+            st.image('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1290520/ss_ddb127b1264d76759be579740cf52e9ac03383c8.1920x1080.jpg?t=1591660144', width=300)
 
 
     with tab2:
-
+        st.write('a')
 
     if st.button('back', key='back from info page'):
         st.session_state[7] = False
