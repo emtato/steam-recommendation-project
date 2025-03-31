@@ -33,8 +33,6 @@ def start_page():
     Here we'll recommend games 🎲🔥 that YOU 🫵💯 can play/buy 💸🧾 on Steam based on YOUR OWN necessities 🧍‍♀️💅📋! 
     Cool right? 😎😜
 
-    (insert some for stuff here / desc 📝💭🛠️)
-
     Made by Emilia 🐱, Amanda 🦆, Nicole 🐔 & Grace 🐸
 
     Click the button below 🔘👇 to get started 🚀🎉🎯
