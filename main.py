@@ -33,8 +33,6 @@ class Game:
         - genres: A list of genres this game falls under
         - dlc: A boolean value representing whether this game is a dlc
 
-    Representation Invariants:
-        -
     """
     id: int
     name: str
@@ -635,19 +633,12 @@ def minimum_requirements(g: Game, key: str) -> tuple:
 
 
 if __name__ == "__main__":
-    # test_graph = load_graph('data.csv')
-    # test_graph.build_edges([100, 0, 0, 0, 0, 0])
-    # graph.testing_thing_hi()
-    # print(graph.get_score(3076100, 1291170, [100, 100, 100, 100, 100, 100]))
-    # print(graph.get_weight(7, 1291170))
-    # print([game.name for game in test_graph.recommend_games([3076100, 1291170], 20)])
-    # print(test_graph._vertices[1290210].item.dlc)
-    # print(graph._vertices[1291170].item.name)
-
     import doctest
+
     doctest.testmod()
 
     import python_ta
+
     python_ta.check_all(config={
         'extra-imports': ['random', 'ast', 'csv', 'attr'],  # the names (strs) of imported modules
         'allowed-io': [],  # the names (strs) of functions that call print/open/input
