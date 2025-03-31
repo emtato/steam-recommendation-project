@@ -456,7 +456,6 @@ def list_choser(suggestions):
 
 
 def final_page():
-    # function i can use later to split by the middle right side is the box left side filters!!
     st.title('additional recommendations :3')
     st.write(" ")
     suggestions = []
@@ -574,9 +573,7 @@ def final_page():
 def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int) -> tuple[list[str], str, str]:
     appinfo = 'https://store.steampowered.com/api/appdetails?appids=' + str(id)
     response = requests.get(appinfo)
-    images = []
-
-    release_date = 'unknown'
+    images, release_date, detailed_desc = [], '', ''
     try:
         data = response.json()
         data = data.get(str(id), {}).get('data', {})
@@ -594,21 +591,19 @@ def more_info():
     id = st.session_state['more'][0]
     graph = st.session_state['graph']
     go = graph.get_vertex(int(id)).item
-    st.write(go)
     st.markdown("<h3><a href =\"https://store.steampowered.com/app/" + str(go.id) + "\">" + go.name + "</a></h3>",
                 unsafe_allow_html=True)
 
     tab1, tab2, tab3 = st.tabs(["Overview", "Details", "Secret"])
     images, date, detailed_desc = get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id)
     import pandas as pd
-    # st.subheader(go.name)
 
     with tab1:
         col1, col2 = st.columns([2, 1])
         with col1:
             data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
                     "categories": ', '.join(go.categories), "platforms": ', '.join(go.platforms),
-                    "price": go.price['final']}
+                    "price": go.price['final']+ "$CAD"}
             df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
             st.table(df)
             st.write(go.description[1:len(go.description) - 1])
@@ -636,9 +631,8 @@ def more_info():
 
             data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
                     "categories": ', '.join(go.categories), "Windows requirements": windows, "Mac requirements": mac,
-                    "Linux requirements": linux, "price": go.price['final'],
-                    "supported languages": ', '.join(go.languages), "is dlc?": go.dlc, "has cat? 😺": any(
-                    ['cat' in go.description, 'cat' in go.name, 'kitten' in go.description,
+                    "Linux requirements": linux, "price": go.price['final'] + "$CAD",
+                    "supported languages": ', '.join(go.languages), "is dlc?": go.dlc, "has cat? 😺": any(['cat' in go.description, 'cat' in go.name, 'kitten' in go.description,
                      'feline' in go.description])}
 
             df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
@@ -654,7 +648,6 @@ def more_info():
     with tab3:
         with open('html&css/secert.html', 'r') as meow:
             meowers = meow.read()
-
         st.code(meowers, language="text")
 
     if st.button('back', key='back from info page'):
@@ -735,9 +728,9 @@ def RANDOM_SELECT():
             st.rerun()
 
 
-# this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
-# maxing  # and  # restarting the app, making the user lose progress.
+# this section checks the session_state and loads the next page
 # AND PYTHONTA IS A LIAR, THIS IS NOT A PROBLEM BUT HOW STREAMLIT WORKS THANK YOU
+# :o
 
 if 'start' not in st.session_state or st.session_state['start'] == 0:
     start_page()
