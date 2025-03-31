@@ -264,8 +264,7 @@ class Graph:
             if curr_sim_score < new_sim_score:
                 game_list.insert(i, new_id)
                 return
-            elif (curr_sim_score == new_sim_score and self._vertices[curr_id].item.name <
-                  self._vertices[new_id].item.name):
+            elif curr_sim_score == new_sim_score:
                 random_num = randint(1, 2)
                 if random_num == 1:
                     game_list.insert(i, new_id)
