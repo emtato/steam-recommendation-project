@@ -1,14 +1,16 @@
-# Description: This piethon file contains the UI for the project. Here we are using streamlit.
+"""# Description: This piethon file contains the UI for the project. Here we are using streamlit.
 # Run locally: install streamlit and run shell command
 # View finished product: https://emtato.streamlit.app (not as up to date if not completed)
 # WARNING: for the app to function, please use streamlit version 1.43.2
 # Created by Emilia, Amanda, Nicole, Grace on 2025-03-25
+"""
 
 import streamlit as st
 import main
 from main import random_selection
 
 col1, col2 = st.columns([1, 1])  # or adjust the ratio like [2, 1] if you want left side bigger
+# necessary code! ignore python ta
 
 
 def start_page():
@@ -140,7 +142,7 @@ def window_page():
     option_STORAGE = st.text_input("How much storage do you have available? (in GB): ")
     if option_STORAGE.isdigit():
 
-        if option_OS and option_RAM and option_STORAGE and st.button('hi'):
+        if option_OS and option_RAM and option_STORAGE and st.button('next'):
             st.session_state[0] = True
             st.session_state['start'] = 2
 
@@ -154,6 +156,7 @@ def window_page():
 
     elif option_STORAGE != "":
         st.warning('HEY! That aint no **int**')
+
 
 def mac_page():
     """
@@ -196,7 +199,7 @@ def linux_page():
 
     if option_STORAGE.isdigit():
 
-        if option_OS and option_RAM and option_STORAGE and st.button('hi'):
+        if option_OS and option_RAM and option_STORAGE and st.button('next'):
             st.session_state[0] = True
             st.session_state['start'] = 2
 
@@ -377,6 +380,7 @@ def selection_box(text: str, gamers: list) -> int:
                 game_id = gamers[chosen_index][0]
                 st.session_state['chosen'] = (game_id, gamers[chosen_index][1])
         return chosen_index
+
 
 def first_pick():
     """
@@ -647,7 +651,7 @@ def RANDOM_SELECT():
 
 # this section checks the session_state and loads the next page, this is to prevent the app's   #  # cache from
 # maxing  # and  # restarting the app, making the user lose progress.
-
+# AND PYTHONTA IS A LIAR, THIS IS NOT A PROBLEM BUT HOW STREAMLIT WORKS THANK YOU
 
 if 'start' not in st.session_state or st.session_state['start'] == 0:
     start_page()
@@ -675,3 +679,14 @@ elif st.session_state[7]:
     more_info()
 elif st.session_state[69]:
     RANDOM_SELECT()
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+
+    import python_ta
+    python_ta.check_all(config={
+        'extra-imports': ['streamlit', 'main'],  # the names (strs) of imported modules
+        'allowed-io': [],  # the names (strs) of functions that call print/open/input
+        'max-line-length': 120
+    })

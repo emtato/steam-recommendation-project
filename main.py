@@ -1,15 +1,16 @@
-# Description: This python file contains the code for the Game class, the graph/vertex classes (with their creation
+"""# Description: This python file contains the code for the Game class, the graph/vertex classes (with their creation
 # functions). This also contains the functions for game filtering, and the graph similarity/weighing code for finding
 # similar games to the chosen one.
 # Created by Emilia, Amanda, Nicole, Grace on 2025-03-23
+"""
 from __future__ import annotations
 
 import ast
 import csv
 from random import randint
 from typing import Optional, Union
-from attr import dataclass
 from typing import Any
+from attr import dataclass
 
 PRICE, LANGUAGE, DEV, PLATFORM, CATEGORY, GENRE = 0, 1, 2, 3, 4, 5
 
@@ -317,7 +318,7 @@ def _get_object_from_string(string: str, exclude: Optional[str] = None) -> Any:
         return ast.literal_eval(string)
 
 
-def _load_game_object(game_data: list[str]) -> Game:
+def _load_game_object(game_data: list) -> Game:
     """ Helper function for load_graph which creates a Game object using a list of game_data.
     """
     (
@@ -356,8 +357,6 @@ def build_dic(data_file: str) -> dict:
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
-        row = 'useless'
-        row = ':('
 
         dic = {}
         for i, row in enumerate(reader):
@@ -388,13 +387,12 @@ def build_dic(data_file: str) -> dict:
         return dic
 
 
-def extract_freq(data_file: str, col: int):
+def extract_freq(data_file: str, col: int) -> list:
     '''this function extracts the frequency'''
     with open(data_file, 'r', encoding='utf8') as file:
         reader = csv.reader(file)
         row = next(reader)
-        row = 'useless'
-        row = ':('
+        col_items = []
         dic = {}
         for i, row in enumerate(reader):
             colle = ast.literal_eval(row[col])
@@ -406,7 +404,7 @@ def extract_freq(data_file: str, col: int):
 
 
 # random button in main menu to select random games to look through
-def random_selection():
+def random_selection() -> list:
     '''this function randomly selects games'''
     gamers = []
     with open('data.csv', 'r', encoding='utf8') as file:
@@ -459,7 +457,6 @@ def filtering_games(data_file: str, requirements: {}) -> list:
                 if requirements["COMPUTER"].lower() in TRUTH:
                     total_sim += 1
                     os_list, ram_list, storage_list = minimum_requirements(g, requirements["COMPUTER"])
-                    print(ram_list)
                     # checks if the wanted os is in the list of possible os for game g.
                     if requirements["OS"] in os_list:
                         total_sim += 1
@@ -625,20 +622,22 @@ def minimum_requirements(g: Game, key: str) -> tuple:
     if not os_list:
         os_list = ['empty']
     if not ram_list:
-        ram_list = [-1, 'empty']
+        ram_list = [-1, 'empty']  # Contrary to PythonTA, 'empty' needs to be here to prevent issues with indexing
     if not storage_list:
-        storage_list = [-1, 'empty']
+        storage_list = [-1, 'empty']  # Contrary to PythonTA, 'empty' needs to be here to prevent issues with indexing
+        # We also can't change it to an integer as in the above code we compare index 1 with a string, and we can't
+        # compare an integer to a string.
 
     return (os_list, ram_list, storage_list)
 
 
 if __name__ == "__main__":
-    test_graph = load_graph('data.csv')
-    test_graph.build_edges([100, 0, 0, 0, 0, 0])
+    # test_graph = load_graph('data.csv')
+    # test_graph.build_edges([100, 0, 0, 0, 0, 0])
     # graph.testing_thing_hi()
     # print(graph.get_score(3076100, 1291170, [100, 100, 100, 100, 100, 100]))
     # print(graph.get_weight(7, 1291170))
-    print([game.name for game in test_graph.recommend_games([3076100, 1291170], 20)])
+    # print([game.name for game in test_graph.recommend_games([3076100, 1291170], 20)])
     # print(test_graph._vertices[1290210].item.dlc)
     # print(graph._vertices[1291170].item.name)
 
@@ -647,7 +646,7 @@ if __name__ == "__main__":
 
     import python_ta
     python_ta.check_all(config={
-        'extra-imports': [],  # the names (strs) of imported modules
+        'extra-imports': ['random', 'ast', 'csv', 'attr'],  # the names (strs) of imported modules
         'allowed-io': [],  # the names (strs) of functions that call print/open/input
         'max-line-length': 120
     })
