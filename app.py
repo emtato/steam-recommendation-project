@@ -8,8 +8,10 @@
 import streamlit as st
 import main
 from main import random_selection
-
+import requests
 col1, col2 = st.columns([1, 1])  # or adjust the ratio like [2, 1] if you want left side bigger
+
+
 # necessary code! ignore python ta
 
 
@@ -100,8 +102,7 @@ def prestart():
             st.session_state['start'] = 1
             st.session_state['skip'] = False
             st.session_state['prestart'] = False
-            st.rerun()
-        # st.write("if youre on mobile, we hate you")
+            st.rerun()  # st.write("if youre on mobile, we hate you")
 
 
 def pc_req_page():
@@ -109,8 +110,8 @@ def pc_req_page():
     A page that lets the user choose their type of computer.
     """
     st.title("Choosing your pc requirements")
-    option_comp = st.selectbox("What type of computer do you have?", (
-        "Windows", "Mac", "Linux"), index=None, placeholder="-", )
+    option_comp = st.selectbox("What type of computer do you have?", ("Windows", "Mac", "Linux"), index=None,
+                               placeholder="-", )
 
     # st.write("You selected:", option)
     st.session_state["results"] = {"COMPUTER": option_comp}
@@ -133,9 +134,9 @@ def window_page():
     """
     st.write('To whomever stole my Microsoft Office copy, I will find you..')
     st.write('You have my Word.')
-    option_OS = st.selectbox("What Windows OS version do you use?", (
-        "Windows 11", "Windows 10", "Windows 8", "Windows 7", "Windows Vista",
-        "Windows XP"), index=None, placeholder="-", )
+    option_OS = st.selectbox("What Windows OS version do you use?",
+                             ("Windows 11", "Windows 10", "Windows 8", "Windows 7", "Windows Vista", "Windows XP"),
+                             index=None, placeholder="-", )
 
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
 
@@ -163,8 +164,8 @@ def mac_page():
     This page lets the user specify their mac computer's attributes,
     """
     st.write('Why should you never fart in an Apple store? Because they don\'t have any windows BAHJJHHJSBFADJ')
-    option_OS = st.selectbox("What Mac OS version do you use?", (
-        "11 and below", "12", "13", "14", "15"), index=None, placeholder="-", )
+    option_OS = st.selectbox("What Mac OS version do you use?", ("11 and below", "12", "13", "14", "15"), index=None,
+                             placeholder="-", )
 
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
 
@@ -190,9 +191,9 @@ def linux_page():
     This page lets the user specify their linux computer's attributes,
     """
     st.write('Computers are like air conditioners—they stop working properly if you open windows')
-    option_OS = st.selectbox("What Linux OS version do you use?", (
-        "Ubuntu 12", "Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22",
-        "SteamOS"), index=None, placeholder="-", )
+    option_OS = st.selectbox("What Linux OS version do you use?",
+                             ("Ubuntu 12", "Ubuntu 14", "Ubuntu 16", "Ubuntu 18", "Ubuntu 20", "Ubuntu 22", "SteamOS"),
+                             index=None, placeholder="-", )
     option_RAM = st.text_input("How much Memory (RAM) do you have? (in GB):")
 
     option_STORAGE = st.text_input("How much storage do you have available? (in GB):")
@@ -217,8 +218,8 @@ def get_data():
     """
     gets the data from the data.csv file
     """
-    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq(
-        'data.csv', 4)
+    cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv',
+        4)
     st.session_state['cat'] = cat
     gen = [one for one in gen if one != 'mac' and one != 'windows' and one != 'linux']
     st.session_state['gen'] = gen
@@ -240,8 +241,8 @@ def category_pick():
 
     st.write(' | '.join(st.session_state['chosen_cat']))
 
-    selected = st.selectbox("Choose categories okay",
-                            st.session_state['cat'], index=None, placeholder='I AM GOING CUCKOO')
+    selected = st.selectbox("Choose categories okay", st.session_state['cat'], index=None,
+                            placeholder='I AM GOING CUCKOO')
     if st.button("undo select"):
         st.session_state["undo_pressed"] = True
         if len(st.session_state['chosen_cat']) > 0:
@@ -568,9 +569,28 @@ def final_page():
                 st.rerun()
 
 
+def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int):
+    appinfo = 'https://store.steampowered.com/api/appdetails?appids=' + str(id)
+    response = requests.get(appinfo)
+
 def more_info():
     st.title('More Info:')
     st.write(st.session_state['more'])
+    id = st.session_state['more'][0]
+    get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id)
+    tab1, tab2 = st.tabs(["Overview", "Details"])
+
+    with tab1:
+        col1, col2 = st.columns([1,1])
+        with col1:
+            st.write('a')
+        with col2:
+            st.image(image, width=300)
+
+
+    with tab2:
+
+
     if st.button('back', key='back from info page'):
         st.session_state[7] = False
         st.session_state[6] = True
@@ -678,8 +698,7 @@ elif st.session_state[6]:
 elif st.session_state[7]:
     more_info()
 elif st.session_state[69]:
-    RANDOM_SELECT()
-#
+    RANDOM_SELECT()  #
 # if __name__ == "__main__":
 #     import doctest
 #     doctest.testmod()

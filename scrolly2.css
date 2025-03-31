@@ -28,3 +28,11 @@
 ol {
     padding-left: 3px;
 }
+.images-scroll-box {
+            height: 900px;
+            overflow-y: auto;
+            border: 1px solid #888;
+            border-radius: 10px;
+            background-color: #111;
+            width: 600px;
+        }
