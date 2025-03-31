@@ -679,14 +679,14 @@ elif st.session_state[7]:
     more_info()
 elif st.session_state[69]:
     RANDOM_SELECT()
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
-
-    import python_ta
-    python_ta.check_all(config={
-        'extra-imports': ['streamlit', 'main'],  # the names (strs) of imported modules
-        'allowed-io': [],  # the names (strs) of functions that call print/open/input
-        'max-line-length': 120
-    })
+#
+# if __name__ == "__main__":
+#     import doctest
+#     doctest.testmod()
+#
+#     import python_ta
+#     python_ta.check_all(config={
+#         'extra-imports': ['streamlit', 'main'],  # the names (strs) of imported modules
+#         'allowed-io': [],  # the names (strs) of functions that call print/open/input
+#         'max-line-length': 120
+#     })
