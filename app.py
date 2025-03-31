@@ -10,6 +10,16 @@ import main
 from main import random_selection
 import requests
 
+st.container(height=500, border=None, key=None)
+with st.container():
+    st.write("This is inside the container")
+
+    # You can call any Streamlit command, including custom components:
+
+
+st.write("This is outside the container")
+
+
 col1, col2 = st.columns([1, 1])  # or adjust the ratio like [2, 1] if you want left side bigger
 
 
