@@ -467,19 +467,22 @@ def final_page():
             genre = int(genre) if genre.isdigit() else 10
 
         if st.button("make  grpah !!"):
-            st.write('working on it— may take up to 30s if you\'re on x86 (or this code is running on cloud) (no '
-                     'unified memory L </3)')
-            graph.clear_edges()  # modify this to account for multiple games if want
-            graph.build_edges([price, languages, dev, platform, category, genre])
-            suggestions = graph.recommend_games([int(game[0]) for game in st.session_state['list']], 50)
+            if len(st.session_state['list']) == 0:
+                st.warning('no game in list to recommend similar games for')
+            else:
+                st.write('working on it— may take up to 30s if you\'re on x86 (or this code is running on cloud) (no '
+                             'unified memory L </3)')
+                graph.clear_edges()  # modify this to account for multiple games if want
+                graph.build_edges([price, languages, dev, platform, category, genre])
+                suggestions = graph.recommend_games([int(game[0]) for game in st.session_state['list']], 50)
 
-            suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
-                            s.description, s.image, s.genres] for s in suggestions]
-            st.session_state['suggestions'] = suggestions
-            st.write(" ")
-            st.write(" ")
+                suggestions = [[s.id, s.name, s.price['final'] if s.price is not None and 'final' in s.price else 'unknown',
+                                s.description, s.image, s.genres] for s in suggestions]
+                st.session_state['suggestions'] = suggestions
+                st.write(" ")
+                st.write(" ")
 
-        if 'suggestions' in st.session_state:
+        if 'suggestions' in st.session_state and st.session_state['suggestions'] is not None:
             list_choser(suggestions)
 
         st.write(" ")
@@ -496,7 +499,7 @@ def final_page():
             st.rerun()
     with coll2:
         st.write('recommended games according to weights. click on image for link')
-        if suggestions != []:
+        if suggestions != [] and suggestions is not None:
             with open('html&css/scrolly.html', 'r') as f:
                 hrml = f.read()
                 games = [format_game(game, 'img') for game in suggestions]
@@ -704,6 +707,9 @@ def RANDOM_SELECT():
             st.session_state['start'] = False
             st.session_state[69] = False
             st.session_state['gamers_list'] = None
+            st.session_state['list'] = None
+            st.session_state['suggestions'] = None
+
             st.rerun()
 
 
