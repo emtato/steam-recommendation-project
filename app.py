@@ -598,12 +598,15 @@ def more_info():
     images, date, detailed_desc = get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id)
     import pandas as pd
 
+    dev = go.developers[0] if go.developers else "unknown :("
+    genres = ', '.join(go.genres) if go.genres else "unknown :("
+    categories = ', '.join(go.categories) if go.categories else "unknown :("
+    price = str(go.price['final']) + "$CAD" if go.price and 'final' in go.price else "unknown :("
     with tab1:
         col1, col2 = st.columns([2, 1])
         with col1:
-            data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
-                    "categories": ', '.join(go.categories), "platforms": ', '.join(go.platforms),
-                    "price": go.price['final']+ "$CAD"}
+            data = {"release date": date, "developpers": dev, 'genres': genres, "categories": categories,
+                    "platforms": ', '.join(go.platforms) if go.platforms else "idk :(", "price": price}
             df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
             st.table(df)
             st.write(go.description[1:len(go.description) - 1])
@@ -629,11 +632,14 @@ def more_info():
             else:
                 linux = "linux is not supported ❌🐧"
 
-            data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
-                    "categories": ', '.join(go.categories), "Windows requirements": windows, "Mac requirements": mac,
-                    "Linux requirements": linux, "price": go.price['final'] + "$CAD",
-                    "supported languages": ', '.join(go.languages), "is dlc?": go.dlc, "has cat? 😺": any(['cat' in go.description, 'cat' in go.name, 'kitten' in go.description,
-                     'feline' in go.description])}
+            langs = ', '.join(go.languages) if go.languages else "unknown :("
+            dlc = go.dlc if go.dlc is not None else "unknown :("
+            catcheck = any(x in go.description for x in ['cat', 'kitten', 'feline']) or any(
+                x in go.name for x in ['cat', 'kitten', 'feline'])
+
+            data = {"release date": date, "developpers": dev, "genres": genres, "categories": categories,
+                    "Windows requirements": windows, "Mac requirements": mac, "Linux requirements": linux,
+                    "price": price, "supported languages": langs, "is dlc?": dlc, "has cat? 😺": catcheck}
 
             df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
             st.table(df)
