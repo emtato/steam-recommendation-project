@@ -9,6 +9,7 @@ import streamlit as st
 import main
 from main import random_selection
 import requests
+
 col1, col2 = st.columns([1, 1])  # or adjust the ratio like [2, 1] if you want left side bigger
 
 
@@ -219,7 +220,7 @@ def get_data():
     gets the data from the data.csv file
     """
     cat, gen, lang = main.extract_freq('data.csv', 9), main.extract_freq('data.csv', 10), main.extract_freq('data.csv',
-        4)
+                                                                                                            4)
     st.session_state['cat'] = cat
     gen = [one for one in gen if one != 'mac' and one != 'windows' and one != 'linux']
     st.session_state['gen'] = gen
@@ -566,42 +567,62 @@ def final_page():
                 st.session_state[6] = False
                 st.session_state[7] = True
                 st.session_state['more'] = st.session_state['list'][chosen_index]
-                st.session_state['graph']= graph
+                st.session_state['graph'] = graph
                 st.rerun()
 
 
-def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int):
+def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int) -> tuple[list[str], str]:
     appinfo = 'https://store.steampowered.com/api/appdetails?appids=' + str(id)
     response = requests.get(appinfo)
     images = []
+    release_date = 'unknown'
     try:
         data = response.json()
         app_data = data.get(str(id), {}).get('data', {})
         screenshots = app_data.get('screenshots', [])
         images = [s.get('path_full', '').replace('\\/', '/') for s in screenshots if 'path_full' in s]
+        release_date = app_data.get('release_date', {}).get('date', 'unknown')
     except Exception:
-        st.write('no photos ;<')
-    return images
+        print(f"Error retrieving screenshots or release date")
+    return images, release_date
+
 
 def more_info():
     st.title('More Info:')
     id = st.session_state['more'][0]
     graph = st.session_state['graph']
-    gameobj = graph.get_vertex(int(id))
-    st.write(gameobj.item)
-    get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id)
-    tab1, tab2 = st.tabs(["Overview", "Details"])
+    go = graph.get_vertex(int(id)).item
+    st.write(go)
 
+    tab1, tab2, tab3 = st.tabs(["Overview", "Details", "Secret"])
+    images, date = get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id)
+    import pandas as pd
     with tab1:
-        col1, col2 = st.columns([1,1])
+        col1, col2 = st.columns([1, 1])
         with col1:
-            st.write('a')
+            st.subheader(go.name)
+            data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
+                    "categories": ', '.join(go.categories), "platforms": ', '.join(go.platforms), "price": go.price}
+            df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
+            st.dataframe(df)
         with col2:
-            st.image('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1290520/ss_ddb127b1264d76759be579740cf52e9ac03383c8.1920x1080.jpg?t=1591660144', width=300)
-
+            st.write('game images')
+            for image in images:
+                st.image(image, width=800)
 
     with tab2:
-        st.write('a')
+        st.subheader(go.name)
+        data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
+                "categories": ', '.join(go.categories), }
+        df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
+        st.dataframe(df)
+
+
+    with tab3:
+        with open('secert.html', 'r') as meow:
+            meowers = meow.read()
+
+        st.code(meowers, language="text")
 
     if st.button('back', key='back from info page'):
         st.session_state[7] = False
@@ -710,11 +731,7 @@ elif st.session_state[6]:
 elif st.session_state[7]:
     more_info()
 elif st.session_state[69]:
-    RANDOM_SELECT()  #
-# if __name__ == "__main__":
-#     import doctest
-#     doctest.testmod()
-#
+    RANDOM_SELECT()  # # if __name__ == "__main__":  #     import doctest  #     doctest.testmod()  #
 #     import python_ta
 #     python_ta.check_all(config={
 #         'extra-imports': ['streamlit', 'main'],  # the names (strs) of imported modules
