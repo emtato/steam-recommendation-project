@@ -272,7 +272,6 @@ class Graph:
                 if random_num == 1:
                     game_list.insert(i, new_id)
                     return
-            return
         game_list.append(new_id)
         return
 
