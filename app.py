@@ -48,7 +48,6 @@ def start_page():
     if st.button("im feeling lucky (dont sue us)"):
         st.session_state['start'] = 2
         st.session_state['prestart'] = False
-        st.session_state['skip'] = False
         st.session_state[0] = False
         st.session_state[1] = False
         st.session_state[2] = False
@@ -58,24 +57,6 @@ def start_page():
         st.session_state[6] = False
         st.session_state[7] = False
         st.session_state[69] = True
-        st.rerun()
-
-
-def password():
-    """test function to skip setup and reach the end"""
-    password = st.text_input("password please")
-    st.session_state['chosen'] = password
-    if password:
-        st.session_state['start'] = 2
-        st.session_state['prestart'] = False
-        st.session_state['skip'] = False
-        st.session_state[0] = False
-        st.session_state[1] = False
-        st.session_state[2] = False
-        st.session_state[3] = False
-        st.session_state[4] = False
-        st.session_state[5] = False
-        st.session_state[6] = True
         st.rerun()
 
 
@@ -91,17 +72,12 @@ def prestart():
                 st.write(' ')
             st.write('you will pay.')
             st.stop()
-        if st.button('skip'):
-            st.session_state['prestart'] = False
-            st.session_state['skip'] = True
-            st.rerun()
     with col2:
         st.markdown("<div style='text-align: right;'>Psst, click the 3 dots, ---------------------------------------> "
                     "settings and activate <strong>W I D E</strong> "
                     "mode for a better viewing experience!</div>", unsafe_allow_html=True)
         if st.button('oki'):
             st.session_state['start'] = 1
-            st.session_state['skip'] = False
             st.session_state['prestart'] = False
             st.rerun()  # st.write("if youre on mobile, we hate you")
 
@@ -466,7 +442,6 @@ def final_page():
     graph = main.load_graph('data.csv')
 
     chosen = st.session_state['chosen']
-    chosen = int(chosen[0]) if type(chosen) == tuple else int(chosen)  # only for testing (with skip button)
 
     coll1, coll2 = st.columns([1, 2])
     with coll1:
@@ -742,8 +717,6 @@ if 'start' not in st.session_state or st.session_state['start'] == 0:
     start_page()
 elif st.session_state['prestart']:
     prestart()
-elif st.session_state['skip']:
-    password()
 elif st.session_state['start'] == 1:
     pc_req_page()
 elif st.session_state[0]:
