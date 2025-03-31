@@ -365,8 +365,6 @@ def first_pick():
        A page that shows the results the user chose, aka the options.
        """
     st.title('Here are the possible options for games that exactly match your requirements!')
-    # st.write(str(st.session_state["results"]))
-    # st.write(main.filtering_games('data.csv', st.session_state["results"]))
     gamers = main.filtering_games('data.csv', st.session_state["results"])
     gamers = [[g.id, g.name, g.price['final'] if g.price and 'final' in g.price else 'unknown', g.description, g.image,
                g.genres] for g in gamers]
@@ -441,16 +439,13 @@ def final_page():
 
     graph = main.load_graph('data.csv')
 
-    chosen = st.session_state['chosen']
-
     coll1, coll2 = st.columns([1, 2])
     with coll1:
         st.markdown("Assign weights to what you think is most important when comparing game similarities. "
                     "Assign a weight of <strong><u>100</u></strong> if you think the condition is critically "
                     "important when "
                     "sorting, and <strong><u>0</u></strong> if its not important at all.", unsafe_allow_html=True)
-        col1, col2, col3 = st.columns([1, 1, 1])  # can add more columns
-        # weights: price, language, dev, platform, category, genre
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             price = st.text_input('price', help="For example, if you chose a free game and set the price weight to "
                                                 "100, the system will strongly favor other free games. Higher weights "
@@ -504,7 +499,6 @@ def final_page():
         if suggestions != []:
             with open('html&css/scrolly.html', 'r') as f:
                 hrml = f.read()
-
                 games = [format_game(game, 'img') for game in suggestions]
                 htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
                 final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
@@ -546,6 +540,15 @@ def final_page():
 
 
 def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int) -> tuple[list[str], str, str]:
+    """
+    "erm why didnt u do this in the firs tplace instead of turning all of the api data into a csv isnt that much more
+    convoluted 🤓"
+    shutup 1. that wouldnt have worked api ratelimits you at a few hundred requests in quick succession you wouldnt
+    be able to access more than a few hundred games to build ur graph
+    2. this is easier to test and show with physical data sheets rather than an impossible to read api response
+    3. i dont have athird point but good things come in threes i said with glee yes thats me
+    its 2am give me a break
+    """
     appinfo = 'https://store.steampowered.com/api/appdetails?appids=' + str(id)
     response = requests.get(appinfo)
     images, release_date, detailed_desc = [], '', ''
@@ -568,11 +571,10 @@ def more_info():
     go = graph.get_vertex(int(id)).item
     st.markdown("<h3><a href =\"https://store.steampowered.com/app/" + str(go.id) + "\">" + go.name + "</a></h3>",
                 unsafe_allow_html=True)
-
     tab1, tab2, tab3 = st.tabs(["Overview", "Details", "Secret"])
+
     images, date, detailed_desc = get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id)
     import pandas as pd
-
     dev = go.developers[0] if go.developers else "unknown :("
     genres = ', '.join(go.genres) if go.genres else "unknown :("
     categories = ', '.join(go.categories) if go.categories else "unknown :("
@@ -590,7 +592,6 @@ def more_info():
             for i, image in enumerate(images):
                 if i < 2:
                     st.image(image, width=500)
-
     with tab2:
         col1, col2 = st.columns([2, 1])
         with col1:
@@ -606,7 +607,6 @@ def more_info():
                 linux = go.requirements['Linux']
             else:
                 linux = "linux is not supported ❌🐧"
-
             langs = ', '.join(go.languages) if go.languages else "unknown :("
             dlc = go.dlc if go.dlc is not None else "unknown :("
             catcheck = any(x in go.description for x in ['cat', 'kitten', 'feline']) or any(
@@ -615,7 +615,6 @@ def more_info():
             data = {"release date": date, "developpers": dev, "genres": genres, "categories": categories,
                     "Windows requirements": windows, "Mac requirements": mac, "Linux requirements": linux,
                     "price": price, "supported languages": langs, "is dlc?": dlc, "has cat? 😺": catcheck}
-
             df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
             st.table(df)
             if detailed_desc == '':
@@ -625,7 +624,6 @@ def more_info():
         with col2:
             for image in images:
                 st.image(image, width=500)
-
     with tab3:
         with open('html&css/secert.html', 'r') as meow:
             meowers = meow.read()
