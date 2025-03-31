@@ -413,12 +413,12 @@ def first_pick():
 
         with col2:
 
-            with open('scrolly.html', 'r') as f:
+            with open('html&css/scrolly.html', 'r') as f:
                 hrml = f.read()
                 games = [format_game(game, 'img') for game in gamers]
                 htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
                 final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-                with open('scrolly.css') as fe:
+                with open('html&css/scrolly.css') as fe:
                     css = f"<style>{fe.read()}</style>"
                     st.markdown(css, unsafe_allow_html=True)
                 st.markdown(final_html, unsafe_allow_html=True)
@@ -528,13 +528,13 @@ def final_page():
     with coll2:
         st.write('recommended games according to weights. click on image for link')
         if suggestions != []:
-            with open('scrolly.html', 'r') as f:
+            with open('html&css/scrolly.html', 'r') as f:
                 hrml = f.read()
 
                 games = [format_game(game, 'img') for game in suggestions]
                 htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
                 final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-                with open('scrolly.css') as fe:
+                with open('html&css/scrolly.css') as fe:
                     css = f"<style>{fe.read()}</style>"
                     st.markdown(css, unsafe_allow_html=True)
                 st.markdown(final_html, unsafe_allow_html=True)
@@ -544,14 +544,14 @@ def final_page():
             st.markdown(""" <span style = "color:red"> No data</span>""", unsafe_allow_html=True)
 
     if 'list' in st.session_state:
-        with open('scrolly2.html', 'r') as f:
+        with open('html&css/scrolly2.html', 'r') as f:
             hrml = f.read()
             st.write('your currnt list!!')
 
             games = [format_game(game, 'img-small') for game in st.session_state['list']]
             htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
             final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-            with open('scrolly2.css') as fe:
+            with open('html&css/scrolly2.css') as fe:
                 css = f"<style>{fe.read()}</style>"
                 st.markdown(css, unsafe_allow_html=True)
             st.markdown(final_html, unsafe_allow_html=True)
@@ -578,10 +578,10 @@ def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int)
     release_date = 'unknown'
     try:
         data = response.json()
-        app_data = data.get(str(id), {}).get('data', {})
-        screenshots = app_data.get('screenshots', [])
+        data = data.get(str(id), {}).get('data', {})
+        screenshots = data.get('screenshots', [])
         images = [s.get('path_full', '').replace('\\/', '/') for s in screenshots if 'path_full' in s]
-        release_date = app_data.get('release_date', {}).get('date', 'unknown')
+        release_date = data.get('release_date', {}).get('date', 'unknown')
     except Exception:
         print(f"Error retrieving screenshots or release date")
     return images, release_date
@@ -602,9 +602,11 @@ def more_info():
         with col1:
             st.subheader(go.name)
             data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
-                    "categories": ', '.join(go.categories), "platforms": ', '.join(go.platforms), "price": go.price}
+                    "categories": ', '.join(go.categories), "platforms": ', '.join(go.platforms),
+                    "price": go.price['final']}
             df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
-            st.dataframe(df)
+            st.table(df)
+            st.write(go.description[1:len(go.description) - 1])
         with col2:
             st.write('game images')
             for image in images:
@@ -612,14 +614,32 @@ def more_info():
 
     with tab2:
         st.subheader(go.name)
-        data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
-                "categories": ', '.join(go.categories), }
-        df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
-        st.dataframe(df)
+        windows, mac, linux = "", "", ""
+        if "PC" in go.requirements:
+            windows = go.requirements['PC']
+        else:
+            windows = "windows is not supported ❌🪟"
+        if "Mac" in go.requirements and len(go.requirements['Mac']) > 11:
+            mac = go.requirements['Mac']
+        else:
+            mac = "mac is not supported ❌🍎"
+        if "Linux" in go.requirements and len(go.requirements['Linux']) > 11:
+            linux = go.requirements['Linux']
+        else:
+            linux = "linux is not supported ❌🐧"
 
+        data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
+                "categories": ', '.join(go.categories), "Windows requirements": windows, "Mac requirements": mac,
+                "Linux requirements": linux, "price": go.price['final'], "supported languages": ', '.join(go.languages),
+                "is dlc?": go.dlc, "has cat? 😺": any(
+                ['cat' in go.description, 'cat' in go.name, 'kitten' in go.description, 'feline' in go.description])}
+
+        df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
+        st.table(df)
+        st.write(go.description[1:len(go.description) - 1])
 
     with tab3:
-        with open('secert.html', 'r') as meow:
+        with open('html&css/secert.html', 'r') as meow:
             meowers = meow.read()
 
         st.code(meowers, language="text")
@@ -683,13 +703,13 @@ def RANDOM_SELECT():
             st.rerun()
 
     with col2:
-        with open('scrolly.html', 'r') as f:
+        with open('html&css/scrolly.html', 'r') as f:
             hrml = f.read()
             st.write('randomly recommended games. click on image for link')
             games = [format_game(game, 'img') for game in gamers]
             htmlformatted = '<ol>' + ''.join(f"<li>{game}</li>" for game in games) + '</ol>'
             final_html = hrml.replace("<!-- placeholder-->", htmlformatted)
-            with open('scrolly.css') as fe:
+            with open('html&css/scrolly.css') as fe:
                 css = f"<style>{fe.read()}</style>"
                 st.markdown(css, unsafe_allow_html=True)
             st.markdown(final_html, unsafe_allow_html=True)
@@ -731,10 +751,7 @@ elif st.session_state[6]:
 elif st.session_state[7]:
     more_info()
 elif st.session_state[69]:
-    RANDOM_SELECT()  # # if __name__ == "__main__":  #     import doctest  #     doctest.testmod()  #
-#     import python_ta
-#     python_ta.check_all(config={
-#         'extra-imports': ['streamlit', 'main'],  # the names (strs) of imported modules
-#         'allowed-io': [],  # the names (strs) of functions that call print/open/input
-#         'max-line-length': 120
-#     })
+    RANDOM_SELECT()  # # if __name__ == "__main__":  #     import doctest  #     doctest.testmod()  #  #     import
+    # python_ta  #     python_ta.check_all(config={  #         'extra-imports': ['streamlit', 'main'],  # the names (
+    # strs) of imported modules  #         'allowed-io': [],  # the names (strs) of functions that call  #
+    # print/open/input  #         'max-line-length': 120  #     })
