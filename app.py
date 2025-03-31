@@ -571,10 +571,11 @@ def final_page():
                 st.rerun()
 
 
-def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int) -> tuple[list[str], str]:
+def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int) -> tuple[list[str], str, str]:
     appinfo = 'https://store.steampowered.com/api/appdetails?appids=' + str(id)
     response = requests.get(appinfo)
     images = []
+
     release_date = 'unknown'
     try:
         data = response.json()
@@ -582,9 +583,10 @@ def get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id: int)
         screenshots = data.get('screenshots', [])
         images = [s.get('path_full', '').replace('\\/', '/') for s in screenshots if 'path_full' in s]
         release_date = data.get('release_date', {}).get('date', 'unknown')
+        detailed_desc = data.get("detailed_description", '')
     except Exception:
         print(f"Error retrieving screenshots or release date")
-    return images, release_date
+    return images, release_date, detailed_desc
 
 
 def more_info():
@@ -593,14 +595,17 @@ def more_info():
     graph = st.session_state['graph']
     go = graph.get_vertex(int(id)).item
     st.write(go)
+    st.markdown("<h3><a href =\"https://store.steampowered.com/app/" + str(go.id) + "\">" + go.name + "</a></h3>",
+                unsafe_allow_html=True)
 
     tab1, tab2, tab3 = st.tabs(["Overview", "Details", "Secret"])
-    images, date = get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id)
+    images, date, detailed_desc = get_more_api_info_since_emma_is_stupid_and_didnt_include_everything(id)
     import pandas as pd
+    # st.subheader(go.name)
+
     with tab1:
-        col1, col2 = st.columns([1, 1])
+        col1, col2 = st.columns([2, 1])
         with col1:
-            st.subheader(go.name)
             data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
                     "categories": ', '.join(go.categories), "platforms": ', '.join(go.platforms),
                     "price": go.price['final']}
@@ -608,35 +613,43 @@ def more_info():
             st.table(df)
             st.write(go.description[1:len(go.description) - 1])
         with col2:
-            st.write('game images')
-            for image in images:
-                st.image(image, width=800)
+            st.image(go.image, width=500)
+            for i, image in enumerate(images):
+                if i < 2:
+                    st.image(image, width=500)
 
     with tab2:
-        st.subheader(go.name)
-        windows, mac, linux = "", "", ""
-        if "PC" in go.requirements:
-            windows = go.requirements['PC']
-        else:
-            windows = "windows is not supported ❌🪟"
-        if "Mac" in go.requirements and len(go.requirements['Mac']) > 11:
-            mac = go.requirements['Mac']
-        else:
-            mac = "mac is not supported ❌🍎"
-        if "Linux" in go.requirements and len(go.requirements['Linux']) > 11:
-            linux = go.requirements['Linux']
-        else:
-            linux = "linux is not supported ❌🐧"
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            if "PC" in go.requirements:
+                windows = go.requirements['PC']
+            else:
+                windows = "windows is not supported ❌🪟"
+            if "Mac" in go.requirements and len(go.requirements['Mac']) > 11:
+                mac = go.requirements['Mac']
+            else:
+                mac = "mac is not supported ❌🍎"
+            if "Linux" in go.requirements and len(go.requirements['Linux']) > 11:
+                linux = go.requirements['Linux']
+            else:
+                linux = "linux is not supported ❌🐧"
 
-        data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
-                "categories": ', '.join(go.categories), "Windows requirements": windows, "Mac requirements": mac,
-                "Linux requirements": linux, "price": go.price['final'], "supported languages": ', '.join(go.languages),
-                "is dlc?": go.dlc, "has cat? 😺": any(
-                ['cat' in go.description, 'cat' in go.name, 'kitten' in go.description, 'feline' in go.description])}
+            data = {"release date": date, "developpers": go.developers[0], 'genres': ', '.join(go.genres),
+                    "categories": ', '.join(go.categories), "Windows requirements": windows, "Mac requirements": mac,
+                    "Linux requirements": linux, "price": go.price['final'],
+                    "supported languages": ', '.join(go.languages), "is dlc?": go.dlc, "has cat? 😺": any(
+                    ['cat' in go.description, 'cat' in go.name, 'kitten' in go.description,
+                     'feline' in go.description])}
 
-        df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
-        st.table(df)
-        st.write(go.description[1:len(go.description) - 1])
+            df = pd.DataFrame.from_dict(data, orient='index', columns=["Info"])
+            st.table(df)
+            if detailed_desc == '':
+                st.write(go.description[1:len(go.description) - 1])
+            else:
+                st.markdown(detailed_desc, unsafe_allow_html=True)
+        with col2:
+            for image in images:
+                st.image(image, width=500)
 
     with tab3:
         with open('html&css/secert.html', 'r') as meow:
@@ -676,7 +689,7 @@ def format_game(game: list, img: str):
     paddingname = '&nbsp;' * max(1, spacesname)  # force html to keep the spacing
     paddingprice = '&nbsp;' * max(1, spacesprice)
 
-    return (f"<a href=\"https://google.com/search?q={nocrop}+steam+{game[0]}\">"
+    return (f"<a href=\"https://store.steampowered.com/app/{game[0]}\">"
             f"<img src=\"{image}\" alt=\"{name}\" class=\"{img}\"/>"
             f"</a>"
             f"<div style='font-family: monospace; white-space: nowrap; font-size: 13px;'>"
@@ -753,5 +766,5 @@ elif st.session_state[7]:
 elif st.session_state[69]:
     RANDOM_SELECT()  # # if __name__ == "__main__":  #     import doctest  #     doctest.testmod()  #  #     import
     # python_ta  #     python_ta.check_all(config={  #         'extra-imports': ['streamlit', 'main'],  # the names (
-    # strs) of imported modules  #         'allowed-io': [],  # the names (strs) of functions that call  #
+    # strs) of imported modules  #         'allowed-io': [],  # the names (strs) of functions that call  #  #  #  #
     # print/open/input  #         'max-line-length': 120  #     })
